@@ -1,0 +1,258 @@
+/**
+ * WHAT: Navbar styles — luxury dark gold aesthetic with smooth transitions.
+ * HOW: Fixed positioning with backdrop blur. Brand row + 3 nav rows.
+ *      Hover uses a gold underline sweep instead of block fill.
+ *      Scroll state collapses brand area and increases blur.
+ */
+
+/* ── Navbar Shell ── */
+.navbar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  z-index: 1000;
+  background: rgba(10, 10, 10, 0.92);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border-bottom: 1px solid var(--color-border-gold);
+  transition: background var(--transition-base),
+              box-shadow var(--transition-base),
+              transform var(--transition-base);
+}
+
+.navbarScrolled {
+  background: rgba(8, 8, 8, 0.98);
+  box-shadow: 0 8px 40px rgba(0, 0, 0, 0.7), 0 1px 0 var(--color-border-gold);
+}
+
+/* ── Brand Row ── */
+.navbarBrand {
+  display: flex;
+  align-items: center;
+  gap: 1.2rem;
+  padding: 0.7rem 2.5rem;
+  border-bottom: 1px solid var(--color-border);
+  position: relative;
+  transition: padding var(--transition-base);
+}
+
+.navbarScrolled .navbarBrand {
+  padding: 0.4rem 2.5rem;
+}
+
+.navbarLogo {
+  height: 3.8rem;
+  width: auto;
+  object-fit: contain;
+  transition: height var(--transition-base), opacity var(--transition-base);
+  filter: drop-shadow(0 2px 8px rgba(201, 168, 76, 0.3));
+}
+
+.navbarScrolled .navbarLogo {
+  height: 2.4rem;
+}
+
+.navbarTagline {
+  display: flex;
+  flex-direction: column;
+  gap: 0.1rem;
+}
+
+.navbarTitle {
+  font-family: var(--font-ui);
+  font-size: 1.5rem;
+  font-weight: 800;
+  color: var(--color-primary);
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  line-height: 1;
+  /* Gold text shimmer */
+  background: linear-gradient(90deg, #c9a84c, #e8c97a, #c9a84c);
+  background-size: 200% auto;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  animation: shimmer 4s linear infinite;
+}
+
+@keyframes shimmer {
+  0%   { background-position: 0% center; }
+  100% { background-position: 200% center; }
+}
+
+.navbarSubtitle {
+  font-family: var(--font-ui);
+  font-size: 0.55rem;
+  font-weight: 600;
+  color: var(--color-text);
+  letter-spacing: 0.3em;
+  text-transform: uppercase;
+  opacity: 0.8;
+}
+
+.navbarMotto {
+  font-family: var(--font-body);
+  font-size: 0.5rem;
+  color: var(--color-text-muted);
+  letter-spacing: 0.12em;
+  font-style: italic;
+}
+
+/* ── Gold separator line between logo and nav links ── */
+.navbarDivider {
+  width: 1px;
+  height: 3rem;
+  background: linear-gradient(to bottom, transparent, var(--color-primary), transparent);
+  margin-left: 0.5rem;
+  opacity: 0.5;
+  transition: height var(--transition-base);
+}
+
+.navbarScrolled .navbarDivider {
+  height: 2rem;
+}
+
+/* ── Nav Rows ── */
+.navbarLinks {
+  display: flex;
+  flex-direction: column;
+}
+
+.navRow {
+  display: flex;
+  width: 100%;
+  border-top: 1px solid var(--color-border);
+}
+
+.navRowPrimary {
+  background: rgba(15, 15, 15, 0.8);
+}
+
+.navRowSecondary {
+  background: rgba(20, 20, 20, 0.7);
+}
+
+/* ── Individual Nav Link ── */
+.navLink {
+  flex: 1;
+  text-align: center;
+  padding: 0.6rem 0.4rem;
+  font-family: var(--font-ui);
+  font-size: 0.62rem;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--color-text-muted);
+  border-right: 1px solid var(--color-border);
+  position: relative;
+  overflow: hidden;
+  transition: color var(--transition-fast);
+  white-space: nowrap;
+}
+
+.navLink:last-child {
+  border-right: none;
+}
+
+/* Gold underline sweep on hover */
+.navLink::after {
+  content: "";
+  position: absolute;
+  bottom: 0;
+  left: 50%;
+  width: 0;
+  height: 2px;
+  background: var(--color-primary);
+  transition: width var(--transition-fast), left var(--transition-fast);
+}
+
+.navLink:hover {
+  color: var(--color-primary-light);
+}
+
+.navLink:hover::after {
+  width: 100%;
+  left: 0;
+}
+
+/* Active state */
+.navLinkActive {
+  color: var(--color-primary) !important;
+}
+
+.navLinkActive::after {
+  width: 100% !important;
+  left: 0 !important;
+}
+
+.navLinkSecondary {
+  font-size: 0.58rem;
+  padding: 0.5rem 0.4rem;
+}
+
+/* ── Hamburger (mobile) ── */
+.navbarHamburger {
+  display: none;
+  flex-direction: column;
+  gap: 5px;
+  background: none;
+  border: 1px solid var(--color-border-gold);
+  padding: 0.5rem 0.6rem;
+  border-radius: var(--radius-sm);
+  position: absolute;
+  right: 1.5rem;
+  top: 50%;
+  transform: translateY(-50%);
+  transition: border-color var(--transition-fast);
+}
+
+.navbarHamburger:hover {
+  border-color: var(--color-primary);
+}
+
+.navbarHamburger span {
+  display: block;
+  width: 22px;
+  height: 1.5px;
+  background: var(--color-primary);
+  transition: transform var(--transition-fast), opacity var(--transition-fast);
+}
+
+.hamburgerOpen span:nth-child(1) { transform: translateY(6.5px) rotate(45deg); }
+.hamburgerOpen span:nth-child(2) { opacity: 0; }
+.hamburgerOpen span:nth-child(3) { transform: translateY(-6.5px) rotate(-45deg); }
+
+/* WHY media query: mobile requires stacked full-width layout vs horizontal grid */
+@media (max-width: 900px) {
+  .navbarHamburger { display: flex; }
+  .navbarDivider { display: none; }
+
+  .navbarLinks {
+    display: none;
+    position: absolute;
+    top: 100%;
+    left: 0;
+    width: 100%;
+    background: rgba(8, 8, 8, 0.98);
+    backdrop-filter: blur(20px);
+    border-top: 1px solid var(--color-border-gold);
+    box-shadow: 0 20px 40px rgba(0,0,0,0.8);
+  }
+
+  .navbarLinksOpen { display: flex; }
+
+  .navRow { flex-direction: column; border-top: none; }
+
+  .navLink {
+    border-right: none;
+    border-bottom: 1px solid var(--color-border);
+    text-align: left;
+    padding: 0.9rem 2rem;
+    font-size: 0.75rem;
+  }
+
+  .navLink::after { display: none; }
+
+  .navLink:hover { background: rgba(201, 168, 76, 0.06); }
+}

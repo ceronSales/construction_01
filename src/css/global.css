@@ -1,0 +1,99 @@
+/**
+ * WHAT: Global CSS custom properties and base reset styles for Triconix Construction.
+ * HOW: Defines brand colors, typography, and spacing as CSS variables
+ *      consumed across all component stylesheets.
+ */
+
+/* ── Brand Design Tokens ── */
+:root {
+  --color-primary: #c9a84c;
+  --color-primary-light: #e8c97a;
+  --color-primary-dark: #8a6e09;
+  --color-secondary: #0d0d0d;
+  --color-surface: #161616;
+  --color-surface-2: #1f1f1f;
+  --color-text: #f5f0e8;
+  --color-text-muted: #888880;
+  --color-accent: #c0392b;
+  --color-border: #2a2a2a;
+  --color-border-gold: rgba(201, 168, 76, 0.25);
+
+  --font-heading: 'Cormorant Garamond', serif;
+  --font-ui: 'Raleway', sans-serif;
+  --font-body: 'Lato', sans-serif;
+
+  --spacing-xs: 0.5rem;
+  --spacing-sm: 1rem;
+  --spacing-md: 2rem;
+  --spacing-lg: 4rem;
+  --spacing-xl: 8rem;
+
+  --radius-sm: 2px;
+  --radius-md: 4px;
+  --radius-lg: 8px;
+
+  --transition-fast: 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  --transition-base: 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  --transition-slow: 0.7s cubic-bezier(0.4, 0, 0.2, 1);
+
+  --shadow-gold: 0 0 40px rgba(201, 168, 76, 0.12);
+  --shadow-deep: 0 20px 60px rgba(0, 0, 0, 0.6);
+
+  --navbar-height: 10rem;
+}
+
+/* ── Base Reset ── */
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html {
+  font-size: 16px;
+  scroll-behavior: smooth;
+}
+
+body {
+  font-family: var(--font-body);
+  background-color: var(--color-secondary);
+  color: var(--color-text);
+  line-height: 1.7;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+a {
+  color: var(--color-primary);
+  text-decoration: none;
+  transition: color var(--transition-fast);
+}
+
+a:hover {
+  color: var(--color-primary-light);
+}
+
+img {
+  max-width: 100%;
+  display: block;
+}
+
+button {
+  cursor: pointer;
+  font-family: var(--font-ui);
+}
+
+/* ── Scrollbar Styling ── */
+::-webkit-scrollbar {
+  width: 6px;
+}
+::-webkit-scrollbar-track {
+  background: var(--color-secondary);
+}
+::-webkit-scrollbar-thumb {
+  background: var(--color-primary-dark);
+  border-radius: 3px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: var(--color-primary);
+}

@@ -1,0 +1,428 @@
+/**
+ * WHAT: Hero scroll-driven construction sequence styles — luxury dark aesthetic.
+ * HOW: heroWrapper is tall (800vh) for scroll distance. heroSticky holds the
+ *      viewport panel. Stage backgrounds crossfade. Content animates in per stage.
+ */
+
+/* ── Scroll wrapper ── */
+.heroWrapper {
+  position: relative;
+  height: 800vh;
+  width: 100%;
+  margin-top: var(--navbar-height);
+}
+
+/* ── Sticky viewport panel ── */
+.heroSticky {
+  position: sticky;
+  top: var(--navbar-height);
+  height: calc(100vh - var(--navbar-height));
+  width: 100%;
+  overflow: hidden;
+  background: var(--color-secondary);
+}
+
+/* ── Background layers — crossfade ── */
+.heroBg {
+  position: absolute;
+  inset: 0;
+  opacity: 0;
+  transition: opacity 1.2s cubic-bezier(0.4, 0, 0.2, 1);
+  will-change: opacity;
+}
+
+.heroBgActive {
+  opacity: 1;
+}
+
+/* Finale: house photo */
+.heroBgFinale {
+  background-size: cover;
+  background-position: center 30%;
+}
+
+/* Blueprint grid — scales to viewport */
+.heroBgPattern {
+  position: absolute;
+  inset: 0;
+  background-image:
+    linear-gradient(rgba(201, 168, 76, 0.04) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(201, 168, 76, 0.04) 1px, transparent 1px);
+  background-size: 5vw 5vw;
+  animation: gridShift 20s linear infinite;
+}
+
+@keyframes gridShift {
+  0%   { background-position: 0 0; }
+  100% { background-position: 5vw 5vw; }
+}
+
+/* Diagonal light sweep on stage transition */
+.heroBgGlow {
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(
+    ellipse 60% 50% at 30% 60%,
+    rgba(201, 168, 76, 0.06) 0%,
+    transparent 70%
+  );
+  pointer-events: none;
+}
+
+/* ── Dark overlay ── */
+.heroOverlay {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    120deg,
+    rgba(0, 0, 0, 0.82) 0%,
+    rgba(0, 0, 0, 0.5) 60%,
+    rgba(0, 0, 0, 0.2) 100%
+  );
+  z-index: 1;
+  transition: background var(--transition-slow);
+}
+
+.heroOverlayLight {
+  background: linear-gradient(
+    120deg,
+    rgba(0, 0, 0, 0.7) 0%,
+    rgba(0, 0, 0, 0.35) 60%,
+    rgba(0, 0, 0, 0.1) 100%
+  );
+}
+
+/* ── Stage number — large watermark ── */
+.heroStageNumber {
+  position: absolute;
+  right: 4vw;
+  top: 50%;
+  transform: translateY(-50%);
+  font-family: var(--font-heading);
+  font-size: clamp(8rem, 20vw, 18rem);
+  font-weight: 700;
+  line-height: 1;
+  color: transparent;
+  -webkit-text-stroke: 1px rgba(201, 168, 76, 0.08);
+  user-select: none;
+  pointer-events: none;
+  z-index: 2;
+  transition: opacity var(--transition-slow);
+  letter-spacing: -0.05em;
+}
+
+/* ── Stage content ── */
+.heroContent {
+  position: absolute;
+  bottom: 8vh;
+  left: 6vw;
+  z-index: 3;
+  max-width: 55vw;
+}
+
+/* Animate in on stage change */
+.heroContentInner {
+  animation: stageReveal 0.6s cubic-bezier(0.4, 0, 0.2, 1) both;
+}
+
+@keyframes stageReveal {
+  from {
+    opacity: 0;
+    transform: translateY(24px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Gold pill badge */
+.heroStageBadge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-family: var(--font-ui);
+  font-size: 0.6rem;
+  font-weight: 700;
+  letter-spacing: 0.3em;
+  text-transform: uppercase;
+  color: var(--color-primary);
+  border: 1px solid var(--color-border-gold);
+  padding: 0.3rem 1rem;
+  margin-bottom: 1.2rem;
+  background: rgba(201, 168, 76, 0.06);
+  backdrop-filter: blur(4px);
+}
+
+.heroStageBadgeDot {
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: var(--color-primary);
+  animation: pulseDot 2s ease infinite;
+}
+
+@keyframes pulseDot {
+  0%, 100% { opacity: 1; transform: scale(1); }
+  50%       { opacity: 0.4; transform: scale(0.6); }
+}
+
+/* Stage label — editorial serif */
+.heroStageLabel {
+  font-family: var(--font-heading);
+  font-size: clamp(2.5rem, 6vw, 5.5rem);
+  font-weight: 700;
+  color: var(--color-text);
+  line-height: 1.05;
+  margin-bottom: 1rem;
+  letter-spacing: -0.02em;
+  text-shadow: 0 4px 30px rgba(0, 0, 0, 0.5);
+}
+
+/* Gold highlight on stage number in label */
+.heroStageLabelNum {
+  color: var(--color-primary);
+}
+
+.heroStageDesc {
+  font-family: var(--font-body);
+  font-size: clamp(0.85rem, 1.4vw, 1rem);
+  color: var(--color-text-muted);
+  max-width: 42ch;
+  line-height: 1.7;
+  letter-spacing: 0.02em;
+}
+
+/* ── Progress indicators ── */
+.heroProgressRow {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  margin-top: 2rem;
+}
+
+.heroProgressDots {
+  display: flex;
+  gap: 0.4rem;
+}
+
+.heroDot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.15);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  cursor: default;
+}
+
+.heroDotDone {
+  background: rgba(201, 168, 76, 0.4);
+  border-color: rgba(201, 168, 76, 0.3);
+  width: 20px;
+  border-radius: 3px;
+}
+
+.heroDotActive {
+  background: var(--color-primary);
+  border-color: var(--color-primary);
+  width: 28px;
+  border-radius: 3px;
+  box-shadow: 0 0 10px rgba(201, 168, 76, 0.5);
+}
+
+.heroProgressCount {
+  font-family: var(--font-ui);
+  font-size: 0.6rem;
+  color: var(--color-text-muted);
+  letter-spacing: 0.15em;
+}
+
+/* ── Bottom gold progress bar ── */
+.heroProgressBar {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  height: 2px;
+  background: rgba(255, 255, 255, 0.06);
+  z-index: 4;
+}
+
+.heroProgressFill {
+  height: 100%;
+  background: linear-gradient(90deg, var(--color-primary-dark), var(--color-primary), var(--color-primary-light));
+  transition: width 0.15s linear;
+  box-shadow: 0 0 12px rgba(201, 168, 76, 0.6);
+}
+
+/* ── Right side vertical label ── */
+.heroSideLabel {
+  position: absolute;
+  right: 3vw;
+  bottom: 8vh;
+  z-index: 3;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1rem;
+}
+
+.heroSideLine {
+  width: 1px;
+  height: 5vh;
+  background: linear-gradient(to bottom, var(--color-primary), transparent);
+}
+
+.heroSideText {
+  font-family: var(--font-ui);
+  font-size: 0.55rem;
+  color: var(--color-text-muted);
+  letter-spacing: 0.25em;
+  text-transform: uppercase;
+  writing-mode: vertical-rl;
+}
+
+/* ── Scroll prompt (stage 0 only) ── */
+.heroScrollPrompt {
+  position: absolute;
+  bottom: 6vh;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 4;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.6rem;
+  animation: fadeInUp 1s ease 1.5s both;
+}
+
+.heroScrollText {
+  font-family: var(--font-ui);
+  font-size: 0.58rem;
+  color: var(--color-text-muted);
+  letter-spacing: 0.3em;
+  text-transform: uppercase;
+}
+
+.heroScrollMouse {
+  width: 22px;
+  height: 36px;
+  border: 1.5px solid rgba(201, 168, 76, 0.4);
+  border-radius: 11px;
+  display: flex;
+  justify-content: center;
+  padding-top: 6px;
+}
+
+.heroScrollWheel {
+  width: 3px;
+  height: 7px;
+  background: var(--color-primary);
+  border-radius: 2px;
+  animation: scrollWheel 1.8s ease infinite;
+}
+
+@keyframes scrollWheel {
+  0%   { transform: translateY(0); opacity: 1; }
+  80%  { transform: translateY(10px); opacity: 0; }
+  100% { transform: translateY(0); opacity: 0; }
+}
+
+@keyframes fadeInUp {
+  from { transform: translate(-50%, 16px); opacity: 0; }
+  to   { transform: translate(-50%, 0); opacity: 1; }
+}
+
+/* ── Finale overlay ── */
+.heroFinaleTagline {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 3;
+  text-align: center;
+  animation: finaleReveal 1s cubic-bezier(0.4, 0, 0.2, 1) both;
+  width: 90%;
+}
+
+@keyframes finaleReveal {
+  from { opacity: 0; transform: translate(-50%, -44%); }
+  to   { opacity: 1; transform: translate(-50%, -50%); }
+}
+
+.heroFinaleEyebrow {
+  font-family: var(--font-ui);
+  font-size: 0.65rem;
+  letter-spacing: 0.4em;
+  text-transform: uppercase;
+  color: var(--color-primary);
+  margin-bottom: 1.2rem;
+}
+
+.heroFinaleTitle {
+  font-family: var(--font-heading);
+  font-size: clamp(3rem, 7vw, 7rem);
+  font-weight: 700;
+  color: var(--color-text);
+  line-height: 1;
+  letter-spacing: -0.02em;
+  text-shadow: 0 4px 40px rgba(0,0,0,0.7);
+}
+
+.heroFinaleTitleGold {
+  font-family: var(--font-heading);
+  font-size: clamp(3rem, 7vw, 7rem);
+  font-weight: 700;
+  background: linear-gradient(135deg, #c9a84c, #e8c97a, #c9a84c);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  line-height: 1.1;
+  letter-spacing: -0.02em;
+  margin-bottom: 2.5rem;
+}
+
+.heroFinaleBtns {
+  display: flex;
+  gap: 1rem;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
+.heroFinaleBtn {
+  display: inline-block;
+  padding: 0.85rem 2.5rem;
+  font-family: var(--font-ui);
+  font-weight: 700;
+  font-size: 0.7rem;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  transition: all var(--transition-fast);
+}
+
+.heroFinaleBtnPrimary {
+  background: var(--color-primary);
+  color: #0d0d0d;
+  border: 2px solid var(--color-primary);
+}
+
+.heroFinaleBtnPrimary:hover {
+  background: var(--color-primary-light);
+  border-color: var(--color-primary-light);
+  color: #0d0d0d;
+  box-shadow: 0 8px 30px rgba(201, 168, 76, 0.4);
+  transform: translateY(-2px);
+}
+
+.heroFinaleBtnSecondary {
+  background: transparent;
+  color: var(--color-text);
+  border: 2px solid rgba(255,255,255,0.2);
+}
+
+.heroFinaleBtnSecondary:hover {
+  border-color: var(--color-primary);
+  color: var(--color-primary);
+  transform: translateY(-2px);
+}
