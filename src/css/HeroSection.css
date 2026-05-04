@@ -23,27 +23,20 @@
   background: #0a0a0a;
 }
 
-/* ── House photo — background-image fills the full sticky panel ── */
-.heroHouseImg {
+/* ── Three.js WebGL canvas mount — fills the full sticky panel ── */
+.heroCanvas {
   position: absolute;
   inset: 0;
   width: 100%;
   height: 100%;
-  background-size: cover;
-  background-position: center 30%;
-  background-repeat: no-repeat;
   z-index: 0;
 }
 
-/* ── Black overlay — opacity controlled by JS to reveal house stage by stage ── */
-.heroBlackOverlay {
-  position: absolute;
-  inset: 0;
-  z-index: 1;
-  background: #000;
-  /* opacity set inline by JS — will-change keeps it GPU-composited */
-  will-change: opacity;
-  transition: opacity 0.3s ease;
+/* Canvas element itself must fill the mount div */
+.heroCanvas canvas {
+  display: block;
+  width: 100% !important;
+  height: 100% !important;
 }
 
 /* ── Subtle gold tint — luxury feel on lower-opacity stages ── */
