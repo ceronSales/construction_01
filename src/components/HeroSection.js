@@ -8,8 +8,9 @@
 
 import React, { useEffect, useRef, useState, useCallback } from "react";
 import "../css/HeroSection.css";
+import houseHeroImg from "../assets/house-hero.jpg";
 
-const HOUSE_IMAGE = "/assets/house-hero.jpg";
+const HOUSE_IMAGE = houseHeroImg;
 
 /**
  * Each stage: overlayOpacity controls the black overlay div on top of the image.
