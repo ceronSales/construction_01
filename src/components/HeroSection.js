@@ -1,117 +1,99 @@
 /**
- * WHAT: Hero section with scroll-driven construction sequence animation.
- * HOW: A tall wrapper (800vh) provides scroll distance. A sticky inner panel
- *      stays in viewport. Scroll position maps to 8 construction stages.
- *      Each stage crossfades backgrounds and animates content in.
+ * WHAT: Hero section — scroll-driven construction sequence using the house image.
+ * HOW: 800vh wrapper gives scroll distance. Sticky panel stays in viewport.
+ *      The house photo dims/brightens via CSS filter as user scrolls through
+ *      8 construction stages. Stage text animates in per stage.
  * CALLED BY: HomePage.js
  */
 
 import React, { useEffect, useRef, useState, useCallback } from "react";
 import "../css/HeroSection.css";
 
-// Construction sequence stages — bg is a dark color per stage
+const HOUSE_IMAGE = "/assets/house-hero.jpg";
+
+/**
+ * Each stage: overlayOpacity controls the black overlay div on top of the image.
+ * 0.85 = very dark (early build), 0.0 = fully revealed (finale).
+ */
 const constructionStages = [
   {
-    id: 1,
-    num: "01",
-    label: "Foundation",
+    id: 1, num: "01", label: "Foundation",
     description: "Site excavation, soil testing, and reinforced concrete foundation construction.",
-    bg: "linear-gradient(135deg, #0d0d0d 0%, #1a1005 100%)",
-    accent: "#6b4f1a",
+    overlayOpacity: 0.82,
   },
   {
-    id: 2,
-    num: "02",
-    label: "Structural Frame",
+    id: 2, num: "02", label: "Structural Frame",
     description: "Steel columns, beams, and structural framework erected to full height.",
-    bg: "linear-gradient(135deg, #0a0f0a 0%, #0d1a0d 100%)",
-    accent: "#1a3a1a",
+    overlayOpacity: 0.70,
   },
   {
-    id: 3,
-    num: "03",
-    label: "Wall Construction",
+    id: 3, num: "03", label: "Wall Construction",
     description: "CHB walls built with precise window and door openings framed and set.",
-    bg: "linear-gradient(135deg, #0d0d14 0%, #0a0a1a 100%)",
-    accent: "#1a1a3a",
+    overlayOpacity: 0.58,
   },
   {
-    id: 4,
-    num: "04",
-    label: "Roof Structure",
+    id: 4, num: "04", label: "Roof Structure",
     description: "Roof framing, truss installation, and structural decking completed.",
-    bg: "linear-gradient(135deg, #0f0a0f 0%, #1a0a1a 100%)",
-    accent: "#2a1a2a",
+    overlayOpacity: 0.46,
   },
   {
-    id: 5,
-    num: "05",
-    label: "Roofing",
+    id: 5, num: "05", label: "Roofing",
     description: "Premium roof covering installed with full waterproofing membrane system.",
-    bg: "linear-gradient(135deg, #140a0a 0%, #1a0d0d 100%)",
-    accent: "#2a1010",
+    overlayOpacity: 0.35,
   },
   {
-    id: 6,
-    num: "06",
-    label: "Windows & Doors",
+    id: 6, num: "06", label: "Windows & Doors",
     description: "Aluminum-framed windows, sliding glass panels, and solid wood doors installed.",
-    bg: "linear-gradient(135deg, #0a0f14 0%, #0a1420 100%)",
-    accent: "#0a2030",
+    overlayOpacity: 0.24,
   },
   {
-    id: 7,
-    num: "07",
-    label: "Finishing",
+    id: 7, num: "07", label: "Finishing",
     description: "Interior and exterior finishes, electrical, plumbing, paint, and tile work.",
-    bg: "linear-gradient(135deg, #0f0f0a 0%, #1a1a0a 100%)",
-    accent: "#2a2a0a",
+    overlayOpacity: 0.14,
   },
   {
-    id: 8,
-    num: "08",
-    label: "Completed House",
+    id: 8, num: "08", label: "Completed House",
     description: "Fully finished, inspected, and ready to move in. Crafted with pride.",
-    bg: null,
+    overlayOpacity: 0.0,
     isFinale: true,
   },
 ];
 
-// Finished house hero image
-const HOUSE_IMAGE = "/assets/house-hero.jpg";
-
 /**
  * WHAT: HeroSection component — sticky scroll construction sequence.
- * HOW: Calculates scroll progress relative to the wrapper element.
- *      Maps progress to a stage index. Each render shows the active stage.
+ * HOW: Scroll listener maps position to stage index + sub-stage fraction.
+ *      overlayOpacity interpolates between stages so the black overlay smoothly
+ *      lifts, revealing the house photo beneath.
  * CALLED BY: HomePage.js
  */
 function HeroSection() {
   const [currentStage, setCurrentStage] = useState(0);
-  const [progress, setProgress] = useState(0);
-  const [contentKey, setContentKey] = useState(0); // forces re-animation on stage change
+  const [subProgress,  setSubProgress]  = useState(0);
+  const [progress,     setProgress]     = useState(0);
+  const [contentKey,   setContentKey]   = useState(0);
   const wrapperRef = useRef(null);
-  const prevStage = useRef(0);
+  const prevStage  = useRef(0);
 
   /**
-   * WHAT: Calculates current stage from scroll position.
-   * HOW: Gets wrapper bounding rect, computes 0–1 progress, maps to stage index.
+   * WHAT: Maps scroll position to stage index and sub-stage fraction.
+   * HOW: Divides wrapper scroll range into equal stage bands.
    * CALLED BY: scroll event listener.
    */
   const handleScroll = useCallback(() => {
     if (!wrapperRef.current) return;
-    const rect = wrapperRef.current.getBoundingClientRect();
+    const rect          = wrapperRef.current.getBoundingClientRect();
     const wrapperHeight = wrapperRef.current.offsetHeight - window.innerHeight;
-    const scrolled = -rect.top;
-    const totalProgress = Math.min(Math.max(scrolled / wrapperHeight, 0), 1);
-    const stageIndex = Math.min(
-      Math.floor(totalProgress * constructionStages.length),
-      constructionStages.length - 1
-    );
+    const scrolled      = Math.max(-rect.top, 0);
+    const totalProgress = Math.min(scrolled / wrapperHeight, 1);
+
+    const stageCount = constructionStages.length;
+    const rawIndex   = totalProgress * stageCount;
+    const stageIndex = Math.min(Math.floor(rawIndex), stageCount - 1);
+    const sub        = rawIndex - Math.floor(rawIndex);
 
     setProgress(totalProgress);
+    setSubProgress(sub);
 
-    // Only trigger re-animation when stage actually changes
     if (stageIndex !== prevStage.current) {
       prevStage.current = stageIndex;
       setCurrentStage(stageIndex);
@@ -124,46 +106,41 @@ function HeroSection() {
     return () => window.removeEventListener("scroll", handleScroll);
   }, [handleScroll]);
 
-  const stage = constructionStages[currentStage];
+  const stage     = constructionStages[currentStage];
+  const nextStage = constructionStages[Math.min(currentStage + 1, constructionStages.length - 1)];
+
+  // Smoothly interpolate overlay opacity between current and next stage
+  const liveOpacity = parseFloat(
+    (stage.overlayOpacity + (nextStage.overlayOpacity - stage.overlayOpacity) * subProgress).toFixed(3)
+  );
 
   return (
     <div className="heroWrapper" ref={wrapperRef} id="home">
       <div className="heroSticky">
 
-        {/* ── Background layers — all rendered, active one fades in ── */}
-        {constructionStages.map((s, i) => (
-          <div
-            key={s.id}
-            className={`heroBg ${i === currentStage ? "heroBgActive" : ""} ${s.isFinale ? "heroBgFinale" : ""}`}
-            style={
-              s.isFinale
-                ? {
-                    backgroundImage: `url(${HOUSE_IMAGE})`,
-                    backgroundSize: "cover",
-                    backgroundPosition: "center 30%",
-                  }
-                : { background: s.bg }
-            }
-          >
-            {/* Blueprint grid texture for non-finale stages */}
-            {!s.isFinale && (
-              <>
-                <div className="heroBgPattern" />
-                <div className="heroBgGlow" />
-              </>
-            )}
-          </div>
-        ))}
+        {/* ── House photo — background-image guarantees full cover fill ── */}
+        <div
+          className="heroHouseImg"
+          style={{ backgroundImage: `url(${HOUSE_IMAGE})` }}
+          role="img"
+          aria-label="Completed Triconix home"
+        />
 
-        {/* ── Dark overlay ── */}
-        <div className={`heroOverlay ${stage.isFinale ? "heroOverlayLight" : ""}`} />
+        {/* ── Black overlay — opacity drops each stage to reveal the house ── */}
+        <div
+          className="heroBlackOverlay"
+          style={{ opacity: liveOpacity }}
+        />
+
+        {/* ── Gold gradient tint — keeps luxury feel on early stages ── */}
+        <div className="heroTint" />
 
         {/* ── Large watermark stage number ── */}
         {!stage.isFinale && (
           <div className="heroStageNumber">{stage.num}</div>
         )}
 
-        {/* ── Main stage content ── */}
+        {/* ── Stage text content ── */}
         {!stage.isFinale && (
           <div className="heroContent">
             <div className="heroContentInner" key={contentKey}>
@@ -176,18 +153,13 @@ function HeroSection() {
               </h2>
               <p className="heroStageDesc">{stage.description}</p>
 
-              {/* Progress indicators */}
               <div className="heroProgressRow">
                 <div className="heroProgressDots">
                   {constructionStages.map((s, i) => (
                     <span
                       key={s.id}
                       className={`heroDot ${
-                        i === currentStage
-                          ? "heroDotActive"
-                          : i < currentStage
-                          ? "heroDotDone"
-                          : ""
+                        i === currentStage ? "heroDotActive" : i < currentStage ? "heroDotDone" : ""
                       }`}
                     />
                   ))}
@@ -208,7 +180,7 @@ function HeroSection() {
           </div>
         )}
 
-        {/* ── Scroll prompt (first stage only) ── */}
+        {/* ── Scroll prompt (stage 0 only) ── */}
         {currentStage === 0 && (
           <div className="heroScrollPrompt">
             <span className="heroScrollText">Scroll to build</span>
@@ -218,7 +190,7 @@ function HeroSection() {
           </div>
         )}
 
-        {/* ── Finale overlay ── */}
+        {/* ── Finale CTA ── */}
         {stage.isFinale && (
           <div className="heroFinaleTagline">
             <p className="heroFinaleEyebrow">Triconix Construction Corporation</p>
@@ -239,6 +211,7 @@ function HeroSection() {
         <div className="heroProgressBar">
           <div className="heroProgressFill" style={{ width: `${progress * 100}%` }} />
         </div>
+
       </div>
     </div>
   );
