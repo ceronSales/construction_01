@@ -1,0 +1,789 @@
+/**
+ * WHAT: CostCalculator styles — dark luxury aesthetic with gold accents.
+ * HOW:  Two-column layout: room selector left, results panel right.
+ *       Invoice preview is a dark card styled to resemble a professional document.
+ *       All colors from global CSS variables.
+ */
+
+/* ── Section wrapper ── */
+.calcSection {
+  width: 100%;
+  background: var(--color-secondary);
+  padding: var(--spacing-lg) 0;
+  border-top: 1px solid var(--color-border);
+  position: relative;
+  overflow: hidden;
+}
+
+/* Subtle blueprint diagonal lines */
+.calcSection::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background-image: repeating-linear-gradient(
+    -55deg, transparent, transparent 80px,
+    rgba(201,168,76,0.02) 80px, rgba(201,168,76,0.02) 81px
+  );
+  pointer-events: none;
+}
+
+/* ── Section header ── */
+.calcHeader {
+  text-align: center;
+  padding: 0 2rem 3rem;
+  position: relative;
+  z-index: 1;
+}
+
+.calcBadge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-family: var(--font-ui);
+  font-size: 0.58rem;
+  font-weight: 700;
+  letter-spacing: 0.35em;
+  text-transform: uppercase;
+  color: var(--color-primary);
+  border: 1px solid var(--color-border-gold);
+  padding: 0.3rem 1rem;
+  margin-bottom: 1.2rem;
+  background: rgba(201,168,76,0.04);
+}
+
+.calcBadgeDot {
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: var(--color-primary);
+  animation: pulseDot 2s ease infinite;
+}
+
+.calcTitle {
+  font-family: var(--font-heading);
+  font-size: clamp(2rem, 4vw, 3.5rem);
+  font-weight: 700;
+  color: var(--color-text);
+  margin-bottom: 0.8rem;
+  letter-spacing: -0.02em;
+}
+
+.calcSubtitle {
+  font-family: var(--font-body);
+  font-size: 0.95rem;
+  color: var(--color-text-muted);
+  max-width: 52ch;
+  margin: 0 auto;
+  line-height: 1.7;
+}
+
+/* ── Two-column body ── */
+.calcBody {
+  display: grid;
+  grid-template-columns: 1fr 380px;
+  gap: 2rem;
+  padding: 0 3rem;
+  max-width: 1400px;
+  margin: 0 auto;
+  position: relative;
+  z-index: 1;
+}
+
+/* ── Room selector (left) ── */
+.calcRooms {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.calcFloor {
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  overflow: hidden;
+}
+
+.calcFloorHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.8rem 1.2rem;
+  background: rgba(201,168,76,0.06);
+  border-bottom: 1px solid var(--color-border);
+}
+
+.calcFloorLabel {
+  font-family: var(--font-ui);
+  font-size: 0.65rem;
+  font-weight: 700;
+  letter-spacing: 0.25em;
+  text-transform: uppercase;
+  color: var(--color-primary);
+}
+
+.calcFloorTotal {
+  font-family: var(--font-ui);
+  font-size: 0.7rem;
+  color: var(--color-text-muted);
+  letter-spacing: 0.05em;
+}
+
+.calcRoomGrid {
+  padding: 0.5rem 0;
+}
+
+.calcRoomRow {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0.5rem 1.2rem;
+  border-bottom: 1px solid rgba(255,255,255,0.03);
+  transition: background var(--transition-fast);
+}
+
+.calcRoomRow:last-child { border-bottom: none; }
+
+.calcRoomRow:hover { background: rgba(201,168,76,0.03); }
+
+.calcRoomActive {
+  background: rgba(201,168,76,0.05) !important;
+  border-left: 2px solid var(--color-primary);
+}
+
+.calcRoomInfo {
+  display: flex;
+  flex-direction: column;
+  gap: 0.1rem;
+}
+
+.calcRoomLabel {
+  font-family: var(--font-body);
+  font-size: 0.82rem;
+  color: var(--color-text);
+}
+
+.calcRoomDim {
+  font-family: var(--font-ui);
+  font-size: 0.58rem;
+  color: var(--color-text-muted);
+  letter-spacing: 0.05em;
+}
+
+.calcQtyInput {
+  width: 56px;
+  background: var(--color-secondary);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-sm);
+  color: var(--color-text);
+  font-family: var(--font-ui);
+  font-size: 0.8rem;
+  text-align: center;
+  padding: 0.3rem 0.4rem;
+  transition: border-color var(--transition-fast);
+  -moz-appearance: textfield;
+}
+
+.calcQtyInput::-webkit-outer-spin-button,
+.calcQtyInput::-webkit-inner-spin-button { -webkit-appearance: none; }
+
+.calcQtyInput:focus {
+  outline: none;
+  border-color: var(--color-primary);
+  box-shadow: 0 0 0 2px rgba(201,168,76,0.15);
+}
+
+/* Manual area override */
+.calcManualArea {
+  background: var(--color-surface);
+  border: 1px solid var(--color-border-gold);
+  border-radius: var(--radius-md);
+  padding: 1.2rem;
+}
+
+.calcManualLabel {
+  display: flex;
+  flex-direction: column;
+  gap: 0.2rem;
+  font-family: var(--font-ui);
+  font-size: 0.7rem;
+  font-weight: 700;
+  color: var(--color-primary);
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  margin-bottom: 0.8rem;
+}
+
+.calcManualNote {
+  font-size: 0.6rem;
+  color: var(--color-text-muted);
+  letter-spacing: 0;
+  text-transform: none;
+  font-weight: 400;
+}
+
+.calcManualRow {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.calcManualInput {
+  flex: 1;
+  background: var(--color-secondary);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-sm);
+  color: var(--color-text);
+  font-family: var(--font-ui);
+  font-size: 1rem;
+  padding: 0.5rem 0.75rem;
+  transition: border-color var(--transition-fast);
+}
+
+.calcManualInput:focus {
+  outline: none;
+  border-color: var(--color-primary);
+}
+
+.calcManualUnit {
+  font-family: var(--font-ui);
+  font-size: 0.75rem;
+  color: var(--color-text-muted);
+}
+
+/* ── Results panel (right) ── */
+.calcResults {
+  display: flex;
+  flex-direction: column;
+  gap: 1.2rem;
+  position: sticky;
+  top: calc(var(--navbar-height) + 1rem);
+  align-self: start;
+  max-height: calc(100vh - var(--navbar-height) - 2rem);
+  overflow-y: auto;
+  scrollbar-width: thin;
+  scrollbar-color: var(--color-border) transparent;
+}
+
+/* Area card */
+.calcAreaCard {
+  background: linear-gradient(135deg, rgba(201,168,76,0.1) 0%, rgba(201,168,76,0.04) 100%);
+  border: 1px solid var(--color-border-gold);
+  border-radius: var(--radius-md);
+  padding: 1.5rem;
+  text-align: center;
+}
+
+.calcAreaLabel {
+  display: block;
+  font-family: var(--font-ui);
+  font-size: 0.58rem;
+  letter-spacing: 0.3em;
+  text-transform: uppercase;
+  color: var(--color-primary);
+  margin-bottom: 0.5rem;
+}
+
+.calcAreaValue {
+  display: block;
+  font-family: var(--font-heading);
+  font-size: 3rem;
+  font-weight: 700;
+  color: var(--color-text);
+  line-height: 1;
+}
+
+.calcAreaUnit {
+  display: block;
+  font-family: var(--font-ui);
+  font-size: 0.65rem;
+  color: var(--color-text-muted);
+  margin-top: 0.3rem;
+  letter-spacing: 0.1em;
+}
+
+/* Chart card */
+.calcChartCard {
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  padding: 1.2rem;
+}
+
+.calcChartTitle {
+  display: block;
+  font-family: var(--font-ui);
+  font-size: 0.6rem;
+  font-weight: 700;
+  letter-spacing: 0.25em;
+  text-transform: uppercase;
+  color: var(--color-text-muted);
+  margin-bottom: 0.8rem;
+}
+
+/* Cost table */
+.calcCostTable {
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  overflow: hidden;
+}
+
+.calcCostHeader {
+  display: grid;
+  grid-template-columns: 1fr auto auto;
+  gap: 0.5rem;
+  padding: 0.6rem 1rem;
+  background: rgba(201,168,76,0.06);
+  border-bottom: 1px solid var(--color-border);
+  font-family: var(--font-ui);
+  font-size: 0.55rem;
+  font-weight: 700;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--color-text-muted);
+}
+
+.calcCostRow {
+  display: grid;
+  grid-template-columns: 1fr auto auto;
+  gap: 0.5rem;
+  padding: 0.65rem 1rem;
+  border-bottom: 1px solid rgba(255,255,255,0.03);
+  align-items: center;
+}
+
+.calcCostRow:last-child { border-bottom: none; }
+
+.calcCostLabel {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-family: var(--font-ui);
+  font-size: 0.7rem;
+  font-weight: 600;
+}
+
+.calcCostDot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+.calcCostVal {
+  font-family: var(--font-ui);
+  font-size: 0.68rem;
+  color: var(--color-text);
+  white-space: nowrap;
+}
+
+/* Additional costs */
+.calcAdditional {
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  padding: 1rem;
+}
+
+.calcAdditionalTitle {
+  display: block;
+  font-family: var(--font-ui);
+  font-size: 0.58rem;
+  font-weight: 700;
+  letter-spacing: 0.25em;
+  text-transform: uppercase;
+  color: var(--color-text-muted);
+  margin-bottom: 0.75rem;
+}
+
+.calcAdditionalRow {
+  display: flex;
+  justify-content: space-between;
+  padding: 0.4rem 0;
+  border-bottom: 1px solid rgba(255,255,255,0.03);
+  font-family: var(--font-body);
+  font-size: 0.75rem;
+  color: var(--color-text-muted);
+}
+
+.calcAdditionalRow:last-child { border-bottom: none; }
+
+/* ── Invoice Section ── */
+.calcInvoiceSection {
+  margin: 3rem auto 0;
+  max-width: 900px;
+  padding: 0 3rem;
+  position: relative;
+  z-index: 1;
+}
+
+.calcInvoiceHeader {
+  text-align: center;
+  margin-bottom: 1.5rem;
+}
+
+.calcInvoiceTitle {
+  font-family: var(--font-heading);
+  font-size: 2rem;
+  font-weight: 700;
+  color: var(--color-text);
+  margin-bottom: 0.4rem;
+}
+
+.calcInvoiceSubtitle {
+  font-family: var(--font-body);
+  font-size: 0.85rem;
+  color: var(--color-text-muted);
+}
+
+.calcInvoiceForm {
+  display: flex;
+  gap: 1rem;
+  margin-bottom: 1.5rem;
+  flex-wrap: wrap;
+}
+
+.calcInvoiceInput {
+  flex: 1;
+  min-width: 200px;
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-sm);
+  color: var(--color-text);
+  font-family: var(--font-body);
+  font-size: 0.88rem;
+  padding: 0.65rem 1rem;
+  transition: border-color var(--transition-fast);
+}
+
+.calcInvoiceInput:focus {
+  outline: none;
+  border-color: var(--color-primary);
+  box-shadow: 0 0 0 2px rgba(201,168,76,0.12);
+}
+
+.calcInvoiceInput::placeholder { color: var(--color-text-muted); }
+
+/* ── Invoice Preview (printed) ── */
+.calcInvoicePreview {
+  background: #0d0d0d;
+  border: 1px solid var(--color-border-gold);
+  border-radius: var(--radius-md);
+  padding: 2.5rem;
+  position: relative;
+  overflow: hidden;
+}
+
+/* Diagonal watermark */
+.invoiceWatermark {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%) rotate(-35deg);
+  font-family: var(--font-heading);
+  font-size: 8rem;
+  font-weight: 700;
+  color: var(--color-primary);
+  opacity: 0.04;
+  pointer-events: none;
+  user-select: none;
+  white-space: nowrap;
+  letter-spacing: 0.2em;
+}
+
+/* Invoice top */
+.invoiceTop {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 2rem;
+  padding-bottom: 1.5rem;
+  border-bottom: 1px solid var(--color-border-gold);
+}
+
+.invoiceLogoBlock {
+  display: flex;
+  gap: 1rem;
+  align-items: flex-start;
+}
+
+.invoiceLogo {
+  height: 60px;
+  width: auto;
+  object-fit: contain;
+}
+
+.invoiceCompany {
+  font-family: var(--font-ui);
+  font-size: 0.75rem;
+  font-weight: 800;
+  letter-spacing: 0.15em;
+  color: var(--color-primary);
+  text-transform: uppercase;
+  margin-bottom: 0.2rem;
+}
+
+.invoiceCompanySub {
+  font-family: var(--font-body);
+  font-size: 0.65rem;
+  color: var(--color-text-muted);
+  font-style: italic;
+  margin-bottom: 0.3rem;
+}
+
+.invoiceCompanyAddr,
+.invoiceCompanyContact {
+  font-family: var(--font-body);
+  font-size: 0.62rem;
+  color: var(--color-text-muted);
+  line-height: 1.5;
+}
+
+.invoiceMeta {
+  text-align: right;
+}
+
+.invoiceMetaLabel {
+  font-family: var(--font-ui);
+  font-size: 0.55rem;
+  letter-spacing: 0.35em;
+  text-transform: uppercase;
+  color: var(--color-text-muted);
+}
+
+.invoiceMetaNum {
+  font-family: var(--font-heading);
+  font-size: 2rem;
+  font-weight: 700;
+  color: var(--color-primary);
+  line-height: 1;
+}
+
+.invoiceMetaDate {
+  font-family: var(--font-body);
+  font-size: 0.65rem;
+  color: var(--color-text-muted);
+  margin-top: 0.25rem;
+}
+
+/* Client block */
+.invoiceClientBlock {
+  margin-bottom: 1.5rem;
+}
+
+.invoiceClientLabel {
+  font-family: var(--font-ui);
+  font-size: 0.52rem;
+  letter-spacing: 0.35em;
+  text-transform: uppercase;
+  color: var(--color-text-muted);
+  margin-bottom: 0.3rem;
+}
+
+.invoiceClientName {
+  font-family: var(--font-heading);
+  font-size: 1.4rem;
+  font-weight: 700;
+  color: var(--color-text);
+}
+
+.invoiceClientAddr {
+  font-family: var(--font-body);
+  font-size: 0.75rem;
+  color: var(--color-text-muted);
+}
+
+/* Items table */
+.invoiceItemsTable {
+  margin-bottom: 1.5rem;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-sm);
+  overflow: hidden;
+}
+
+.invoiceItemsHeader {
+  display: grid;
+  grid-template-columns: 2fr 1fr 0.5fr 1fr 1fr;
+  padding: 0.55rem 1rem;
+  background: rgba(201,168,76,0.08);
+  font-family: var(--font-ui);
+  font-size: 0.55rem;
+  font-weight: 700;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--color-primary);
+  gap: 0.5rem;
+}
+
+.invoiceItemRow {
+  display: grid;
+  grid-template-columns: 2fr 1fr 0.5fr 1fr 1fr;
+  padding: 0.45rem 1rem;
+  border-top: 1px solid rgba(255,255,255,0.03);
+  font-family: var(--font-body);
+  font-size: 0.72rem;
+  color: var(--color-text-muted);
+  gap: 0.5rem;
+}
+
+.invoiceItemsFooter {
+  display: grid;
+  grid-template-columns: 2fr 1fr 0.5fr 1fr 1fr;
+  padding: 0.6rem 1rem;
+  background: rgba(201,168,76,0.05);
+  border-top: 1px solid var(--color-border-gold);
+  font-family: var(--font-ui);
+  font-size: 0.7rem;
+  font-weight: 700;
+  color: var(--color-primary);
+  gap: 0.5rem;
+}
+
+/* Cost summary */
+.invoiceCostSummary {
+  margin-bottom: 1.2rem;
+  padding: 1.2rem;
+  background: rgba(201,168,76,0.04);
+  border: 1px solid var(--color-border-gold);
+  border-radius: var(--radius-sm);
+}
+
+.invoiceCostTitle {
+  font-family: var(--font-ui);
+  font-size: 0.58rem;
+  font-weight: 700;
+  letter-spacing: 0.3em;
+  text-transform: uppercase;
+  color: var(--color-primary);
+  margin-bottom: 0.8rem;
+}
+
+.invoiceCostLine {
+  display: flex;
+  justify-content: space-between;
+  padding: 0.4rem 0;
+  border-bottom: 1px solid rgba(255,255,255,0.04);
+  font-family: var(--font-body);
+  font-size: 0.78rem;
+}
+
+.invoiceCostLine:last-child { border-bottom: none; }
+
+.invoiceCostFinish { font-weight: 600; }
+
+.invoiceCostRange { color: var(--color-text-muted); }
+
+/* Additional */
+.invoiceAdditional {
+  margin-bottom: 1.5rem;
+}
+
+.invoiceAdditionalTitle {
+  font-family: var(--font-ui);
+  font-size: 0.55rem;
+  letter-spacing: 0.3em;
+  text-transform: uppercase;
+  color: var(--color-text-muted);
+  margin-bottom: 0.5rem;
+}
+
+.invoiceAdditionalLine {
+  display: flex;
+  justify-content: space-between;
+  font-family: var(--font-body);
+  font-size: 0.72rem;
+  color: var(--color-text-muted);
+  padding: 0.3rem 0;
+  border-bottom: 1px solid rgba(255,255,255,0.03);
+}
+
+/* Footer */
+.invoiceFooter {
+  border-top: 1px solid var(--color-border-gold);
+  padding-top: 1.2rem;
+}
+
+.invoiceDisclaimer {
+  font-family: var(--font-body);
+  font-size: 0.62rem;
+  color: var(--color-text-muted);
+  line-height: 1.6;
+  font-style: italic;
+  margin-bottom: 0.8rem;
+}
+
+.invoiceFooterBrand {
+  font-family: var(--font-ui);
+  font-size: 0.6rem;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--color-primary);
+  opacity: 0.7;
+  text-align: center;
+}
+
+/* ── Download button ── */
+.calcInvoiceBtn {
+  display: block;
+  width: 100%;
+  margin-top: 1.2rem;
+  padding: 1rem 2rem;
+  background: var(--color-primary);
+  color: #0d0d0d;
+  font-family: var(--font-ui);
+  font-weight: 700;
+  font-size: 0.78rem;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  border: 2px solid var(--color-primary);
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  transition: all var(--transition-fast);
+}
+
+.calcInvoiceBtn:hover {
+  background: var(--color-primary-light);
+  border-color: var(--color-primary-light);
+  box-shadow: 0 8px 30px rgba(201,168,76,0.35);
+  transform: translateY(-2px);
+}
+
+.calcInvoiceBtnLoading {
+  opacity: 0.6;
+  cursor: not-allowed;
+  transform: none !important;
+}
+
+/* WHY media query: two-column grid collapses to single column on mobile */
+@media (max-width: 900px) {
+  .calcBody {
+    grid-template-columns: 1fr;
+    padding: 0 1.2rem;
+  }
+
+  .calcResults {
+    position: static;
+    max-height: none;
+  }
+
+  .calcInvoiceSection {
+    padding: 0 1.2rem;
+  }
+
+  .invoiceTop {
+    flex-direction: column;
+    gap: 1rem;
+  }
+
+  .invoiceItemsHeader,
+  .invoiceItemRow,
+  .invoiceItemsFooter {
+    grid-template-columns: 2fr 1fr 1fr;
+  }
+
+  .invoiceItemsHeader span:nth-child(2),
+  .invoiceItemRow span:nth-child(2),
+  .invoiceItemsFooter span:nth-child(2) {
+    display: none;
+  }
+}
