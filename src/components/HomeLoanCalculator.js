@@ -448,7 +448,49 @@ function HomeLoanCalculator() {
         </div>
       </div>
 
-      {/* ── Interest Rate History Chart ── */}
+      {/* ── Current Home Loan Interest Rates — below calculator card ── */}
+      <div className="loanRateTable">
+        <span className="loanRateTableTitle">Current Home Loan Interest Rates</span>
+        <table className="loanTable">
+          <thead>
+            <tr>
+              <th>Fixing Period</th>
+              <th>Interest Rate</th>
+              <th>Monthly Payment <span className="loanTableNote">({loanDisplay} / {termYears} yrs)</span></th>
+            </tr>
+          </thead>
+          <tbody>
+            {FIXING_PERIODS.map((fp, idx) => {
+              const P = parseAmount(loanAmount);
+              const r = fp.rate / 100 / 12;
+              const n = parseFloat(termYears) * 12;
+              const m = (P && r && n)
+                ? P * (r * Math.pow(1+r,n)) / (Math.pow(1+r,n) - 1)
+                : 0;
+              return (
+                <tr key={fp.label} className={activeFixing === idx ? "loanTableRowActive" : ""}>
+                  <td>{fp.label}</td>
+                  <td className="loanTableRate">{fp.rate.toFixed(2)}%</td>
+                  <td>{formatPeso(m)}</td>
+                </tr>
+              );
+            })}
+          </tbody>
+        </table>
+      </div>
+
+      {/* ── Triconix Insight — below rate table ── */}
+      <div className="loanOpinionBox">
+        <span className="loanOpinionTag">Triconix Insight</span>
+        <p className="loanOpinionText">
+          Based on our observation, interest rates tend to drop during presidential elections (1998, 2004, 2010, 2016, 2022)
+          and during periods of uncertainty such as the early months of the Covid Pandemic. Rates rise when inflation increases
+          due to higher demand for goods and services. <strong>Always prepare at least 40% cash or equity</strong> when
+          constructing via home loan — banks release funds in tranches (30%, 60%, 90%) and under-assess completion by ~5%.
+        </p>
+      </div>
+
+      {/* ── BSP Interest Rate History Chart — below Triconix Insight ── */}
       <div className="loanChartSection">
         <div className="loanChartHeader">
           <h3 className="loanChartTitle">BSP Interest Rate History <span className="loanChartTitleGold">(2000–2024)</span></h3>
@@ -497,51 +539,6 @@ function HomeLoanCalculator() {
           </ResponsiveContainer>
         </div>
         <p className="loanChartSource">Source: Bangko Sentral ng Pilipinas (BSP) · Trading Economics</p>
-      </div>
-
-      {/* ── Triconix Opinion callout ── */}
-      <div className="loanOpinionBox">
-        <span className="loanOpinionTag">Triconix Insight</span>
-        <p className="loanOpinionText">
-          Based on our observation, interest rates tend to drop during presidential elections (1998, 2004, 2010, 2016, 2022)
-          and during periods of uncertainty such as the early months of the Covid Pandemic. Rates rise when inflation increases
-          due to higher demand for goods and services. <strong>Always prepare at least 40% cash or equity</strong> when
-          constructing via home loan — banks release funds in tranches (30%, 60%, 90%) and under-assess completion by ~5%.
-        </p>
-      </div>
-
-      {/* ── Fixing period reference table ── */}
-      <div className="loanRateTable">
-        <span className="loanRateTableTitle">Current Home Loan Interest Rates</span>
-        <table className="loanTable">
-          <thead>
-            <tr>
-              <th>Fixing Period</th>
-              <th>Interest Rate</th>
-              {/* Header updates live — reflects the user's actual loan amount and term */}
-              <th>Monthly Payment <span className="loanTableNote">({loanDisplay} / {termYears} yrs)</span></th>
-            </tr>
-          </thead>
-          <tbody>
-            {FIXING_PERIODS.map((fp, idx) => {
-              // Use user's actual loan amount and term — not hardcoded 10M / 20yrs
-              const P = parseAmount(loanAmount);
-              const r = fp.rate / 100 / 12;
-              const n = parseFloat(termYears) * 12;
-              // Guard: show 0 if inputs are incomplete
-              const m = (P && r && n)
-                ? P * (r * Math.pow(1+r,n)) / (Math.pow(1+r,n) - 1)
-                : 0;
-              return (
-                <tr key={fp.label} className={activeFixing === idx ? "loanTableRowActive" : ""}>
-                  <td>{fp.label}</td>
-                  <td className="loanTableRate">{fp.rate.toFixed(2)}%</td>
-                  <td>{formatPeso(m)}</td>
-                </tr>
-              );
-            })}
-          </tbody>
-        </table>
       </div>
 
     </section>
