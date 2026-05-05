@@ -7,7 +7,7 @@
  * CALLED BY: HomePage.js
  */
 
-import React, { useState, useRef, useCallback, useEffect } from "react";
+import React, { useState, useRef, useCallback } from "react";
 import {
   BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip,
   ResponsiveContainer, Cell, LabelList,
@@ -142,36 +142,8 @@ function CostCalculator() {
   // activeFloor: 0=Ground, 1=2nd, 2=3rd — driven by scroll position
   const [activeFloor,    setActiveFloor]    = useState(0);
   const invoiceRef   = useRef(null);
-  const floorRefs    = useRef([]);          // sentinel divs for each floor section
 
-  /**
-   * WHAT: Watches floor sentinel divs and updates activeFloor on scroll.
-   * HOW:  IntersectionObserver fires when a floor sentinel crosses 40% viewport.
-   *       The floor with the highest intersection ratio wins — handles scroll up/down.
-   * CALLED BY: useEffect on mount (step 1 only).
-   */
-  useEffect(() => {
-    if (activeStep !== 1) return;
-    const observers = [];
-    const ratios = [0, 0, 0];
-
-    floorRefs.current.forEach((el, i) => {
-      if (!el) return;
-      const obs = new IntersectionObserver(
-        ([entry]) => {
-          ratios[i] = entry.intersectionRatio;
-          // Floor with the highest visibility wins
-          const best = ratios.indexOf(Math.max(...ratios));
-          if (ratios[best] > 0) setActiveFloor(best);
-        },
-        { threshold: Array.from({ length: 21 }, (_, k) => k / 20), rootMargin: "-10% 0px -10% 0px" }
-      );
-      obs.observe(el);
-      observers.push(obs);
-    });
-
-    return () => observers.forEach(o => o.disconnect());
-  }, [activeStep]);
+  // activeFloor is now driven purely by tab clicks — no scroll detection needed.
 
   /**
    * WHAT: Updates room quantity in qty state.
@@ -286,33 +258,26 @@ function CostCalculator() {
             {/* Room selector left — scroll drives floor switching */}
             <div className="calcRooms">
 
-              {/* Sticky floor tab indicator */}
+              {/* ── Floor tab buttons — clicking sets activeFloor, shows matching panel ── */}
               <div className="calcFloorTabs">
                 {["Ground Floor", "2nd Floor", "3rd Floor"].map((label, i) => (
                   <button
                     key={label}
                     className={`calcFloorTab ${activeFloor === i ? "calcFloorTabActive" : ""}`}
-                    onClick={() => {
-                      setActiveFloor(i);
-                      floorRefs.current[i]?.scrollIntoView({ behavior: "smooth", block: "start" });
-                    }}
+                    onClick={() => setActiveFloor(i)}
                   >
                     {label}
                   </button>
                 ))}
               </div>
 
-              {/* Three floor sections — each has a sentinel ref for scroll detection */}
+              {/* ── Active floor panel — only the selected floor renders ── */}
               {[
                 { label: "Ground Floor", rooms: GROUND_ROOMS, total: groundTotal },
                 { label: "2nd Floor",    rooms: SECOND_ROOMS, total: secondTotal },
                 { label: "3rd Floor",    rooms: THIRD_ROOMS,  total: thirdTotal  },
-              ].map((floor, fi) => (
-                <div
-                  key={floor.label}
-                  className="calcFloor"
-                  ref={el => { floorRefs.current[fi] = el; }}
-                >
+              ].filter((_, fi) => fi === activeFloor).map((floor) => (
+                <div key={floor.label} className="calcFloor">
                   <div className="calcFloorHeader">
                     <span className="calcFloorLabel">{floor.label}</span>
                     <span className="calcFloorTotal">{floor.total.toFixed(2)} m²</span>
@@ -335,23 +300,6 @@ function CostCalculator() {
                 </div>
               ))}
 
-              {/* Manual area override */}
-              <div className="calcManualArea">
-                <label className="calcManualLabel">
-                  Override Total Floor Area
-                  <span className="calcManualNote">including garage, balcony, lanai, pathwalk etc.</span>
-                </label>
-                <div className="calcManualRow">
-                  <input
-                    type="number"
-                    className="calcManualInput"
-                    placeholder={estimatedArea.toFixed(2)}
-                    value={floorInput}
-                    onChange={e => setFloorInput(e.target.value)}
-                  />
-                  <span className="calcManualUnit">m²</span>
-                </div>
-              </div>
             </div>
 
             {/* Live area summary right — sticky */}
@@ -383,6 +331,24 @@ function CostCalculator() {
                   </div>
                 ))}
                 <p className="calcQuickNote">* Approximate only. Updates as you select rooms.</p>
+              </div>
+
+              {/* Manual area override — below Live Cost Preview */}
+              <div className="calcManualArea">
+                <label className="calcManualLabel">
+                  Override Total Floor Area
+                  <span className="calcManualNote">including garage, balcony, lanai, pathwalk etc.</span>
+                </label>
+                <div className="calcManualRow">
+                  <input
+                    type="number"
+                    className="calcManualInput"
+                    placeholder={estimatedArea.toFixed(2)}
+                    value={floorInput}
+                    onChange={e => setFloorInput(e.target.value)}
+                  />
+                  <span className="calcManualUnit">m²</span>
+                </div>
               </div>
 
               <button className="calcNextBtn" onClick={() => setActiveStep(2)}>
