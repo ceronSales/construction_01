@@ -20,5 +20,79 @@
   <body>
     <noscript>You need to enable JavaScript to run this app.</noscript>
     <div id="root"></div>
+  <script>
+    /* ── WHAT: Content protection — blocks right-click context menu,
+               image drag, and media save on all elements site-wide.
+       HOW:  contextmenu is suppressed on all nodes. dragstart is
+             blocked on img and video. selectstart disabled globally.
+             A lightweight toast notifies the user on attempt. ── */
+
+    (function () {
+      /* ── Toast element ── */
+      function showToast() {
+        var existing = document.getElementById("protectToast");
+        if (existing) { existing.style.opacity = "1"; clearTimeout(existing._timer); existing._timer = setTimeout(function(){ existing.style.opacity = "0"; }, 2200); return; }
+        var t = document.createElement("div");
+        t.id = "protectToast";
+        t.textContent = "🔒 Content is protected — © Triconix Construction Corporation";
+        t.style.cssText = [
+          "position:fixed","bottom:2rem","left:50%","transform:translateX(-50%)",
+          "background:rgba(8,6,4,0.95)","color:#c9a84c",
+          "font-family:Raleway,sans-serif","font-size:0.72rem","letter-spacing:0.15em",
+          "padding:0.75rem 1.6rem","border:1px solid rgba(201,168,76,0.4)",
+          "border-radius:3px","z-index:99999","pointer-events:none",
+          "transition:opacity 0.4s ease","opacity:1","white-space:nowrap"
+        ].join(";");
+        document.body.appendChild(t);
+        t._timer = setTimeout(function(){ t.style.opacity = "0"; }, 2200);
+      }
+
+      /* ── Block right-click context menu on entire document ── */
+      document.addEventListener("contextmenu", function (e) {
+        e.preventDefault();
+        showToast();
+      }, true);
+
+      /* ── Block image and video drag (prevents drag-to-desktop save) ── */
+      document.addEventListener("dragstart", function (e) {
+        var tag = e.target.tagName.toLowerCase();
+        if (tag === "img" || tag === "video" || tag === "canvas") {
+          e.preventDefault();
+          showToast();
+        }
+      }, true);
+
+      /* ── Block text selection (prevents copy of text content) ── */
+      document.addEventListener("selectstart", function (e) {
+        e.preventDefault();
+      }, true);
+
+      /* ── Block keyboard shortcuts: Ctrl+S, Ctrl+U, Ctrl+Shift+I, F12 ── */
+      document.addEventListener("keydown", function (e) {
+        var blocked = (
+          (e.ctrlKey && e.key === "s") ||   /* Save page */
+          (e.ctrlKey && e.key === "u") ||   /* View source */
+          (e.ctrlKey && e.shiftKey && e.key === "I") || /* DevTools */
+          (e.ctrlKey && e.shiftKey && e.key === "J") || /* Console */
+          (e.ctrlKey && e.shiftKey && e.key === "C") || /* Inspector */
+          e.key === "F12"                   /* DevTools */
+        );
+        if (blocked) {
+          e.preventDefault();
+          showToast();
+        }
+      }, true);
+
+      /* ── Apply CSS protection to images and videos once DOM ready ── */
+      document.addEventListener("DOMContentLoaded", function () {
+        var style = document.createElement("style");
+        style.textContent = [
+          "img, video, canvas { -webkit-user-drag: none !important; user-drag: none !important; pointer-events: none !important; }",
+          "* { -webkit-user-select: none !important; user-select: none !important; }"
+        ].join("\n");
+        document.head.appendChild(style);
+      });
+    })();
+  </script>
   </body>
 </html>
