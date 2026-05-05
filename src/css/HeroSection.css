@@ -1,15 +1,14 @@
 /**
- * WHAT: HeroSection styles — Apple-style scroll video scrubbing.
- * HOW:  heroWrapper is tall (600vh) for scroll distance.
- *       heroSticky is position:sticky — holds the viewport panel in place.
- *       heroVideo covers the full sticky panel like a cinematic background.
- *       All text overlays sit above the video via z-index layering.
+ * WHAT: HeroSection styles — full-viewport GSAP photo slider.
+ * HOW:  heroWrapper is 800vh for scroll distance. heroSticky holds the viewport.
+ *       Each heroSlide is absolutely positioned full-cover. GSAP manages opacity/scale.
+ *       Text overlays sit above slides via z-index. All transitions via GSAP — not CSS.
  */
 
 /* ── Scroll distance wrapper ── */
 .heroWrapper {
   position: relative;
-  height: 600vh;
+  height: 800vh;
   width: 100%;
   margin-top: var(--navbar-height);
 }
@@ -21,72 +20,29 @@
   height: calc(100vh - var(--navbar-height));
   width: 100%;
   overflow: hidden;
-  background: #000;
-}
-
-/* ── Full-cover video ── */
-.heroVideo {
-  position: absolute;
-  inset: 0;
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  object-position: center center;
-  z-index: 0;
-  /* GPU-accelerated compositing */
-  transform: translate3d(0, 0, 0);
-  will-change: contents;
-}
-
-/* ── Video loading state ── */
-.heroVideoLoader {
-  position: absolute;
-  inset: 0;
-  z-index: 5;
   background: #080808;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  gap: 1.2rem;
 }
 
-.heroLoaderSpinner {
-  width: 36px;
-  height: 36px;
-  border: 2px solid var(--color-border);
-  border-top-color: var(--color-primary);
-  border-radius: 50%;
-  animation: spin 0.9s linear infinite;
-}
-
-@keyframes spin {
-  to { transform: rotate(360deg); }
-}
-
-.heroLoaderText {
-  font-family: var(--font-ui);
-  font-size: 0.6rem;
-  letter-spacing: 0.3em;
-  text-transform: uppercase;
-  color: var(--color-text-muted);
-}
-
-/* ── Cinematic dark overlay ── */
-.heroOverlay {
+/* ── Individual slide — full cover photo, GPU composited ── */
+.heroSlide {
   position: absolute;
   inset: 0;
-  z-index: 1;
-  background:
-    linear-gradient(to right, rgba(0,0,0,0.72) 0%, rgba(0,0,0,0.3) 55%, rgba(0,0,0,0.05) 100%),
-    linear-gradient(to top,   rgba(0,0,0,0.5)  0%, transparent 40%);
-  transition: background var(--transition-slow);
-  pointer-events: none;
+  background-size: cover;
+  background-position: center center;
+  background-repeat: no-repeat;
+  will-change: opacity, transform;
+  transform: translate3d(0, 0, 0);
 }
 
-.heroOverlayLight {
+/* ── Cinematic overlay — left-heavy gradient for text legibility ── */
+.heroSlideOverlay {
+  position: absolute;
+  inset: 0;
   background:
-    linear-gradient(to bottom, rgba(0,0,0,0.55) 0%, rgba(0,0,0,0.35) 100%);
+    linear-gradient(to right,  rgba(0,0,0,0.78) 0%, rgba(0,0,0,0.45) 50%, rgba(0,0,0,0.15) 100%),
+    linear-gradient(to top,    rgba(0,0,0,0.55) 0%, transparent 45%),
+    linear-gradient(to bottom, rgba(0,0,0,0.4)  0%, transparent 30%);
+  pointer-events: none;
 }
 
 /* ── Watermark stage number ── */
@@ -96,37 +52,33 @@
   top: 50%;
   transform: translateY(-50%);
   font-family: var(--font-heading);
-  font-size: clamp(7rem, 18vw, 16rem);
+  font-size: clamp(8rem, 20vw, 18rem);
   font-weight: 700;
   line-height: 1;
   color: transparent;
-  -webkit-text-stroke: 1px rgba(201, 168, 76, 0.1);
+  -webkit-text-stroke: 1px rgba(201, 168, 76, 0.09);
   user-select: none;
   pointer-events: none;
-  z-index: 2;
+  z-index: 5;
   letter-spacing: -0.04em;
 }
 
-/* ── Stage content block ── */
+/* ── Stage text content ── */
 .heroContent {
   position: absolute;
   bottom: 9vh;
   left: 5vw;
-  z-index: 3;
-  max-width: 52vw;
+  z-index: 10;
+  max-width: 54vw;
 }
 
-/* Slide-up + fade-in on each stage change */
 .heroContentInner {
-  animation: stageReveal 0.55s cubic-bezier(0.22, 1, 0.36, 1) both;
+  display: flex;
+  flex-direction: column;
+  gap: 0;
 }
 
-@keyframes stageReveal {
-  from { opacity: 0; transform: translateY(22px); }
-  to   { opacity: 1; transform: translateY(0); }
-}
-
-/* ── Gold badge ── */
+/* Gold badge */
 .heroStageBadge {
   display: inline-flex;
   align-items: center;
@@ -139,10 +91,11 @@
   color: var(--color-primary);
   border: 1px solid rgba(201, 168, 76, 0.3);
   padding: 0.28rem 0.9rem;
-  margin-bottom: 1.1rem;
-  background: rgba(0, 0, 0, 0.4);
-  backdrop-filter: blur(8px);
-  -webkit-backdrop-filter: blur(8px);
+  margin-bottom: 1rem;
+  background: rgba(0, 0, 0, 0.45);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  width: fit-content;
 }
 
 .heroStageBadgeDot {
@@ -159,33 +112,34 @@
   50%       { opacity: 0.3; transform: scale(0.5); }
 }
 
-/* ── Stage label ── */
+/* Stage label */
 .heroStageLabel {
   font-family: var(--font-heading);
-  font-size: clamp(2.2rem, 5.5vw, 5rem);
+  font-size: clamp(2.4rem, 5.5vw, 5.2rem);
   font-weight: 700;
   color: #fff;
   line-height: 1.05;
   margin-bottom: 0.9rem;
   letter-spacing: -0.02em;
-  text-shadow: 0 2px 24px rgba(0,0,0,0.6);
+  text-shadow: 0 2px 20px rgba(0,0,0,0.6);
 }
 
 .heroStageLabelNum {
   color: var(--color-primary);
 }
 
-/* ── Stage description ── */
+/* Description */
 .heroStageDesc {
   font-family: var(--font-body);
   font-size: clamp(0.82rem, 1.3vw, 0.98rem);
-  color: rgba(245, 240, 232, 0.7);
+  color: rgba(245, 240, 232, 0.72);
   max-width: 44ch;
   line-height: 1.75;
-  text-shadow: 0 1px 8px rgba(0,0,0,0.5);
+  margin-bottom: 0;
+  text-shadow: 0 1px 6px rgba(0,0,0,0.5);
 }
 
-/* ── Progress dots + count ── */
+/* Progress row */
 .heroProgressRow {
   display: flex;
   align-items: center;
@@ -203,25 +157,25 @@
   height: 4px;
   width: 4px;
   border-radius: 2px;
-  background: rgba(255,255,255,0.2);
-  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  background: rgba(255,255,255,0.18);
+  transition: all 0.45s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 .heroDotDone {
-  background: rgba(201, 168, 76, 0.45);
+  background: rgba(201, 168, 76, 0.42);
   width: 16px;
 }
 
 .heroDotActive {
   background: var(--color-primary);
-  width: 26px;
-  box-shadow: 0 0 10px rgba(201, 168, 76, 0.55);
+  width: 28px;
+  box-shadow: 0 0 12px rgba(201, 168, 76, 0.6);
 }
 
 .heroProgressCount {
   font-family: var(--font-ui);
   font-size: 0.58rem;
-  color: rgba(255,255,255,0.35);
+  color: rgba(255,255,255,0.32);
   letter-spacing: 0.18em;
 }
 
@@ -232,15 +186,15 @@
   left: 0;
   width: 100%;
   height: 2px;
-  background: rgba(255,255,255,0.06);
-  z-index: 4;
+  background: rgba(255,255,255,0.05);
+  z-index: 10;
 }
 
 .heroProgressFill {
   height: 100%;
   background: linear-gradient(90deg, var(--color-primary-dark), var(--color-primary), var(--color-primary-light));
-  transition: width 0.1s linear;
-  box-shadow: 0 0 14px rgba(201, 168, 76, 0.7);
+  transition: width 0.12s linear;
+  box-shadow: 0 0 14px rgba(201, 168, 76, 0.65);
 }
 
 /* ── Right vertical label ── */
@@ -248,7 +202,7 @@
   position: absolute;
   right: 2.5vw;
   bottom: 9vh;
-  z-index: 3;
+  z-index: 10;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -264,7 +218,7 @@
 .heroSideText {
   font-family: var(--font-ui);
   font-size: 0.5rem;
-  color: rgba(255,255,255,0.3);
+  color: rgba(255,255,255,0.28);
   letter-spacing: 0.28em;
   text-transform: uppercase;
   writing-mode: vertical-rl;
@@ -276,26 +230,26 @@
   bottom: 5vh;
   left: 50%;
   transform: translateX(-50%);
-  z-index: 4;
+  z-index: 10;
   display: flex;
   flex-direction: column;
   align-items: center;
   gap: 0.6rem;
-  animation: fadeInUp 0.8s ease 1.2s both;
+  animation: fadeInUp 0.8s ease 1s both;
 }
 
 .heroScrollText {
   font-family: var(--font-ui);
-  font-size: 0.56rem;
-  color: rgba(255,255,255,0.35);
-  letter-spacing: 0.3em;
+  font-size: 0.55rem;
+  color: rgba(255,255,255,0.3);
+  letter-spacing: 0.32em;
   text-transform: uppercase;
 }
 
 .heroScrollMouse {
   width: 20px;
   height: 32px;
-  border: 1.5px solid rgba(201, 168, 76, 0.35);
+  border: 1.5px solid rgba(201, 168, 76, 0.32);
   border-radius: 10px;
   display: flex;
   justify-content: center;
@@ -311,10 +265,10 @@
 }
 
 @keyframes scrollWheel {
-  0%  { transform: translateY(0);    opacity: 1; }
-  75% { transform: translateY(9px);  opacity: 0; }
-  76% { transform: translateY(0);    opacity: 0; }
-  100%{ transform: translateY(0);    opacity: 0; }
+  0%  { transform: translateY(0);   opacity: 1; }
+  75% { transform: translateY(9px); opacity: 0; }
+  76% { transform: translateY(0);   opacity: 0; }
+  100%{ opacity: 0; }
 }
 
 @keyframes fadeInUp {
@@ -322,21 +276,15 @@
   to   { transform: translate(-50%, 0);    opacity: 1; }
 }
 
-/* ── Finale overlay ── */
+/* ── Finale CTA ── */
 .heroFinaleTagline {
   position: absolute;
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
-  z-index: 3;
+  z-index: 10;
   text-align: center;
   width: 90%;
-  animation: finaleReveal 0.9s cubic-bezier(0.22, 1, 0.36, 1) both;
-}
-
-@keyframes finaleReveal {
-  from { opacity: 0; transform: translate(-50%, -46%); }
-  to   { opacity: 1; transform: translate(-50%, -50%); }
 }
 
 .heroFinaleEyebrow {
@@ -415,4 +363,19 @@
   border-color: var(--color-primary);
   color: var(--color-primary);
   transform: translateY(-2px);
+}
+
+/* WHY media query: mobile requires fundamentally different font sizes and layout */
+@media (max-width: 768px) {
+  .heroContent {
+    max-width: 90vw;
+    bottom: 14vh;
+  }
+
+  .heroStageNumber {
+    opacity: 0.04;
+    font-size: clamp(5rem, 30vw, 10rem);
+  }
+
+  .heroSideLabel { display: none; }
 }
