@@ -1,0 +1,521 @@
+/**
+ * WHAT: DesignServices styles — looping video BG + glassmorphism content cards.
+ * HOW:  dsSection is relative with a sticky video background. dsContent scrolls
+ *       over the video. All cards use backdrop-filter blur for glassmorphism.
+ */
+
+/* ── Section wrapper ── */
+.dsSection {
+  position: relative;
+  width: 100%;
+  background: #080808;
+}
+
+/* ── Fixed video background ── */
+.dsVideoBg {
+  position: sticky;
+  top: var(--navbar-height);
+  height: calc(100vh - var(--navbar-height));
+  width: 100%;
+  overflow: hidden;
+  z-index: 0;
+  margin-top: 0;
+}
+
+.dsVideo {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center;
+  transform: translate3d(0, 0, 0);
+}
+
+.dsVideoOverlay {
+  position: absolute;
+  inset: 0;
+  background:
+    linear-gradient(to bottom, rgba(8,8,8,0.55) 0%, rgba(8,8,8,0.4) 100%),
+    linear-gradient(to right,  rgba(8,8,8,0.3)  0%, transparent 60%);
+}
+
+/* ── Scrollable content layer ── */
+.dsContent {
+  position: relative;
+  z-index: 2;
+  /* Pull content up to overlap the sticky video */
+  margin-top: calc(-100vh + var(--navbar-height));
+  padding: 6rem 3rem 6rem;
+  max-width: 1400px;
+  margin-left: auto;
+  margin-right: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+}
+
+/* ── Eyebrow ── */
+.dsEyebrow {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 0.5rem;
+}
+
+.dsBadge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-family: var(--font-ui);
+  font-size: 0.6rem;
+  font-weight: 700;
+  letter-spacing: 0.35em;
+  text-transform: uppercase;
+  color: var(--color-primary);
+  border: 1px solid var(--color-border-gold);
+  padding: 0.3rem 1.2rem;
+  background: rgba(0, 0, 0, 0.4);
+  backdrop-filter: blur(8px);
+}
+
+/* ── Section divider label ── */
+.dsSectionLabel {
+  display: flex;
+  align-items: center;
+  gap: 1.2rem;
+  margin: 1rem 0 0.5rem;
+}
+
+.dsSectionLabelLine {
+  flex: 1;
+  height: 1px;
+  background: linear-gradient(to right, transparent, var(--color-border-gold), transparent);
+}
+
+.dsSectionLabelText {
+  font-family: var(--font-ui);
+  font-size: 0.6rem;
+  font-weight: 700;
+  letter-spacing: 0.3em;
+  text-transform: uppercase;
+  color: var(--color-primary);
+  white-space: nowrap;
+}
+
+/* ── Glassmorphism base card ── */
+.dsGlassCard {
+  background: rgba(10, 10, 10, 0.65);
+  backdrop-filter: blur(24px);
+  -webkit-backdrop-filter: blur(24px);
+  border: 1px solid rgba(201, 168, 76, 0.18);
+  border-radius: var(--radius-lg);
+  padding: 2.5rem;
+  box-shadow:
+    0 8px 40px rgba(0, 0, 0, 0.5),
+    inset 0 1px 0 rgba(255, 255, 255, 0.04);
+  transition: border-color var(--transition-fast), box-shadow var(--transition-fast);
+}
+
+.dsGlassCard:hover {
+  border-color: rgba(201, 168, 76, 0.3);
+  box-shadow:
+    0 12px 50px rgba(0, 0, 0, 0.6),
+    0 0 0 1px rgba(201, 168, 76, 0.08),
+    inset 0 1px 0 rgba(255, 255, 255, 0.06);
+}
+
+/* ── Hero intro card — 2 columns ── */
+.dsHeroCard {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 3rem;
+}
+
+.dsHeroTitle {
+  font-family: var(--font-heading);
+  font-size: clamp(2rem, 4vw, 3.5rem);
+  font-weight: 700;
+  color: var(--color-text);
+  letter-spacing: -0.02em;
+  margin-bottom: 1.2rem;
+  line-height: 1.05;
+}
+
+.dsHeroBody {
+  font-family: var(--font-body);
+  font-size: 0.9rem;
+  color: rgba(245, 240, 232, 0.78);
+  line-height: 1.8;
+}
+
+.dsHeroList {
+  list-style: none;
+  margin: 1rem 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+}
+
+.dsHeroList li {
+  font-family: var(--font-body);
+  font-size: 0.88rem;
+  color: var(--color-text-muted);
+  padding-left: 1.2rem;
+  position: relative;
+}
+
+.dsHeroList li::before {
+  content: "—";
+  position: absolute;
+  left: 0;
+  color: var(--color-primary);
+  font-size: 0.75rem;
+}
+
+.dsHeroDiscount {
+  display: flex;
+  gap: 0.8rem;
+  align-items: flex-start;
+  margin-top: 1.5rem;
+  padding: 1rem 1.2rem;
+  background: rgba(201, 168, 76, 0.07);
+  border: 1px solid var(--color-border-gold);
+  border-radius: var(--radius-md);
+}
+
+.dsHeroDiscountIcon {
+  font-size: 1.2rem;
+  flex-shrink: 0;
+}
+
+.dsHeroDiscount p {
+  font-family: var(--font-body);
+  font-size: 0.82rem;
+  color: rgba(245, 240, 232, 0.75);
+  line-height: 1.6;
+}
+
+/* ── Package grid — 3 cards in a row ── */
+.dsPackageGrid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1.5rem;
+}
+
+.dsPackageCard {
+  display: flex;
+  flex-direction: column;
+  gap: 1.2rem;
+}
+
+.dsPackageTop {
+  padding-bottom: 1rem;
+  border-bottom: 2px solid;
+}
+
+.dsPackageTier {
+  display: block;
+  font-family: var(--font-heading);
+  font-size: 1.8rem;
+  font-weight: 700;
+  letter-spacing: -0.01em;
+  line-height: 1;
+  margin-bottom: 0.3rem;
+}
+
+.dsPackageSubtitle {
+  font-family: var(--font-ui);
+  font-size: 0.58rem;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--color-text-muted);
+}
+
+.dsPackageStoreys {
+  display: flex;
+  flex-direction: column;
+  gap: 0.45rem;
+}
+
+.dsPackageStoreyRow {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.4rem 0.6rem;
+  background: rgba(255, 255, 255, 0.02);
+  border-radius: var(--radius-sm);
+  border: 1px solid rgba(255, 255, 255, 0.04);
+}
+
+.dsPackageStoreyLabel {
+  font-family: var(--font-body);
+  font-size: 0.78rem;
+  color: var(--color-text-muted);
+}
+
+.dsPackageStoreyRange {
+  font-family: var(--font-ui);
+  font-size: 0.72rem;
+  font-weight: 700;
+  text-align: right;
+}
+
+.dsPackageIncludes {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+}
+
+.dsPackageIncludesLabel {
+  font-family: var(--font-ui);
+  font-size: 0.55rem;
+  font-weight: 700;
+  letter-spacing: 0.25em;
+  text-transform: uppercase;
+  color: var(--color-text-muted);
+  margin-bottom: 0.2rem;
+}
+
+.dsPackageIncludeRow {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.6rem;
+  font-family: var(--font-body);
+  font-size: 0.75rem;
+  color: rgba(245, 240, 232, 0.7);
+  line-height: 1.5;
+}
+
+.dsPackageIncludeDot {
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  flex-shrink: 0;
+  margin-top: 0.35rem;
+}
+
+.dsPackageNote {
+  font-family: var(--font-body);
+  font-size: 0.65rem;
+  color: var(--color-text-muted);
+  font-style: italic;
+  line-height: 1.5;
+  margin-top: auto;
+  padding-top: 0.8rem;
+  border-top: 1px solid var(--color-border);
+}
+
+/* ── Special Engineering card ── */
+.dsSpecialCard {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.dsSpecialHeader {
+  display: flex;
+  flex-direction: column;
+  gap: 0.3rem;
+}
+
+.dsSpecialTitle {
+  font-family: var(--font-heading);
+  font-size: 1.8rem;
+  font-weight: 700;
+  color: var(--color-text);
+  letter-spacing: -0.01em;
+}
+
+.dsSpecialSubtitle {
+  font-family: var(--font-ui);
+  font-size: 0.6rem;
+  color: var(--color-text-muted);
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+
+.dsSpecialGrid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.5rem;
+}
+
+.dsSpecialRow {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.6rem 0.8rem;
+  background: rgba(255, 255, 255, 0.02);
+  border: 1px solid rgba(255, 255, 255, 0.04);
+  border-radius: var(--radius-sm);
+  gap: 1rem;
+}
+
+.dsSpecialLabel {
+  font-family: var(--font-body);
+  font-size: 0.78rem;
+  color: rgba(245, 240, 232, 0.75);
+  line-height: 1.4;
+}
+
+.dsSpecialRange {
+  font-family: var(--font-ui);
+  font-size: 0.7rem;
+  font-weight: 700;
+  color: var(--color-primary);
+  white-space: nowrap;
+  text-align: right;
+  flex-shrink: 0;
+}
+
+/* ── Design Process card ── */
+.dsProcessCard {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+  padding: 0;
+  overflow: hidden;
+}
+
+/* Step tabs */
+.dsProcessTabs {
+  display: flex;
+  border-bottom: 1px solid var(--color-border);
+  background: rgba(0, 0, 0, 0.3);
+  overflow-x: auto;
+  scrollbar-width: none;
+}
+
+.dsProcessTabs::-webkit-scrollbar { display: none; }
+
+.dsProcessTab {
+  flex-shrink: 0;
+  padding: 0.8rem 1.4rem;
+  font-family: var(--font-ui);
+  font-size: 0.6rem;
+  font-weight: 700;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: var(--color-text-muted);
+  background: none;
+  border: none;
+  border-bottom: 2px solid transparent;
+  cursor: pointer;
+  transition: color var(--transition-fast), border-color var(--transition-fast);
+  white-space: nowrap;
+}
+
+.dsProcessTab:hover {
+  color: var(--color-text);
+}
+
+.dsProcessTabActive {
+  color: var(--color-primary) !important;
+  border-bottom-color: var(--color-primary) !important;
+  background: rgba(201, 168, 76, 0.04);
+}
+
+/* Step content */
+.dsProcessContent {
+  padding: 2.5rem;
+  min-height: 320px;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.dsProcessStepBadge {
+  display: inline-flex;
+  align-items: center;
+  font-family: var(--font-ui);
+  font-size: 0.58rem;
+  font-weight: 700;
+  letter-spacing: 0.3em;
+  text-transform: uppercase;
+  color: var(--color-primary);
+  border: 1px solid var(--color-border-gold);
+  padding: 0.25rem 0.8rem;
+  background: rgba(201, 168, 76, 0.06);
+  width: fit-content;
+}
+
+.dsProcessStepTitle {
+  font-family: var(--font-heading);
+  font-size: clamp(1.4rem, 2.5vw, 2.2rem);
+  font-weight: 700;
+  color: var(--color-text);
+  letter-spacing: -0.01em;
+  line-height: 1.1;
+}
+
+.dsProcessStepBody {
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+  flex: 1;
+  overflow-y: auto;
+  max-height: 220px;
+  padding-right: 0.5rem;
+  scrollbar-width: thin;
+  scrollbar-color: var(--color-border) transparent;
+}
+
+.dsProcessStepBody::-webkit-scrollbar { width: 3px; }
+.dsProcessStepBody::-webkit-scrollbar-thumb { background: var(--color-border); border-radius: 2px; }
+
+.dsProcessStepBody p {
+  font-family: var(--font-body);
+  font-size: 0.85rem;
+  color: rgba(245, 240, 232, 0.75);
+  line-height: 1.75;
+}
+
+/* Step navigation */
+.dsProcessNav {
+  display: flex;
+  gap: 0.8rem;
+  padding-top: 1rem;
+  border-top: 1px solid var(--color-border);
+  margin-top: auto;
+}
+
+.dsProcessNavBtn {
+  padding: 0.55rem 1.4rem;
+  font-family: var(--font-ui);
+  font-size: 0.65rem;
+  font-weight: 700;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: var(--color-text-muted);
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  transition: all var(--transition-fast);
+}
+
+.dsProcessNavBtn:hover {
+  color: var(--color-text);
+  border-color: var(--color-primary);
+  background: rgba(201, 168, 76, 0.06);
+}
+
+.dsProcessNavBtnNext {
+  color: var(--color-primary);
+  border-color: var(--color-primary);
+  background: rgba(201, 168, 76, 0.06);
+}
+
+.dsProcessNavBtnNext:hover {
+  background: var(--color-primary);
+  color: #0d0d0d;
+}
+
+/* WHY media query: grid collapses to single column on mobile */
+@media (max-width: 900px) {
+  .dsHeroCard { grid-template-columns: 1fr; gap: 1.5rem; }
+  .dsPackageGrid { grid-template-columns: 1fr; }
+  .dsSpecialGrid { grid-template-columns: 1fr; }
+  .dsContent { padding: 4rem 1.2rem 4rem; }
+}
