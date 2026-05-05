@@ -1,0 +1,813 @@
+/* ────────────────────────────────────────────────────────────────
+   HomeLoanCalculator.css
+   WHAT: Styles for the Home Loan Calculator section.
+   ──────────────────────────────────────────────────────────────── */
+
+/* ── Section wrapper ── */
+.loanSection {
+  background: var(--color-secondary);
+  padding: clamp(4rem, 8vw, 7rem) clamp(1.5rem, 6vw, 6rem);
+  position: relative;
+  overflow: hidden;
+}
+
+.loanSection::before {
+  content: "";
+  position: absolute;
+  top: 0; left: 10%; right: 10%;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, var(--color-primary), transparent);
+}
+
+/* ── Header ── */
+.loanHeader {
+  text-align: center;
+  margin-bottom: clamp(2.5rem, 5vw, 4rem);
+}
+
+.loanEyebrow {
+  display: inline-block;
+  font-family: var(--font-ui);
+  font-size: 0.58rem;
+  letter-spacing: 0.35em;
+  text-transform: uppercase;
+  color: var(--color-primary);
+  border: 1px solid var(--color-border-gold);
+  padding: 0.35em 1.2em;
+  margin-bottom: 1.2rem;
+}
+
+.loanTitle {
+  font-family: var(--font-heading);
+  font-size: clamp(2.2rem, 4.5vw, 3.8rem);
+  font-weight: 300;
+  color: var(--color-text);
+  letter-spacing: 0.02em;
+  margin: 0 0 1rem;
+}
+
+.loanTitleGold { color: var(--color-primary); }
+
+.loanSubtitle {
+  font-family: var(--font-body);
+  font-size: clamp(0.85rem, 1.4vw, 1rem);
+  color: var(--color-text-muted);
+  max-width: 40em;
+  margin: 0 auto;
+  line-height: 1.75;
+}
+
+/* ── Main calculator card ── */
+.loanCard {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: clamp(1.5rem, 3vw, 3rem);
+  max-width: 1200px;
+  margin: 0 auto 3rem;
+  background: var(--color-surface);
+  border: 1px solid var(--color-border-gold);
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+  box-shadow: var(--shadow-deep);
+}
+
+/* WHY media query: grid can't express stacking with fluid units alone */
+@media (max-width: 860px) {
+  .loanCard { grid-template-columns: 1fr; }
+}
+
+/* ── Column shared styles ── */
+.loanInputCol,
+.loanResultCol {
+  padding: clamp(1.5rem, 3vw, 2.5rem);
+}
+
+.loanInputCol {
+  border-right: 1px solid var(--color-border);
+}
+
+@media (max-width: 860px) {
+  .loanInputCol { border-right: none; border-bottom: 1px solid var(--color-border); }
+}
+
+.loanInputColHeader,
+.loanResultColHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  margin-bottom: 1.8rem;
+  padding-bottom: 0.8rem;
+  border-bottom: 1px solid var(--color-border);
+}
+
+.loanInputColTitle,
+.loanResultColTitle {
+  font-family: var(--font-ui);
+  font-size: 0.72rem;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--color-text);
+}
+
+.loanInputColNote,
+.loanResultColNote {
+  font-family: var(--font-body);
+  font-size: 0.7rem;
+  color: var(--color-primary);
+  opacity: 0.8;
+}
+
+/* ── Form fields ── */
+.loanField {
+  margin-bottom: 1.6rem;
+}
+
+.loanFieldLabel {
+  display: flex;
+  flex-direction: column;
+  gap: 0.2rem;
+  font-family: var(--font-ui);
+  font-size: 0.68rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--color-text-muted);
+  margin-bottom: 0.6rem;
+}
+
+.loanFieldHint {
+  font-family: var(--font-body);
+  font-size: 0.72rem;
+  letter-spacing: 0;
+  text-transform: none;
+  color: var(--color-text-muted);
+  opacity: 0.6;
+}
+
+.loanInputWrap {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-sm);
+  padding: 0 0.8rem;
+  transition: border-color var(--transition-fast);
+}
+
+.loanInputWrap:focus-within {
+  border-color: var(--color-primary);
+  box-shadow: 0 0 0 2px rgba(201,168,76,0.15);
+}
+
+/* Yellow highlight like Excel */
+.loanInputHighlight {
+  background: rgba(201,168,76,0.07);
+  border-color: rgba(201,168,76,0.35);
+}
+
+.loanInput {
+  flex: 1;
+  background: transparent;
+  border: none;
+  outline: none;
+  font-family: var(--font-body);
+  font-size: 1rem;
+  color: var(--color-text);
+  padding: 0.6rem 0;
+  min-width: 0;
+}
+
+/* Remove number arrows */
+.loanInput::-webkit-outer-spin-button,
+.loanInput::-webkit-inner-spin-button { -webkit-appearance: none; margin: 0; }
+.loanInput[type=number] { -moz-appearance: textfield; }
+
+.loanInputPrefix,
+.loanInputSuffix {
+  font-family: var(--font-ui);
+  font-size: 0.8rem;
+  color: var(--color-primary);
+  flex-shrink: 0;
+}
+
+.loanFieldFormatted {
+  display: block;
+  font-family: var(--font-heading);
+  font-size: 0.88rem;
+  color: var(--color-primary);
+  margin-top: 0.3rem;
+  letter-spacing: 0.05em;
+}
+
+/* ── Fixing period buttons ── */
+.loanFixingBtns {
+  display: flex;
+  gap: 0.6rem;
+  margin-bottom: 0.7rem;
+  flex-wrap: wrap;
+}
+
+.loanFixingBtn {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.15rem;
+  background: var(--color-surface-2);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-sm);
+  padding: 0.5rem 0.9rem;
+  cursor: pointer;
+  transition: all var(--transition-fast);
+  flex: 1;
+  min-width: 0;
+}
+
+.loanFixingBtn:hover {
+  border-color: var(--color-primary);
+  background: rgba(201,168,76,0.06);
+}
+
+.loanFixingBtnActive {
+  border-color: var(--color-primary) !important;
+  background: rgba(201,168,76,0.14) !important;
+}
+
+.loanFixingBtnLabel {
+  font-family: var(--font-ui);
+  font-size: 0.62rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--color-text-muted);
+}
+
+.loanFixingBtnRate {
+  font-family: var(--font-heading);
+  font-size: 1rem;
+  color: var(--color-primary);
+}
+
+/* ── Term slider ── */
+.loanTermSlider { margin-top: 0.6rem; }
+
+.loanRangeSlider {
+  width: 100%;
+  -webkit-appearance: none;
+  height: 3px;
+  border-radius: 2px;
+  background: linear-gradient(90deg, var(--color-primary) 0%, var(--color-border) 100%);
+  outline: none;
+  cursor: pointer;
+}
+
+.loanRangeSlider::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  width: 16px; height: 16px;
+  border-radius: 50%;
+  background: var(--color-primary);
+  border: 2px solid var(--color-secondary);
+  box-shadow: 0 0 6px rgba(201,168,76,0.5);
+}
+
+.loanTermTicks {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 0.4rem;
+}
+
+.loanTermTick {
+  font-family: var(--font-ui);
+  font-size: 0.58rem;
+  letter-spacing: 0.05em;
+  color: var(--color-text-muted);
+  opacity: 0.5;
+  transition: all var(--transition-fast);
+}
+
+.loanTermTickActive {
+  color: var(--color-primary);
+  opacity: 1;
+}
+
+/* ── Results column ── */
+.loanResultHero {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  padding: 1.8rem;
+  background: rgba(201,168,76,0.06);
+  border: 1px solid var(--color-border-gold);
+  border-radius: var(--radius-md);
+  margin-bottom: 1.5rem;
+}
+
+.loanResultHeroLabel {
+  font-family: var(--font-ui);
+  font-size: 0.62rem;
+  letter-spacing: 0.25em;
+  text-transform: uppercase;
+  color: var(--color-text-muted);
+  margin-bottom: 0.6rem;
+}
+
+.loanResultHeroAmount {
+  font-family: var(--font-heading);
+  font-size: clamp(2rem, 4vw, 3rem);
+  color: var(--color-primary);
+  letter-spacing: 0.02em;
+  line-height: 1;
+  margin-bottom: 0.4rem;
+}
+
+.loanResultHeroSub {
+  font-family: var(--font-body);
+  font-size: 0.78rem;
+  color: var(--color-text-muted);
+}
+
+/* ── Results grid ── */
+.loanResultGrid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1rem;
+  margin-bottom: 1.5rem;
+}
+
+.loanResultItem {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+  padding: 1rem;
+  background: var(--color-surface-2);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-sm);
+}
+
+.loanResultItemLabel {
+  font-family: var(--font-ui);
+  font-size: 0.58rem;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: var(--color-text-muted);
+}
+
+.loanResultItemValue {
+  font-family: var(--font-heading);
+  font-size: 1.25rem;
+  color: var(--color-text);
+  letter-spacing: 0.02em;
+}
+
+.loanResultItemGold { color: var(--color-primary) !important; }
+
+.loanResultItemNote {
+  font-family: var(--font-body);
+  font-size: 0.65rem;
+  color: var(--color-text-muted);
+  opacity: 0.6;
+}
+
+/* ── Breakdown bar ── */
+.loanBreakdownBar { margin-bottom: 1.2rem; }
+
+.loanBreakdownLabel {
+  display: block;
+  font-family: var(--font-ui);
+  font-size: 0.6rem;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: var(--color-text-muted);
+  margin-bottom: 0.5rem;
+}
+
+.loanBreakdownTrack {
+  display: flex;
+  height: 2rem;
+  border-radius: var(--radius-sm);
+  overflow: hidden;
+  border: 1px solid var(--color-border);
+}
+
+.loanBreakdownPrincipal {
+  background: var(--color-primary);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: width 0.5s ease;
+  min-width: 5%;
+}
+
+.loanBreakdownInterest {
+  flex: 1;
+  background: var(--color-surface-2);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.loanBreakdownSegLabel {
+  font-family: var(--font-ui);
+  font-size: 0.6rem;
+  letter-spacing: 0.1em;
+  color: rgba(0,0,0,0.7);
+  white-space: nowrap;
+  padding: 0 0.4rem;
+}
+
+.loanBreakdownInterest .loanBreakdownSegLabel {
+  color: var(--color-text-muted);
+}
+
+.loanDisclaimer {
+  font-family: var(--font-body);
+  font-size: 0.68rem;
+  color: var(--color-text-muted);
+  opacity: 0.55;
+  line-height: 1.5;
+  margin: 0;
+}
+
+/* ── BSP Chart section ── */
+.loanChartSection {
+  max-width: 1200px;
+  margin: 0 auto 2.5rem;
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-lg);
+  padding: clamp(1.5rem, 3vw, 2.5rem);
+}
+
+.loanChartHeader { margin-bottom: 1.5rem; }
+
+.loanChartTitle {
+  font-family: var(--font-heading);
+  font-size: clamp(1.2rem, 2.5vw, 1.8rem);
+  font-weight: 400;
+  color: var(--color-text);
+  margin: 0 0 0.6rem;
+}
+
+.loanChartTitleGold { color: var(--color-primary); }
+
+.loanChartDesc {
+  font-family: var(--font-body);
+  font-size: 0.88rem;
+  color: var(--color-text-muted);
+  line-height: 1.7;
+  max-width: 52em;
+  margin: 0;
+}
+
+.loanChartWrap { width: 100%; }
+
+.loanChartTooltip {
+  background: rgba(8,6,4,0.95);
+  border: 1px solid var(--color-border-gold);
+  border-radius: var(--radius-sm);
+  padding: 0.5rem 0.9rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.2rem;
+}
+
+.loanChartTooltipYear {
+  font-family: var(--font-ui);
+  font-size: 0.6rem;
+  letter-spacing: 0.15em;
+  color: var(--color-text-muted);
+}
+
+.loanChartTooltipRate {
+  font-family: var(--font-heading);
+  font-size: 1.1rem;
+  color: var(--color-primary);
+}
+
+.loanChartSource {
+  font-family: var(--font-body);
+  font-size: 0.65rem;
+  color: var(--color-text-muted);
+  opacity: 0.45;
+  text-align: right;
+  margin: 0.8rem 0 0;
+}
+
+/* ── Opinion box ── */
+.loanOpinionBox {
+  max-width: 1200px;
+  margin: 0 auto 2.5rem;
+  background: rgba(201,168,76,0.05);
+  border: 1px solid var(--color-border-gold);
+  border-left: 3px solid var(--color-primary);
+  border-radius: var(--radius-md);
+  padding: 1.4rem 1.8rem;
+}
+
+.loanOpinionTag {
+  display: inline-block;
+  font-family: var(--font-ui);
+  font-size: 0.58rem;
+  letter-spacing: 0.3em;
+  text-transform: uppercase;
+  color: var(--color-primary);
+  margin-bottom: 0.7rem;
+}
+
+.loanOpinionText {
+  font-family: var(--font-body);
+  font-size: 0.9rem;
+  color: var(--color-text-muted);
+  line-height: 1.8;
+  margin: 0;
+}
+
+.loanOpinionText strong { color: var(--color-primary); font-weight: 600; }
+
+/* ── Rate reference table ── */
+.loanRateTable {
+  max-width: 1200px;
+  margin: 0 auto;
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-lg);
+  padding: clamp(1.2rem, 2.5vw, 2rem);
+  overflow-x: auto;
+}
+
+.loanRateTableTitle {
+  display: block;
+  font-family: var(--font-ui);
+  font-size: 0.65rem;
+  letter-spacing: 0.25em;
+  text-transform: uppercase;
+  color: var(--color-text-muted);
+  margin-bottom: 1rem;
+}
+
+.loanTable {
+  width: 100%;
+  border-collapse: collapse;
+  font-family: var(--font-body);
+  font-size: 0.88rem;
+}
+
+.loanTable th {
+  font-family: var(--font-ui);
+  font-size: 0.62rem;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: var(--color-text-muted);
+  text-align: left;
+  padding: 0.6rem 1rem;
+  border-bottom: 1px solid var(--color-border);
+}
+
+.loanTable td {
+  padding: 0.75rem 1rem;
+  color: var(--color-text);
+  border-bottom: 1px solid rgba(255,255,255,0.04);
+}
+
+.loanTableNote {
+  font-size: 0.6rem;
+  opacity: 0.6;
+  font-weight: 400;
+  text-transform: none;
+  letter-spacing: 0;
+}
+
+.loanTableRate { color: var(--color-primary); font-family: var(--font-heading); font-size: 1rem; }
+
+.loanTableRowActive td {
+  background: rgba(201,168,76,0.07);
+  color: var(--color-primary);
+}
+
+.loanTableRowActive .loanTableRate {
+  color: var(--color-primary-light);
+}
+
+
+/* ────────────────────────────────────────────────────────────────
+   HORIZONTAL SCROLL-HIJACK SLIDER
+   WHAT: Vertical scroll is captured and converted to horizontal
+         panel slides. Page stays pinned during the sequence.
+         Each scroll tick advances/retreats one slide via translateX.
+   ──────────────────────────────────────────────────────────────── */
+
+/* ── Outer wrapper — gives the section a fixed height in the flow ── */
+.loanHijackOuter {
+  max-width: 100%;
+  margin: 0 auto clamp(3rem, 6vw, 5rem);
+  height: 100vh;
+  position: relative;
+}
+
+/* ── Sticky container — stays in viewport during hijack ── */
+.loanHijackSticky {
+  position: sticky;
+  top: 0;
+  height: 100vh;
+  overflow: hidden;
+  background: var(--color-surface);
+  border-top: 1px solid var(--color-border-gold);
+  border-bottom: 1px solid var(--color-border-gold);
+}
+
+/* ── Slide track — full width × N slides, shifts via translateX ── */
+.loanHijackTrack {
+  display: flex;
+  width: 100%;
+  height: 100%;
+  transition: transform 0.65s cubic-bezier(0.77, 0, 0.175, 1);
+  will-change: transform;
+}
+
+/* ── Individual slide — each takes exactly 100% of the viewport ── */
+.loanHijackSlide {
+  flex: 0 0 100%;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  padding: clamp(2rem, 6vw, 5rem) clamp(2rem, 8vw, 8rem);
+  background: var(--color-surface);
+  overflow: hidden;
+}
+
+.loanHijackSlideHighlight {
+  background: linear-gradient(135deg, rgba(201,168,76,0.06) 0%, var(--color-surface) 60%);
+}
+
+.loanHijackSlideHighlight::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border: 1px solid var(--color-border-gold);
+  pointer-events: none;
+}
+
+/* ── Large watermark number — decorative background ── */
+.loanHijackWatermark {
+  position: absolute;
+  right: 5%;
+  bottom: -2rem;
+  font-family: var(--font-heading);
+  font-size: clamp(8rem, 20vw, 16rem);
+  font-weight: 700;
+  color: rgba(201,168,76,0.05);
+  line-height: 1;
+  pointer-events: none;
+  user-select: none;
+}
+
+/* ── Slide content — centred column ── */
+.loanHijackSlideContent {
+  max-width: 52rem;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 1.4rem;
+  position: relative;
+  z-index: 1;
+}
+
+.loanHijackTag {
+  display: inline-block;
+  font-family: var(--font-ui);
+  font-size: 0.58rem;
+  letter-spacing: 0.35em;
+  text-transform: uppercase;
+  color: var(--color-primary);
+  border: 1px solid var(--color-border-gold);
+  padding: 0.32em 1.1em;
+  border-radius: 2px;
+  width: fit-content;
+}
+
+.loanHijackTitle {
+  font-family: var(--font-heading);
+  font-size: clamp(1.8rem, 4vw, 3rem);
+  font-weight: 300;
+  color: var(--color-text);
+  line-height: 1.2;
+  margin: 0;
+}
+
+.loanHijackBody {
+  font-family: var(--font-body);
+  font-size: clamp(0.95rem, 1.5vw, 1.1rem);
+  color: var(--color-text-muted);
+  line-height: 1.85;
+  max-width: 42em;
+  margin: 0;
+}
+
+/* ── Prev / Next nav buttons inside each slide ── */
+.loanHijackNav {
+  display: flex;
+  gap: 1rem;
+  margin-top: 0.5rem;
+}
+
+.loanHijackNavBtn {
+  font-family: var(--font-ui);
+  font-size: 0.65rem;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: var(--color-text-muted);
+  background: transparent;
+  border: 1px solid var(--color-border);
+  padding: 0.5em 1.2em;
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  transition: all var(--transition-fast);
+}
+
+.loanHijackNavBtn:hover {
+  border-color: var(--color-primary);
+  color: var(--color-primary);
+}
+
+.loanHijackNavBtnNext {
+  border-color: var(--color-border-gold);
+  color: var(--color-primary);
+}
+
+.loanHijackNavBtnNext:hover {
+  background: rgba(201,168,76,0.1);
+}
+
+/* ── Bottom gold progress bar ── */
+.loanHijackProgressBar {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background: rgba(255,255,255,0.06);
+  z-index: 10;
+}
+
+.loanHijackProgressFill {
+  height: 100%;
+  background: linear-gradient(90deg, var(--color-primary-dark), var(--color-primary), var(--color-primary-light));
+  transition: width 0.65s cubic-bezier(0.77, 0, 0.175, 1);
+  box-shadow: 0 0 8px rgba(201,168,76,0.6);
+}
+
+/* ── Dot navigation ── */
+.loanHijackDots {
+  position: absolute;
+  bottom: 1.6rem;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  gap: 0.5rem;
+  z-index: 10;
+}
+
+.loanHijackDot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: rgba(255,255,255,0.2);
+  border: none;
+  cursor: pointer;
+  transition: all var(--transition-fast);
+  padding: 0;
+}
+
+.loanHijackDotActive {
+  background: var(--color-primary);
+  transform: scale(1.5);
+  box-shadow: 0 0 6px rgba(201,168,76,0.7);
+}
+
+/* ── Scroll hint label ── */
+.loanHijackHint {
+  position: absolute;
+  bottom: 1.4rem;
+  right: 2rem;
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  font-family: var(--font-ui);
+  font-size: 0.55rem;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--color-text-muted);
+  opacity: 0.5;
+  z-index: 10;
+  animation: loanHintPulse 2s ease-in-out infinite;
+}
+
+.loanHijackHintArrow {
+  font-size: 0.75rem;
+}
+
+@keyframes loanHintPulse {
+  0%, 100% { opacity: 0.35; }
+  50%       { opacity: 0.7;  }
+}

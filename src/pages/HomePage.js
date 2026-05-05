@@ -14,16 +14,16 @@ import WhyChooseUs from "../components/WhyChooseUs";
 import ContactSection from "../components/ContactSection";
 import ProjectsSection from "../components/ProjectsSection";
 import CostCalculator from "../components/CostCalculator";
+import HomeLoanCalculator from "../components/HomeLoanCalculator";
 import "../css/HomePage.css";
 
-// Placeholder sections — projects, contact, interior-projects and why-us are now built components
+// Placeholder sections — built components are excluded from this list
 const placeholderSections = [
   { id: "construction-works", label: "Construction Works" },
   { id: "design-services",    label: "Design Services" },
   { id: "finishes",           label: "Type of Finishes" },
   { id: "earthquake",         label: "Earthquake Faultline" },
   { id: "permits",            label: "Building Permits" },
-  { id: "loan",               label: "Home Loan Calculator" },
   { id: "fengshui",           label: "Fengshui" },
 ];
 
@@ -57,6 +57,9 @@ function HomePage() {
           </div>
         </section>
       ))}
+
+      {/* ── Home Loan Calculator ── */}
+      <HomeLoanCalculator />
 
       {/* ── Why Choose Us ── */}
       <WhyChooseUs />
