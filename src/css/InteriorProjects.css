@@ -1,0 +1,206 @@
+/**
+ * WHAT: InteriorProjects section styles — fullscreen video background carousel.
+ * HOW: Section is 100vh with position:relative. Video stack fills the section
+ *      absolutely. Active video fades in via opacity transition. Content sits
+ *      above via z-index. Bottom gradient ensures text legibility.
+ */
+
+/* ── Section container ── */
+.interiorSection {
+  position: relative;
+  width: 100%;
+  height: 100vh;
+  overflow: hidden;
+  background: #0a0a0a;
+  border-bottom: 1px solid var(--color-border);
+}
+
+/* ── Video stack — all videos stacked absolutely, only active is visible ── */
+.interiorVideoStack {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+}
+
+/* ── Individual video — fills container, hidden by default ── */
+.interiorVideo {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center;
+  opacity: 0;
+  /* GPU-composited crossfade */
+  transition: opacity 0.9s cubic-bezier(0.4, 0, 0.2, 1);
+  will-change: opacity;
+  transform: translate3d(0, 0, 0);
+}
+
+/* ── Active video — fades in ── */
+.interiorVideoActive {
+  opacity: 1;
+}
+
+/* ── Dark overlay — gradient from transparent top to dark bottom ── */
+.interiorOverlay {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  background: linear-gradient(
+    to bottom,
+    rgba(0, 0, 0, 0.25) 0%,
+    rgba(0, 0, 0, 0.1)  40%,
+    rgba(0, 0, 0, 0.55) 75%,
+    rgba(0, 0, 0, 0.82) 100%
+  );
+  pointer-events: none;
+}
+
+/* ── Content wrapper — sits above video and overlay ── */
+.interiorContent {
+  position: absolute;
+  bottom: 5vh;
+  left: 5vw;
+  z-index: 2;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 1.2rem;
+}
+
+/* ── Eyebrow label ── */
+.interiorEyebrow {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  font-family: var(--font-ui);
+  font-size: 0.58rem;
+  font-weight: 700;
+  letter-spacing: 0.35em;
+  text-transform: uppercase;
+  color: var(--color-primary);
+  border: 1px solid var(--color-border-gold);
+  padding: 0.3rem 1rem;
+  background: rgba(201, 168, 76, 0.06);
+}
+
+.interiorEyebrowDot {
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: var(--color-primary);
+  flex-shrink: 0;
+}
+
+/* ── Video title ── */
+.interiorTitle {
+  font-family: var(--font-heading);
+  font-size: clamp(2rem, 5vw, 4rem);
+  font-weight: 700;
+  color: var(--color-text);
+  letter-spacing: -0.01em;
+  line-height: 1.1;
+  /* Animate in on label change */
+  animation: interiorTitleIn 0.5s ease forwards;
+}
+
+@keyframes interiorTitleIn {
+  from { opacity: 0; transform: translateY(10px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+/* ── Dot indicators ── */
+.interiorDots {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.interiorDot {
+  width: 28px;
+  height: 3px;
+  border-radius: 2px;
+  background: rgba(255, 255, 255, 0.25);
+  border: none;
+  cursor: pointer;
+  padding: 0;
+  transition: background 0.3s ease, width 0.3s ease;
+}
+
+.interiorDotActive {
+  background: var(--color-primary);
+  width: 48px;
+}
+
+/* ── Prev / Next controls ── */
+.interiorControls {
+  display: flex;
+  align-items: center;
+  gap: 1.2rem;
+  margin-top: 0.4rem;
+}
+
+.interiorBtn {
+  width: 2.8rem;
+  height: 2.8rem;
+  border: 1px solid rgba(201, 168, 76, 0.4);
+  background: rgba(0, 0, 0, 0.4);
+  color: var(--color-primary);
+  border-radius: 50%;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background 0.2s ease, border-color 0.2s ease;
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
+}
+
+.interiorBtn:hover {
+  background: rgba(201, 168, 76, 0.12);
+  border-color: var(--color-primary);
+}
+
+.interiorBtnArrow {
+  font-size: 1rem;
+  line-height: 1;
+}
+
+.interiorCounter {
+  font-family: var(--font-ui);
+  font-size: 0.65rem;
+  letter-spacing: 0.2em;
+  color: rgba(255, 255, 255, 0.5);
+  min-width: 3rem;
+  text-align: center;
+}
+
+/* ── Right side vertical label ── */
+.interiorSideLabel {
+  position: absolute;
+  right: 1.5rem;
+  top: 50%;
+  transform: translateY(-50%);
+  z-index: 2;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.8rem;
+}
+
+.interiorSideLine {
+  width: 1px;
+  height: 4rem;
+  background: linear-gradient(to bottom, transparent, var(--color-border-gold));
+}
+
+.interiorSideText {
+  font-family: var(--font-ui);
+  font-size: 0.5rem;
+  letter-spacing: 0.3em;
+  text-transform: uppercase;
+  color: rgba(201, 168, 76, 0.45);
+  writing-mode: vertical-rl;
+  text-orientation: mixed;
+}

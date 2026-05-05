@@ -9,12 +9,12 @@
 import React from "react";
 import Navbar from "../components/Navbar";
 import HeroSection from "../components/HeroSection";
+import InteriorProjects from "../components/InteriorProjects";
 import "../css/HomePage.css";
 
-// Placeholder sections matching Image 2 navigation
+// Placeholder sections — interior-projects is now a built component
 const placeholderSections = [
   { id: "projects",           label: "Projects" },
-  { id: "interior-projects",  label: "Interior Projects" },
   { id: "construction-works", label: "Construction Works" },
   { id: "cost-calculator",    label: "Building Cost Calculator" },
   { id: "design-services",    label: "Design Services" },
@@ -36,7 +36,10 @@ function HomePage() {
       {/* ── 50% — Scroll Construction Sequence Hero ── */}
       <HeroSection />
 
-      {/* ── Remaining 50% — Site Sections ── */}
+      {/* ── Interior Projects — video background carousel ── */}
+      <InteriorProjects />
+
+      {/* ── Remaining sections ── */}
       {placeholderSections.map((section) => (
         <section key={section.id} id={section.id} className="homeSection">
           <div className="homeSectionInner">
