@@ -143,6 +143,21 @@ function CostCalculator() {
   const [activeFloor,    setActiveFloor]    = useState(0);
   const invoiceRef   = useRef(null);
 
+  /**
+   * WHAT: Resets all calculator state back to initial empty values.
+   * HOW:  Sets every state to its useState default value.
+   * CALLED BY: handleGenerateInvoice after successful PDF save.
+   */
+  const resetAll = useCallback(() => {
+    setActiveStep(1);
+    setQty({});
+    setFloorInput("");
+    setSelectedFinish("economic");
+    setClientName("");
+    setClientAddr("");
+    setActiveFloor(0);
+  }, []);
+
   // activeFloor is now driven purely by tab clicks — no scroll detection needed.
 
   /**
@@ -193,29 +208,89 @@ function CostCalculator() {
    *       then overlays diagonal TRICONIX watermark text before saving.
    * CALLED BY: onClick on Download Invoice button.
    */
+  /**
+   * WHAT: Generates a multi-page A4 PDF invoice with readable content.
+   * HOW:  html2canvas captures the full invoice div at 1.5x scale.
+   *       The canvas is then sliced into A4-height segments — each segment
+   *       becomes one PDF page. Watermark text is drawn on every page.
+   *       calcInvoicePrinting class removes scroll constraints before capture.
+   * CALLED BY: onClick on Download Invoice button.
+   */
   const handleGenerateInvoice = useCallback(async () => {
     if (!invoiceRef.current) return;
     setGenerating(true);
     try {
-      const canvas  = await html2canvas(invoiceRef.current, { scale: 2, backgroundColor: "#0d0d0d", useCORS: true });
-      const imgData = canvas.toDataURL("image/png");
-      const pdf     = new jsPDF({ orientation: "portrait", unit: "mm", format: "a4" });
-      const pdfW    = pdf.internal.pageSize.getWidth();
-      const pdfH    = pdf.internal.pageSize.getHeight();
-      pdf.addImage(imgData, "PNG", 0, 0, pdfW, pdfH);
-      pdf.setFontSize(36);
-      pdf.setTextColor(201, 168, 76);
-      pdf.setGState(pdf.GState({ opacity: 0.07 }));
-      for (let y = 40; y < pdfH; y += 60) {
-        pdf.text("TRICONIX CONSTRUCTION CORP.", pdfW / 2, y, { angle: 35, align: "center" });
+      // Remove scroll constraints so full invoice renders for capture
+      invoiceRef.current.classList.add("calcInvoicePrinting");
+
+      // Wait one frame for DOM to reflow after class change
+      await new Promise(r => setTimeout(r, 120));
+
+      // Capture at 1.5x — sharp but not oversized, keeps text readable
+      const canvas = await html2canvas(invoiceRef.current, {
+        scale: 1.5,
+        backgroundColor: "#0d0d0d",
+        useCORS: true,
+        logging: false,
+      });
+
+      const pdf   = new jsPDF({ orientation: "portrait", unit: "mm", format: "a4" });
+      const pdfW  = pdf.internal.pageSize.getWidth();   // 210mm
+      const pdfH  = pdf.internal.pageSize.getHeight();  // 297mm
+
+      const margin    = 10;                             // 10mm margin each side
+      const printW    = pdfW - margin * 2;              // usable width
+      const printH    = pdfH - margin * 2;              // usable height per page
+
+      // Scale canvas so its width fits the usable print area
+      const scale     = printW / canvas.width;
+      const fullH     = canvas.height * scale;           // total rendered height in mm
+
+      // Slice canvas into A4 pages
+      const pageCount  = Math.ceil(fullH / printH);
+      const sliceH_px  = Math.floor(printH / scale);    // px height per page slice
+
+      for (let page = 0; page < pageCount; page++) {
+        if (page > 0) pdf.addPage();
+
+        // Create a slice canvas for this page
+        const sliceCanvas = document.createElement("canvas");
+        sliceCanvas.width  = canvas.width;
+        sliceCanvas.height = Math.min(sliceH_px, canvas.height - page * sliceH_px);
+        const ctx = sliceCanvas.getContext("2d");
+        ctx.drawImage(
+          canvas,
+          0, page * sliceH_px,                          // source x, y
+          canvas.width, sliceCanvas.height,             // source w, h
+          0, 0,                                         // dest x, y
+          canvas.width, sliceCanvas.height              // dest w, h
+        );
+
+        const sliceData  = sliceCanvas.toDataURL("image/png");
+        const sliceH_mm  = sliceCanvas.height * scale;
+        pdf.addImage(sliceData, "PNG", margin, margin, printW, sliceH_mm);
+
+        // Diagonal watermark on every page
+        pdf.setFontSize(28);
+        pdf.setTextColor(201, 168, 76);
+        pdf.setGState(pdf.GState({ opacity: 0.06 }));
+        for (let y = 50; y < pdfH; y += 55) {
+          pdf.text("TRICONIX CONSTRUCTION CORP.", pdfW / 2, y, { angle: 35, align: "center" });
+        }
+        // Reset opacity for next page
+        pdf.setGState(pdf.GState({ opacity: 1 }));
       }
+
       pdf.save(`Triconix-Estimate-${Date.now()}.pdf`);
+      // Reset all fields after successful download
+      resetAll();
     } catch (err) {
       console.error("PDF error:", err);
     } finally {
+      invoiceRef.current?.classList.remove("calcInvoicePrinting");
       setGenerating(false);
     }
-  }, []);
+  }, [resetAll]);
 
   return (
     <section id="cost-calculator" className="calcSection">
@@ -367,38 +442,51 @@ function CostCalculator() {
         <div className="calcStepPanel">
           <div className="calcStep2Body">
 
-            {/* Finish selector cards */}
-            <div className="calcFinishCards">
-              {allCosts.map(c => (
-                <button
-                  key={c.key}
-                  className={`calcFinishCard ${selectedFinish === c.key ? "calcFinishCardActive" : ""}`}
-                  style={{ "--finish-color": c.color }}
-                  onClick={() => setSelectedFinish(c.key)}
-                >
-                  <div className="calcFinishCardTop">
-                    <span className="calcFinishCardDot" style={{ background: c.color }} />
-                    <span className="calcFinishCardName">{c.label}</span>
-                    {selectedFinish === c.key && <span className="calcFinishCardCheck">✓</span>}
+            {/* Left column — finish cards + additional costs below ── */}
+            <div className="calcStep2Left">
+              <div className="calcFinishCards">
+                {allCosts.map(c => (
+                  <button
+                    key={c.key}
+                    className={`calcFinishCard ${selectedFinish === c.key ? "calcFinishCardActive" : ""}`}
+                    style={{ "--finish-color": c.color }}
+                    onClick={() => setSelectedFinish(c.key)}
+                  >
+                    <div className="calcFinishCardTop">
+                      <span className="calcFinishCardDot" style={{ background: c.color }} />
+                      <span className="calcFinishCardName">{c.label}</span>
+                      {selectedFinish === c.key && <span className="calcFinishCardCheck">✓</span>}
+                    </div>
+                    <div className="calcFinishCardCost">
+                      {formatPeso(c.min)} – {formatPeso(c.max)}
+                    </div>
+                    <p className="calcFinishCardDesc">{FINISH_DESC[c.key]}</p>
+                  </button>
+                ))}
+              </div>
+
+              {/* Additional costs — below finish cards, bottom aligns with right column */}
+              <div className="calcAdditional">
+                <span className="calcAdditionalTitle">Additional Costs (Approximate)</span>
+                {ADDITIONAL.map(a => (
+                  <div key={a.key} className="calcAdditionalRow">
+                    <span>{a.label}</span>
+                    <span>{formatPeso(a.min)} – {formatPeso(a.max)}</span>
                   </div>
-                  <div className="calcFinishCardCost">
-                    {formatPeso(c.min)} – {formatPeso(c.max)}
-                  </div>
-                  <p className="calcFinishCardDesc">{FINISH_DESC[c.key]}</p>
-                </button>
-              ))}
+                ))}
+              </div>
             </div>
 
-            {/* Bar chart + selected cost */}
+            {/* Right column — selected cost highlight + bar chart ── */}
             <div className="calcStep2Right">
 
-              {/* Selected finish highlight */}
+              {/* Selected finish highlight — compact: label | min | to | max */}
               {activeCost && (
                 <div className="calcSelectedCost" style={{ borderColor: activeCost.color }}>
                   <span className="calcSelectedEye">Selected: {activeCost.label} Finish</span>
                   <span className="calcSelectedMin">{formatPeso(activeCost.min)}</span>
-                  <span className="calcSelectedSep">to</span>
                   <span className="calcSelectedMax">{formatPeso(activeCost.max)}</span>
+                  <span className="calcSelectedSep">min — max estimate</span>
                   <span className="calcSelectedArea">for {totalArea.toFixed(2)} m²</span>
                 </div>
               )}
@@ -406,7 +494,7 @@ function CostCalculator() {
               {/* Bar chart — all finish levels side by side */}
               <div className="calcBarChartCard">
                 <span className="calcBarChartTitle">Cost Comparison by Finish Level</span>
-                <ResponsiveContainer width="100%" height={260}>
+                <ResponsiveContainer width="100%" height={340}>
                   <BarChart data={barData} margin={{ top: 16, right: 8, left: 8, bottom: 0 }} barSize={36}>
                     <CartesianGrid stroke="rgba(255,255,255,0.04)" vertical={false} />
                     <XAxis
@@ -440,17 +528,6 @@ function CostCalculator() {
                     </Bar>
                   </BarChart>
                 </ResponsiveContainer>
-              </div>
-
-              {/* Additional costs */}
-              <div className="calcAdditional">
-                <span className="calcAdditionalTitle">Additional Costs (Approximate)</span>
-                {ADDITIONAL.map(a => (
-                  <div key={a.key} className="calcAdditionalRow">
-                    <span>{a.label}</span>
-                    <span>{formatPeso(a.min)} – {formatPeso(a.max)}</span>
-                  </div>
-                ))}
               </div>
 
             </div>
@@ -491,10 +568,18 @@ function CostCalculator() {
                 value={clientAddr}
                 onChange={e => setClientAddr(e.target.value)}
               />
+              {/* Validation — show which fields are missing */}
+              {(!clientName.trim() || !clientAddr.trim() || totalArea === 0) && (
+                <div className="calcInvoiceValidation">
+                  {!clientName.trim() && <span>· Client name is required</span>}
+                  {!clientAddr.trim() && <span>· Project address is required</span>}
+                  {totalArea === 0 && <span>· Select at least one room in Step 1</span>}
+                </div>
+              )}
               <button
-                className={`calcInvoiceBtn ${generating ? "calcInvoiceBtnLoading" : ""}`}
+                className={`calcInvoiceBtn ${generating ? "calcInvoiceBtnLoading" : ""} ${(!clientName.trim() || !clientAddr.trim() || totalArea === 0) ? "calcInvoiceBtnDisabled" : ""}`}
                 onClick={handleGenerateInvoice}
-                disabled={generating}
+                disabled={generating || !clientName.trim() || !clientAddr.trim() || totalArea === 0}
               >
                 {generating ? "Generating PDF…" : "⬇ Download Invoice PDF"}
               </button>
