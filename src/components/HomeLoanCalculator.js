@@ -114,110 +114,67 @@ function HomeLoanCalculator() {
   const [activeFixing, setActiveFixing] = useState(0);
 
   const [activeStep,   setActiveStep]   = useState(0);
-  const hijackRef   = useRef(null);          // outer wrapper that owns the scroll distance
-  const isHovering  = useRef(false);         // true only when mouse is inside the slider
+  const hijackRef   = useRef(null);   // outer tall wrapper — provides scroll distance
+  const prevStep    = useRef(0);      // avoids unnecessary setState calls
 
   /* ────────────────────────────────────────────────────────────────
-     Scroll-hijack effect — converts vertical wheel scroll into
-     horizontal panel slides ONLY while the cursor is physically
-     inside the slider element.
-     HOW: mouseenter/mouseleave on the slider element toggle isHovering.
-          The wheel listener is attached to the slider element (not window)
-          so it only fires when the user hovers the slider.
-          preventDefault stops the page from scrolling during slides.
-          At the first/last step the page scroll is released naturally.
+     Scroll-position-driven slide advancement.
+     HOW: The outer wrapper is 500vh tall (set in CSS). As the user
+          scrolls, we compute how far into the wrapper they are (0→1).
+          That progress is divided into N equal segments, one per slide.
+          activeStep updates only when the segment changes.
+          No wheel hijack, no mouse tracking — pure scroll position.
+          Works regardless of where the mouse cursor is.
      CALLED BY: useEffect on mount
      ──────────────────────────────────────────────────────────────── */
   useEffect(() => {
-    const el = hijackRef.current;
-    if (!el) return;
-
-    let cooldown = false;
-
     /**
-     * WHAT: Sets isHovering true when mouse enters the slider.
-     * HOW:  Plain ref write — no re-render needed.
-     * CALLED BY: mouseenter on hijackRef element.
+     * WHAT: Reads window scroll and maps it to the active slide index.
+     * HOW:  Gets outer wrapper's top offset from viewport. Computes
+     *       how many px the user has scrolled into it. Divides that
+     *       progress by total scrollable height to get 0→1 raw value.
+     *       Maps raw value to step index via Math.floor with clamping.
+     * CALLED BY: scroll event on window.
      */
-    function onMouseEnter() { isHovering.current = true;  }
+    function onScroll() {
+      const el = hijackRef.current;
+      if (!el) return;
 
-    /**
-     * WHAT: Clears isHovering when mouse leaves the slider.
-     * HOW:  Plain ref write — no re-render needed.
-     * CALLED BY: mouseleave on hijackRef element.
-     */
-    function onMouseLeave() { isHovering.current = false; }
+      // scrolled = how many px of the outer wrapper have passed the top of the viewport
+      const rect     = el.getBoundingClientRect();
+      const scrolled = -rect.top;                          // negative when not yet reached
+      const total    = el.offsetHeight - window.innerHeight; // total scrollable distance
 
-    /**
-     * WHAT: Intercepts wheel events to advance/retreat slides.
-     * HOW:  Only fires when isHovering is true. Calls preventDefault
-     *       to stop page scroll during the slide sequence. Releases
-     *       page scroll at first/last boundary steps. 600ms cooldown
-     *       prevents rapid multi-step jumping per scroll tick.
-     * CALLED BY: wheel event on hijackRef element.
-     */
-    function onWheel(e) {
-      if (!isHovering.current) return;
+      if (scrolled < 0 || total <= 0) {
+        // Haven't reached the section yet — reset to first slide
+        if (prevStep.current !== 0) { prevStep.current = 0; setActiveStep(0); }
+        return;
+      }
 
-      // At first step scrolling up — release to page
-      if (e.deltaY < 0 && activeStep === 0) return;
-      // At last step scrolling down — release to page
-      if (e.deltaY > 0 && activeStep === SCROLL_STEPS.length - 1) return;
+      if (scrolled > total) {
+        // Scrolled past the section — lock to last slide
+        const last = SCROLL_STEPS.length - 1;
+        if (prevStep.current !== last) { prevStep.current = last; setActiveStep(last); }
+        return;
+      }
 
-      e.preventDefault();
-      if (cooldown) return;
-      cooldown = true;
-      setTimeout(() => { cooldown = false; }, 600);
-
-      setActiveStep(prev => {
-        if (e.deltaY > 0) return Math.min(prev + 1, SCROLL_STEPS.length - 1);
-        return Math.max(prev - 1, 0);
-      });
-    }
-
-    // Touch swipe support — scoped to element
-    let touchStartY = 0;
-
-    /**
-     * WHAT: Records touch start Y position for swipe direction detection.
-     * HOW:  Stores first touch clientY in touchStartY.
-     * CALLED BY: touchstart on hijackRef element.
-     */
-    function onTouchStart(e) { touchStartY = e.touches[0].clientY; }
-
-    /**
-     * WHAT: Advances/retreats slide based on swipe direction.
-     * HOW:  Computes deltaY from touchStart. Ignores swipes < 30px.
-     *       Releases at boundary steps. Calls preventDefault mid-sequence.
-     * CALLED BY: touchend on hijackRef element.
-     */
-    function onTouchEnd(e) {
-      const dy = touchStartY - e.changedTouches[0].clientY;
-      if (Math.abs(dy) < 30) return;
-      if (dy < 0 && activeStep === 0) return;
-      if (dy > 0 && activeStep === SCROLL_STEPS.length - 1) return;
-      e.preventDefault();
-      setActiveStep(prev => dy > 0
-        ? Math.min(prev + 1, SCROLL_STEPS.length - 1)
-        : Math.max(prev - 1, 0)
+      // Map 0→1 progress into SCROLL_STEPS.length segments
+      const raw  = scrolled / total;                                       // 0 → 1
+      const step = Math.min(
+        Math.floor(raw * SCROLL_STEPS.length),
+        SCROLL_STEPS.length - 1
       );
+
+      if (step !== prevStep.current) {
+        prevStep.current = step;
+        setActiveStep(step);
+      }
     }
 
-    // Attach all listeners to the element — not window
-    el.addEventListener("mouseenter",  onMouseEnter);
-    el.addEventListener("mouseleave",  onMouseLeave);
-    el.addEventListener("wheel",       onWheel,      { passive: false });
-    el.addEventListener("touchstart",  onTouchStart, { passive: true  });
-    el.addEventListener("touchend",    onTouchEnd,   { passive: false });
-
-    return () => {
-      el.removeEventListener("mouseenter",  onMouseEnter);
-      el.removeEventListener("mouseleave",  onMouseLeave);
-      el.removeEventListener("wheel",       onWheel);
-      el.removeEventListener("touchstart",  onTouchStart);
-      el.removeEventListener("touchend",    onTouchEnd);
-    };
-  }, [activeStep]);
+    window.addEventListener("scroll", onScroll, { passive: true });
+    onScroll(); // run once on mount in case page loads mid-section
+    return () => window.removeEventListener("scroll", onScroll);
+  }, []);
 
 
   const results = useMemo(() => {
@@ -561,14 +518,20 @@ function HomeLoanCalculator() {
             <tr>
               <th>Fixing Period</th>
               <th>Interest Rate</th>
-              <th>Monthly Payment <span className="loanTableNote">(₱10M / 20 yrs)</span></th>
+              {/* Header updates live — reflects the user's actual loan amount and term */}
+              <th>Monthly Payment <span className="loanTableNote">({loanDisplay} / {termYears} yrs)</span></th>
             </tr>
           </thead>
           <tbody>
             {FIXING_PERIODS.map((fp, idx) => {
+              // Use user's actual loan amount and term — not hardcoded 10M / 20yrs
+              const P = parseAmount(loanAmount);
               const r = fp.rate / 100 / 12;
-              const n = 20 * 12;
-              const m = 10000000 * (r * Math.pow(1+r,n)) / (Math.pow(1+r,n) - 1);
+              const n = parseFloat(termYears) * 12;
+              // Guard: show 0 if inputs are incomplete
+              const m = (P && r && n)
+                ? P * (r * Math.pow(1+r,n)) / (Math.pow(1+r,n) - 1)
+                : 0;
               return (
                 <tr key={fp.label} className={activeFixing === idx ? "loanTableRowActive" : ""}>
                   <td>{fp.label}</td>
