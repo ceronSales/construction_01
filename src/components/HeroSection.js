@@ -22,56 +22,50 @@ const FRAME_URL     = (n) =>                      // public/frames/f001.jpg … 
   `${process.env.PUBLIC_URL}/frames/f${String(n).padStart(3,"0")}.jpg`;
 
 /**
- * Stage boundaries mapped to frame numbers (24fps).
- * Verified against actual extracted frame content:
- *   f001–f048  = completed house (evening → daylight)
- *   f049–f062  = exterior near-done, garage partial
- *   f063–f072  = garage/cladding framing exposed
- *   f073–f096  = full roof trusses, walls poured
- *   f097–f120  = mid-frame construction
- *   f121–f156  = raw frame, excavator visible
- *   f157–f192  = earliest site / foundation stage
+ * Stage boundaries mapped to frame numbers — verified frame-by-frame visually.
+ * The video runs from FINISHED house → backwards to earliest construction:
+ *   f001–f048  = fully completed home, evening lighting, full landscaping & garage door
+ *   f049–f072  = exterior nearly done — driveway bare, side landscaping partial
+ *   f073–f096  = walls rendered white, window openings formed, roof partially tiled
+ *   f097–f120  = full timber roof trusses exposed, walls up, no roof tiles yet
+ *   f121–f156  = active framing — excavator on site, lumber stacked, wrap tarps visible
+ *   f157–f192  = earliest stage — raw timber frame, construction signboard visible
  */
 const STAGES = [
   {
     id: 0, num: "01", label: "Completed Home",
-    description: "Your dream home — fully finished, inspected, and ready to move in.",
+    description: "Your dream home — fully finished, landscaped, and ready to move in.",
     frame: 1,
   },
   {
-    id: 1, num: "02", label: "Exterior Finishing",
-    description: "Render, paint, landscaping and all exterior trim applied to the facade.",
-    frame: 25,   // ~1.0s
+    id: 1, num: "02", label: "Landscaping & Driveway",
+    description: "Gardens planted, driveway poured, outdoor lighting installed and garden lights set.",
+    frame: 25,
   },
   {
-    id: 2, num: "03", label: "Windows & Doors",
-    description: "Aluminum frames, sliding glass panels and solid hardwood doors set.",
-    frame: 49,   // ~2.0s
+    id: 2, num: "03", label: "Exterior Finishing",
+    description: "Facade rendered and painted. Garage door fitted. Exterior trim and steps complete.",
+    frame: 49,
   },
   {
-    id: 3, num: "04", label: "Garage & Cladding",
-    description: "Garage structure framed and cladded. Facade cladding panels fixed.",
-    frame: 63,   // ~2.6s
+    id: 3, num: "04", label: "Render & Window Frames",
+    description: "Walls rendered white. Window and door openings formed. Roof tiles partially laid.",
+    frame: 73,
   },
   {
     id: 4, num: "05", label: "Roof Trusses",
-    description: "Steel trusses erected. Ridge beam set. Roof decking nailed down.",
-    frame: 73,   // ~3.0s
+    description: "Full timber roof trusses erected and set. Ridge beam secured. Roof decking begins.",
+    frame: 97,
   },
   {
-    id: 5, num: "06", label: "Wall & Frame",
-    description: "CHB walls and timber frame rising. All structural openings formed.",
-    frame: 97,   // ~4.0s
+    id: 5, num: "06", label: "Wall Framing",
+    description: "Timber wall frames rising. Structural openings for windows and doors formed.",
+    frame: 121,
   },
   {
-    id: 6, num: "07", label: "Structural Frame",
-    description: "Steel columns, beams and structural framework erected to full height.",
-    frame: 121,  // ~5.0s
-  },
-  {
-    id: 7, num: "08", label: "Site & Foundation",
-    description: "Where every great home begins — excavation and reinforced footings poured.",
-    frame: 157,  // ~6.5s
+    id: 6, num: "07", label: "Site & Foundation",
+    description: "Where every great home begins — slab poured, site fenced, excavator on deck.",
+    frame: 157,
     isFinale: true,
   },
 ];
@@ -209,12 +203,12 @@ function HeroSection() {
     const canvas = canvasRef.current;
     if (!canvas) return;
 
-    // Set canvas resolution to match display size
+    // Set canvas resolution to match exact CSS display size — no DPR scaling.
+    // DPR multiplication caused drawImage to render at 2x the visible area
+    // on retina screens, making the image appear cropped and not full-width.
     const resize = () => {
-      canvas.width  = canvas.offsetWidth  * window.devicePixelRatio;
-      canvas.height = canvas.offsetHeight * window.devicePixelRatio;
-      const ctx = canvas.getContext("2d");
-      ctx.scale(window.devicePixelRatio, window.devicePixelRatio);
+      canvas.width  = canvas.offsetWidth;
+      canvas.height = canvas.offsetHeight;
       drawFrame(prevFrameRef.current);
     };
     resize();
@@ -252,8 +246,10 @@ function HeroSection() {
     return () => window.removeEventListener("resize", resize);
   }, [drawFrame, animateText]);
 
-  const stage    = STAGES[activeIndex];
-  const isLoaded = loadProgress === 100;
+  // Clamp activeIndex to valid range — guards against stale state after STAGES array edits
+  const safeIndex = Math.min(activeIndex, STAGES.length - 1);
+  const stage     = STAGES[safeIndex];
+  const isLoaded  = loadProgress === 100;
 
   return (
     <div className="heroWrapper" ref={wrapperRef} id="home">
@@ -293,12 +289,12 @@ function HeroSection() {
                     <span
                       key={s.id}
                       className={`heroDot ${
-                        i === activeIndex ? "heroDotActive" : i < activeIndex ? "heroDotDone" : ""
+                        i === safeIndex ? "heroDotActive" : i < safeIndex ? "heroDotDone" : ""
                       }`}
                     />
                   ))}
                 </div>
-                <span className="heroProgressCount">{activeIndex + 1} / {STAGES.length}</span>
+                <span className="heroProgressCount">{safeIndex + 1} / {STAGES.length}</span>
               </div>
             </div>
           </div>
@@ -318,7 +314,7 @@ function HeroSection() {
         )}
 
         {/* ── Scroll prompt — first stage only ── */}
-        {activeIndex === 0 && isLoaded && (
+        {safeIndex === 0 && isLoaded && (
           <div className="heroScrollPrompt">
             <span className="heroScrollText">Scroll to reveal the build</span>
             <div className="heroScrollMouse">
