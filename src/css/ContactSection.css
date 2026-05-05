@@ -1,0 +1,361 @@
+/* ────────────────────────────────────────────────────────────────
+   ContactSection.css
+   WHAT: Styles for the two-column Contact Us section.
+         Left col = email composer shell. Right col = 3D globe + address.
+   ──────────────────────────────────────────────────────────────── */
+
+/* ── Section wrapper ── */
+.contactSection {
+  background: var(--color-secondary);
+  padding: clamp(4rem, 8vw, 7rem) clamp(1.5rem, 6vw, 6rem);
+  position: relative;
+  overflow: hidden;
+}
+
+/* ── Subtle gold top border ── */
+.contactSection::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 10%;
+  right: 10%;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, var(--color-primary), transparent);
+}
+
+/* ── Section header ── */
+.contactHeader {
+  text-align: center;
+  margin-bottom: clamp(2.5rem, 5vw, 4rem);
+}
+
+.contactEyebrow {
+  display: inline-block;
+  font-family: var(--font-ui);
+  font-size: 0.58rem;
+  letter-spacing: 0.35em;
+  text-transform: uppercase;
+  color: var(--color-primary);
+  border: 1px solid var(--color-border-gold);
+  padding: 0.35em 1.2em;
+  margin-bottom: 1.2rem;
+}
+
+.contactTitle {
+  font-family: var(--font-heading);
+  font-size: clamp(2.2rem, 4.5vw, 3.8rem);
+  font-weight: 300;
+  color: var(--color-text);
+  letter-spacing: 0.02em;
+  margin: 0 0 1rem;
+}
+
+.contactTitleGold {
+  color: var(--color-primary);
+}
+
+.contactSubtitle {
+  font-family: var(--font-body);
+  font-size: clamp(0.85rem, 1.4vw, 1rem);
+  color: var(--color-text-muted);
+  max-width: 38em;
+  margin: 0 auto;
+  line-height: 1.75;
+}
+
+/* ── Two-column body ── */
+.contactBody {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: clamp(2rem, 4vw, 4rem);
+  align-items: start;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+/* ── Media query: stack columns on narrow viewports.
+   WHY fluid units can't solve this: fundamentally different layout
+   (side-by-side vs stacked) requires a structural grid change. ── */
+@media (max-width: 860px) {
+  .contactBody {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* ────────────────────────────────────────────────────────────────
+   COLUMN 1 — Email Composer
+   ──────────────────────────────────────────────────────────────── */
+
+.contactComposer {
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  overflow: hidden;
+  position: relative;
+  box-shadow: var(--shadow-deep);
+}
+
+/* ── macOS-style window chrome ── */
+.contactComposerHeader {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  background: var(--color-surface-2);
+  border-bottom: 1px solid var(--color-border);
+  padding: 0.75rem 1rem;
+}
+
+.contactComposerDots {
+  display: flex;
+  gap: 0.38rem;
+}
+
+.contactDot {
+  width: 0.65rem;
+  height: 0.65rem;
+  border-radius: 50%;
+  display: inline-block;
+}
+
+.contactDotRed   { background: #ff5f56; }
+.contactDotAmber { background: #ffbd2e; }
+.contactDotGreen { background: #27c93f; }
+
+.contactComposerTitle {
+  font-family: var(--font-ui);
+  font-size: 0.72rem;
+  letter-spacing: 0.1em;
+  color: var(--color-text-muted);
+  flex: 1;
+  text-align: center;
+  margin-right: 2.2rem; /* optical center offset for dots */
+}
+
+/* ── Form ── */
+.contactForm {
+  display: flex;
+  flex-direction: column;
+  padding: 0;
+}
+
+.contactFormRow {
+  display: flex;
+  align-items: center;
+  border-bottom: 1px solid var(--color-border);
+  padding: 0.6rem 1.2rem;
+  gap: 0.8rem;
+}
+
+.contactFormRowTo {
+  background: rgba(201,168,76,0.04);
+}
+
+.contactFormLabel {
+  font-family: var(--font-ui);
+  font-size: 0.65rem;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: var(--color-text-muted);
+  min-width: 4.5rem;
+}
+
+.contactFormStatic {
+  font-family: var(--font-body);
+  font-size: 0.88rem;
+  color: var(--color-primary);
+}
+
+.contactFormInput {
+  flex: 1;
+  background: transparent;
+  border: none;
+  outline: none;
+  font-family: var(--font-body);
+  font-size: 0.88rem;
+  color: var(--color-text);
+  padding: 0.2rem 0;
+}
+
+.contactFormInput::placeholder { color: var(--color-text-muted); opacity: 0.6; }
+
+.contactFormTextarea {
+  background: transparent;
+  border: none;
+  border-bottom: 1px solid var(--color-border);
+  outline: none;
+  resize: none;
+  font-family: var(--font-body);
+  font-size: 0.9rem;
+  color: var(--color-text);
+  line-height: 1.7;
+  padding: 1rem 1.2rem;
+  min-height: 12rem;
+}
+
+.contactFormTextarea::placeholder { color: var(--color-text-muted); opacity: 0.5; }
+
+/* ── Send bar ── */
+.contactFormSendBar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0.8rem 1.2rem;
+  gap: 1rem;
+}
+
+.contactSendBtn {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  background: var(--color-primary);
+  color: #0a0800;
+  border: none;
+  cursor: pointer;
+  font-family: var(--font-ui);
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  padding: 0.65em 1.6em;
+  border-radius: var(--radius-sm);
+  transition: background var(--transition-fast), transform var(--transition-fast);
+}
+
+.contactSendBtn:hover {
+  background: var(--color-primary-light);
+  transform: translateY(-1px);
+}
+
+.contactSendBtnIcon {
+  font-size: 0.85rem;
+}
+
+.contactDemoTag {
+  font-family: var(--font-ui);
+  font-size: 0.6rem;
+  letter-spacing: 0.1em;
+  color: var(--color-text-muted);
+  opacity: 0.6;
+}
+
+/* ── Demo notice overlay ── */
+.contactDemoNotice {
+  position: absolute;
+  inset: 0;
+  background: rgba(8,6,4,0.92);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0.6rem;
+  animation: contactFadeIn 0.3s ease;
+  z-index: 10;
+}
+
+@keyframes contactFadeIn {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+
+.contactDemoNoticeIcon {
+  font-size: 2rem;
+  margin-bottom: 0.4rem;
+}
+
+.contactDemoNotice p {
+  font-family: var(--font-body);
+  font-size: 0.9rem;
+  color: var(--color-text);
+  text-align: center;
+  margin: 0;
+  line-height: 1.6;
+}
+
+.contactDemoNotice strong {
+  color: var(--color-primary);
+}
+
+/* ────────────────────────────────────────────────────────────────
+   COLUMN 2 — Globe Map
+   ──────────────────────────────────────────────────────────────── */
+
+.contactMapCol {
+  display: flex;
+  flex-direction: column;
+  gap: 1.2rem;
+}
+
+/* ── SVG Philippines map wrapper ── */
+.contactMapSvgWrap {
+  width: 100%;
+  background: #06111e;
+  border: 1px solid var(--color-border-gold);
+  border-radius: var(--radius-md);
+  overflow: hidden;
+  box-shadow:
+    0 0 40px rgba(201,168,76,0.08),
+    var(--shadow-deep);
+}
+
+.contactMapSvg {
+  width: 100%;
+  height: auto;
+  display: block;
+}
+
+/* ── Pulsing pin rings — CSS animation ── */
+.contactPinRing {
+  transform-origin: 205px 148px;
+  transform-box: fill-box;
+}
+
+.contactPinRing1 {
+  animation: contactRingPulse 2s ease-out infinite;
+}
+
+.contactPinRing2 {
+  animation: contactRingPulse 2s ease-out 0.5s infinite;
+}
+
+.contactPinRing3 {
+  animation: contactRingPulse 2s ease-out 1s infinite;
+}
+
+@keyframes contactRingPulse {
+  0%   { opacity: 1;   transform: scale(1);   }
+  100% { opacity: 0;   transform: scale(1.8); }
+}
+.contactAddressCard {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.9rem;
+  background: var(--color-surface);
+  border: 1px solid var(--color-border-gold);
+  border-radius: var(--radius-md);
+  padding: 1rem 1.4rem;
+}
+
+.contactAddressIcon {
+  font-size: 1.3rem;
+  flex-shrink: 0;
+  margin-top: 0.1rem;
+}
+
+.contactAddressText {
+  display: flex;
+  flex-direction: column;
+  gap: 0.18rem;
+  font-family: var(--font-body);
+  font-size: 0.88rem;
+  color: var(--color-text-muted);
+  line-height: 1.5;
+}
+
+.contactAddressText strong {
+  color: var(--color-primary);
+  font-family: var(--font-ui);
+  font-size: 0.75rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  margin-bottom: 0.2rem;
+}

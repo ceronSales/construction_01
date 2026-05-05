@@ -11,9 +11,10 @@ import Navbar from "../components/Navbar";
 import HeroSection from "../components/HeroSection";
 import InteriorProjects from "../components/InteriorProjects";
 import WhyChooseUs from "../components/WhyChooseUs";
+import ContactSection from "../components/ContactSection";
 import "../css/HomePage.css";
 
-// Placeholder sections — interior-projects and why-us are now built components
+// Placeholder sections — contact, interior-projects and why-us are now built components
 const placeholderSections = [
   { id: "projects",           label: "Projects" },
   { id: "construction-works", label: "Construction Works" },
@@ -23,7 +24,6 @@ const placeholderSections = [
   { id: "earthquake",         label: "Earthquake Faultline" },
   { id: "permits",            label: "Building Permits" },
   { id: "loan",               label: "Home Loan Calculator" },
-  { id: "contact",            label: "Contact Us" },
   { id: "fengshui",           label: "Fengshui" },
 ];
 
@@ -54,6 +54,9 @@ function HomePage() {
 
       {/* ── Why Choose Us ── */}
       <WhyChooseUs />
+
+      {/* ── Contact Us — two-column composer + 3D globe ── */}
+      <ContactSection />
     </div>
   );
 }
