@@ -10,9 +10,10 @@ import React from "react";
 import Navbar from "../components/Navbar";
 import HeroSection from "../components/HeroSection";
 import InteriorProjects from "../components/InteriorProjects";
+import WhyChooseUs from "../components/WhyChooseUs";
 import "../css/HomePage.css";
 
-// Placeholder sections — interior-projects is now a built component
+// Placeholder sections — interior-projects and why-us are now built components
 const placeholderSections = [
   { id: "projects",           label: "Projects" },
   { id: "construction-works", label: "Construction Works" },
@@ -24,7 +25,6 @@ const placeholderSections = [
   { id: "loan",               label: "Home Loan Calculator" },
   { id: "contact",            label: "Contact Us" },
   { id: "fengshui",           label: "Fengshui" },
-  { id: "why-us",             label: "Why Choose Us?" },
 ];
 
 function HomePage() {
@@ -51,6 +51,9 @@ function HomePage() {
           </div>
         </section>
       ))}
+
+      {/* ── Why Choose Us ── */}
+      <WhyChooseUs />
     </div>
   );
 }
