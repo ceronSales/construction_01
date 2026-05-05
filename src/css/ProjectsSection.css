@@ -1,0 +1,291 @@
+/**
+ * WHAT: ProjectsSection styles — fullscreen video background with bottom-right thumbnail slider.
+ * HOW: Section is 100vh with overflow hidden. Video stack fills absolutely.
+ *      Active video fades in via opacity transition. Thumbnail slider is fixed
+ *      to bottom-right with a horizontal track of 4 clickable image thumbnails.
+ *      Gold border animates on the active thumbnail.
+ */
+
+/* ── Section container ── */
+.projectsSection {
+  position: relative;
+  width: 100%;
+  height: 100vh;
+  overflow: hidden;
+  background: #0a0a0a;
+  border-bottom: 1px solid var(--color-border);
+}
+
+/* ── Video stack — all videos stacked absolutely ── */
+.projectsVideoStack {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+}
+
+/* ── Individual video — hidden by default ── */
+.projectsVideo {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center;
+  opacity: 0;
+  transition: opacity 0.9s cubic-bezier(0.4, 0, 0.2, 1);
+  will-change: opacity;
+  transform: translate3d(0, 0, 0);
+}
+
+/* ── Active video — visible ── */
+.projectsVideoActive {
+  opacity: 1;
+}
+
+/* ── Dark gradient overlay — bottom-heavy for text legibility ── */
+.projectsOverlay {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  background: linear-gradient(
+    135deg,
+    rgba(0, 0, 0, 0.60) 0%,
+    rgba(0, 0, 0, 0.10) 50%,
+    rgba(0, 0, 0, 0.70) 100%
+  );
+  pointer-events: none;
+}
+
+/* ── Top-left header block ── */
+.projectsHeader {
+  position: absolute;
+  top: 12vh;
+  left: 5vw;
+  z-index: 2;
+  display: flex;
+  flex-direction: column;
+  gap: 0.9rem;
+}
+
+/* ── Eyebrow tag ── */
+.projectsEyebrow {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  font-family: var(--font-ui);
+  font-size: 0.58rem;
+  font-weight: 700;
+  letter-spacing: 0.35em;
+  text-transform: uppercase;
+  color: var(--color-primary);
+  border: 1px solid var(--color-border-gold);
+  padding: 0.3rem 1rem;
+  background: rgba(201, 168, 76, 0.06);
+  width: fit-content;
+}
+
+.projectsEyebrowDot {
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: var(--color-primary);
+  flex-shrink: 0;
+}
+
+/* ── Main title — animates on slide change ── */
+.projectsTitle {
+  font-family: var(--font-heading);
+  font-size: clamp(2.4rem, 5.5vw, 5rem);
+  font-weight: 700;
+  color: var(--color-text);
+  letter-spacing: -0.01em;
+  line-height: 1.1;
+  animation: projectsTitleIn 0.5s ease forwards;
+}
+
+@keyframes projectsTitleIn {
+  from { opacity: 0; transform: translateY(12px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+/* ── Subtitle ── */
+.projectsSub {
+  font-family: var(--font-ui);
+  font-size: 0.75rem;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: rgba(245, 240, 232, 0.55);
+  animation: projectsTitleIn 0.6s ease forwards;
+}
+
+/* ── Top-right slide counter ── */
+.projectsSlideCount {
+  position: absolute;
+  top: 12vh;
+  right: 5vw;
+  z-index: 2;
+  display: flex;
+  align-items: baseline;
+  gap: 0.3rem;
+  font-family: var(--font-ui);
+  line-height: 1;
+}
+
+.projectsSlideNum {
+  font-size: clamp(2.5rem, 4vw, 4rem);
+  font-weight: 700;
+  color: var(--color-primary);
+  letter-spacing: -0.02em;
+}
+
+.projectsSlideTotal {
+  font-size: 0.9rem;
+  color: rgba(245, 240, 232, 0.35);
+  letter-spacing: 0.12em;
+}
+
+/* ── Bottom-right thumbnail slider container ── */
+.projectsThumbSlider {
+  position: absolute;
+  bottom: 4vh;
+  right: 3vw;
+  z-index: 3;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 0.75rem;
+}
+
+/* ── "Select Project" label above thumbs ── */
+.projectsThumbLabel {
+  font-family: var(--font-ui);
+  font-size: 0.5rem;
+  letter-spacing: 0.3em;
+  text-transform: uppercase;
+  color: rgba(201, 168, 76, 0.6);
+}
+
+/* ── Horizontal track holding all thumbnails ── */
+.projectsThumbTrack {
+  display: flex;
+  align-items: flex-end;
+  gap: 0.75rem;
+}
+
+/* ── Individual thumbnail button ── */
+.projectsThumb {
+  position: relative;
+  width: 7.5vw;
+  /* Fluid height — 16:9 ratio */
+  height: calc(7.5vw * 0.65);
+  min-width: 80px;
+  min-height: 52px;
+  max-width: 140px;
+  max-height: 91px;
+  border: none;
+  border-radius: var(--radius-sm);
+  overflow: hidden;
+  cursor: pointer;
+  padding: 0;
+  background: #111;
+  /* Non-active: slightly dimmed */
+  opacity: 0.55;
+  transform: scale(1);
+  transition:
+    opacity 0.35s var(--transition-base),
+    transform 0.35s var(--transition-base),
+    box-shadow 0.35s var(--transition-base);
+  flex-shrink: 0;
+}
+
+/* ── Active thumbnail — full opacity, scaled up, gold shadow ── */
+.projectsThumbActive {
+  opacity: 1;
+  transform: scale(1.12);
+  box-shadow: 0 0 0 2px var(--color-primary), var(--shadow-gold);
+}
+
+/* ── Hover state ── */
+.projectsThumb:not(.projectsThumbActive):hover {
+  opacity: 0.85;
+  transform: scale(1.05);
+}
+
+/* ── Thumbnail image fills the button ── */
+.projectsThumbImg {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center;
+  display: block;
+  pointer-events: none;
+  /* Slight desaturate on inactive — CSS filter */
+  filter: saturate(0.6);
+  transition: filter 0.35s ease;
+}
+
+.projectsThumbActive .projectsThumbImg {
+  filter: saturate(1);
+}
+
+/* ── Gold border overlay — animated in on active ── */
+.projectsThumbBorder {
+  position: absolute;
+  inset: 0;
+  border-radius: var(--radius-sm);
+  pointer-events: none;
+  /* Only visible on active — handled via box-shadow on parent */
+}
+
+/* ── Caption tooltip — appears on hover ── */
+.projectsThumbCaption {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  padding: 0.3rem 0.4rem;
+  background: linear-gradient(to top, rgba(0,0,0,0.75), transparent);
+  font-family: var(--font-ui);
+  font-size: 0.42rem;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: rgba(245, 240, 232, 0.9);
+  text-align: center;
+  opacity: 0;
+  transition: opacity 0.2s ease;
+  pointer-events: none;
+}
+
+.projectsThumb:hover .projectsThumbCaption,
+.projectsThumbActive .projectsThumbCaption {
+  opacity: 1;
+}
+
+/* ── Right side vertical label ── */
+.projectsSideLabel {
+  position: absolute;
+  right: 1.5rem;
+  top: 50%;
+  transform: translateY(-50%);
+  z-index: 2;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.8rem;
+}
+
+.projectsSideLine {
+  width: 1px;
+  height: 4rem;
+  background: linear-gradient(to bottom, transparent, var(--color-border-gold));
+}
+
+.projectsSideText {
+  font-family: var(--font-ui);
+  font-size: 0.5rem;
+  letter-spacing: 0.3em;
+  text-transform: uppercase;
+  color: rgba(201, 168, 76, 0.45);
+  writing-mode: vertical-rl;
+  text-orientation: mixed;
+}

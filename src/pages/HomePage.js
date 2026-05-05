@@ -12,11 +12,11 @@ import HeroSection from "../components/HeroSection";
 import InteriorProjects from "../components/InteriorProjects";
 import WhyChooseUs from "../components/WhyChooseUs";
 import ContactSection from "../components/ContactSection";
+import ProjectsSection from "../components/ProjectsSection";
 import "../css/HomePage.css";
 
-// Placeholder sections — contact, interior-projects and why-us are now built components
+// Placeholder sections — projects, contact, interior-projects and why-us are now built components
 const placeholderSections = [
-  { id: "projects",           label: "Projects" },
   { id: "construction-works", label: "Construction Works" },
   { id: "cost-calculator",    label: "Building Cost Calculator" },
   { id: "design-services",    label: "Design Services" },
@@ -38,6 +38,9 @@ function HomePage() {
 
       {/* ── Interior Projects — video background carousel ── */}
       <InteriorProjects />
+
+      {/* ── Projects — fullscreen video bg + thumbnail slider ── */}
+      <ProjectsSection />
 
       {/* ── Remaining sections ── */}
       {placeholderSections.map((section) => (
