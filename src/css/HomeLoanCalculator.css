@@ -596,10 +596,12 @@
 
 /* ── Outer wrapper — gives the section a fixed height in the flow ── */
 .loanHijackOuter {
-  max-width: 100%;
+  max-width: 92%;
   margin: 0 auto clamp(3rem, 6vw, 5rem);
   height: 100vh;
   position: relative;
+  border-radius: 1.5rem;
+  overflow: hidden;
 }
 
 /* ── Sticky container — stays in viewport during hijack ── */
@@ -609,8 +611,8 @@
   height: 100vh;
   overflow: hidden;
   background: var(--color-surface);
-  border-top: 1px solid var(--color-border-gold);
-  border-bottom: 1px solid var(--color-border-gold);
+  border: 1px solid var(--color-border-gold);
+  border-radius: 1.5rem;
 }
 
 /* ── Slide track — full width × N slides, shifts via translateX ── */

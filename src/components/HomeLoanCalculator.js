@@ -114,32 +114,54 @@ function HomeLoanCalculator() {
   const [activeFixing, setActiveFixing] = useState(0);
 
   const [activeStep,   setActiveStep]   = useState(0);
-  const hijackRef  = useRef(null);   // outer wrapper that owns the scroll distance
-  const isHijacking = useRef(false); // prevents re-entrant scroll handler
+  const hijackRef   = useRef(null);          // outer wrapper that owns the scroll distance
+  const isHovering  = useRef(false);         // true only when mouse is inside the slider
 
   /* ────────────────────────────────────────────────────────────────
      Scroll-hijack effect — converts vertical wheel scroll into
-     horizontal panel slides while the section is in the viewport.
-     HOW: wheel event is captured when hijackRef is visible.
-          Each scroll tick increments/decrements activeStep.
-          The page is held in place (preventDefault) during the
-          sequence. Once all slides are seen the page scrolls normally.
+     horizontal panel slides ONLY while the cursor is physically
+     inside the slider element.
+     HOW: mouseenter/mouseleave on the slider element toggle isHovering.
+          The wheel listener is attached to the slider element (not window)
+          so it only fires when the user hovers the slider.
+          preventDefault stops the page from scrolling during slides.
+          At the first/last step the page scroll is released naturally.
      CALLED BY: useEffect on mount
      ──────────────────────────────────────────────────────────────── */
   useEffect(() => {
     const el = hijackRef.current;
     if (!el) return;
 
-    let cooldown = false; // debounce per scroll tick
+    let cooldown = false;
 
+    /**
+     * WHAT: Sets isHovering true when mouse enters the slider.
+     * HOW:  Plain ref write — no re-render needed.
+     * CALLED BY: mouseenter on hijackRef element.
+     */
+    function onMouseEnter() { isHovering.current = true;  }
+
+    /**
+     * WHAT: Clears isHovering when mouse leaves the slider.
+     * HOW:  Plain ref write — no re-render needed.
+     * CALLED BY: mouseleave on hijackRef element.
+     */
+    function onMouseLeave() { isHovering.current = false; }
+
+    /**
+     * WHAT: Intercepts wheel events to advance/retreat slides.
+     * HOW:  Only fires when isHovering is true. Calls preventDefault
+     *       to stop page scroll during the slide sequence. Releases
+     *       page scroll at first/last boundary steps. 600ms cooldown
+     *       prevents rapid multi-step jumping per scroll tick.
+     * CALLED BY: wheel event on hijackRef element.
+     */
     function onWheel(e) {
-      const rect = el.getBoundingClientRect();
-      const inView = rect.top <= 80 && rect.bottom >= window.innerHeight * 0.5;
-      if (!inView) return;
+      if (!isHovering.current) return;
 
-      // At first step scrolling up — let page scroll freely
+      // At first step scrolling up — release to page
       if (e.deltaY < 0 && activeStep === 0) return;
-      // At last step scrolling down — let page scroll freely
+      // At last step scrolling down — release to page
       if (e.deltaY > 0 && activeStep === SCROLL_STEPS.length - 1) return;
 
       e.preventDefault();
@@ -153,13 +175,23 @@ function HomeLoanCalculator() {
       });
     }
 
-    // Touch swipe support
+    // Touch swipe support — scoped to element
     let touchStartY = 0;
+
+    /**
+     * WHAT: Records touch start Y position for swipe direction detection.
+     * HOW:  Stores first touch clientY in touchStartY.
+     * CALLED BY: touchstart on hijackRef element.
+     */
     function onTouchStart(e) { touchStartY = e.touches[0].clientY; }
+
+    /**
+     * WHAT: Advances/retreats slide based on swipe direction.
+     * HOW:  Computes deltaY from touchStart. Ignores swipes < 30px.
+     *       Releases at boundary steps. Calls preventDefault mid-sequence.
+     * CALLED BY: touchend on hijackRef element.
+     */
     function onTouchEnd(e) {
-      const rect = el.getBoundingClientRect();
-      const inView = rect.top <= 80 && rect.bottom >= window.innerHeight * 0.5;
-      if (!inView) return;
       const dy = touchStartY - e.changedTouches[0].clientY;
       if (Math.abs(dy) < 30) return;
       if (dy < 0 && activeStep === 0) return;
@@ -171,13 +203,19 @@ function HomeLoanCalculator() {
       );
     }
 
-    window.addEventListener("wheel", onWheel, { passive: false });
-    window.addEventListener("touchstart", onTouchStart, { passive: true });
-    window.addEventListener("touchend", onTouchEnd, { passive: false });
+    // Attach all listeners to the element — not window
+    el.addEventListener("mouseenter",  onMouseEnter);
+    el.addEventListener("mouseleave",  onMouseLeave);
+    el.addEventListener("wheel",       onWheel,      { passive: false });
+    el.addEventListener("touchstart",  onTouchStart, { passive: true  });
+    el.addEventListener("touchend",    onTouchEnd,   { passive: false });
+
     return () => {
-      window.removeEventListener("wheel", onWheel);
-      window.removeEventListener("touchstart", onTouchStart);
-      window.removeEventListener("touchend", onTouchEnd);
+      el.removeEventListener("mouseenter",  onMouseEnter);
+      el.removeEventListener("mouseleave",  onMouseLeave);
+      el.removeEventListener("wheel",       onWheel);
+      el.removeEventListener("touchstart",  onTouchStart);
+      el.removeEventListener("touchend",    onTouchEnd);
     };
   }, [activeStep]);
 
