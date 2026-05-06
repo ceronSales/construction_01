@@ -5,24 +5,20 @@
 
 /* ── Section wrapper ── */
 .loanSection {
-  background: var(--color-secondary);
+  background: #08080f;
   padding: clamp(4rem, 8vw, 7rem) clamp(1.5rem, 6vw, 6rem);
   position: relative;
   overflow: hidden;
 }
 
-.loanSection::before {
-  content: "";
-  position: absolute;
-  top: 0; left: 10%; right: 10%;
-  height: 1px;
-  background: linear-gradient(90deg, transparent, var(--color-primary), transparent);
-}
+/* blob spans rendered by BlobBackground component — see BlobGradient.css */
 
 /* ── Header ── */
 .loanHeader {
   text-align: center;
   margin-bottom: clamp(2.5rem, 5vw, 4rem);
+  position: relative;
+  z-index: 1;
 }
 
 .loanEyebrow {
@@ -59,16 +55,23 @@
 
 /* ── Main calculator card ── */
 .loanCard {
+  position: relative;
+  z-index: 1;
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: clamp(1.5rem, 3vw, 3rem);
   max-width: 1200px;
   margin: 0 auto 3rem;
-  background: var(--color-surface);
-  border: 1px solid var(--color-border-gold);
+  background: rgba(255, 255, 255, 0.07);
+  backdrop-filter: blur(28px);
+  -webkit-backdrop-filter: blur(28px);
+  border: 1px solid rgba(255, 255, 255, 0.14);
   border-radius: var(--radius-lg);
   overflow: hidden;
-  box-shadow: var(--shadow-deep);
+  box-shadow:
+    0 8px 40px rgba(0, 0, 0, 0.45),
+    0 2px 0 rgba(255, 255, 255, 0.06) inset,
+    0 0 0 1px rgba(201, 168, 76, 0.08);
 }
 
 /* WHY media query: grid can't express stacking with fluid units alone */
@@ -147,10 +150,13 @@
   display: flex;
   align-items: center;
   gap: 0.4rem;
-  border: 1px solid var(--color-border);
+  background: rgba(255,255,255,0.05);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  border: 1px solid rgba(255,255,255,0.12);
   border-radius: var(--radius-sm);
   padding: 0 0.8rem;
-  transition: border-color var(--transition-fast);
+  transition: border-color var(--transition-fast), box-shadow var(--transition-fast);
 }
 
 .loanInputWrap:focus-within {
@@ -211,14 +217,17 @@
   flex-direction: column;
   align-items: center;
   gap: 0.15rem;
-  background: var(--color-surface-2);
-  border: 1px solid var(--color-border);
+  background: rgba(255, 255, 255, 0.05);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
   border-radius: var(--radius-sm);
   padding: 0.5rem 0.9rem;
   cursor: pointer;
   transition: all var(--transition-fast);
   flex: 1;
   min-width: 0;
+  box-shadow: 0 2px 10px rgba(0,0,0,0.2);
 }
 
 .loanFixingBtn:hover {
@@ -294,10 +303,13 @@
   align-items: center;
   text-align: center;
   padding: 1.8rem;
-  background: rgba(201,168,76,0.06);
-  border: 1px solid var(--color-border-gold);
+  background: rgba(255, 255, 255, 0.08);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid rgba(201, 168, 76, 0.28);
   border-radius: var(--radius-md);
   margin-bottom: 1.5rem;
+  box-shadow: 0 4px 24px rgba(0,0,0,0.3), inset 0 1px 0 rgba(255,255,255,0.08);
 }
 
 .loanResultHeroLabel {
@@ -337,9 +349,12 @@
   flex-direction: column;
   gap: 0.25rem;
   padding: 1rem;
-  background: var(--color-surface-2);
-  border: 1px solid var(--color-border);
+  background: rgba(255, 255, 255, 0.06);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
   border-radius: var(--radius-sm);
+  box-shadow: 0 2px 12px rgba(0,0,0,0.25), inset 0 1px 0 rgba(255,255,255,0.06);
 }
 
 .loanResultItemLabel {
@@ -428,12 +443,17 @@
 
 /* ── BSP Chart section ── */
 .loanChartSection {
+  position: relative;
+  z-index: 1;
   max-width: 1200px;
   margin: 0 auto 2.5rem;
-  background: var(--color-surface);
-  border: 1px solid var(--color-border);
+  background: rgba(255, 255, 255, 0.06);
+  backdrop-filter: blur(24px);
+  -webkit-backdrop-filter: blur(24px);
+  border: 1px solid rgba(255, 255, 255, 0.11);
   border-radius: var(--radius-lg);
   padding: clamp(1.5rem, 3vw, 2.5rem);
+  box-shadow: 0 8px 36px rgba(0,0,0,0.4), inset 0 1px 0 rgba(255,255,255,0.06);
 }
 
 .loanChartHeader { margin-bottom: 1.5rem; }
@@ -493,13 +513,18 @@
 
 /* ── Opinion box ── */
 .loanOpinionBox {
+  position: relative;
+  z-index: 1;
   max-width: 1200px;
   margin: 0 auto 2.5rem;
-  background: rgba(201,168,76,0.05);
-  border: 1px solid var(--color-border-gold);
+  background: rgba(255, 255, 255, 0.06);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
   border-left: 3px solid var(--color-primary);
   border-radius: var(--radius-md);
   padding: 1.4rem 1.8rem;
+  box-shadow: 0 4px 24px rgba(0,0,0,0.3), inset 0 1px 0 rgba(255,255,255,0.06);
 }
 
 .loanOpinionTag {
@@ -524,13 +549,18 @@
 
 /* ── Rate reference table ── */
 .loanRateTable {
+  position: relative;
+  z-index: 1;
   max-width: 1200px;
   margin: 0 auto;
-  background: var(--color-surface);
-  border: 1px solid var(--color-border);
+  background: rgba(255, 255, 255, 0.06);
+  backdrop-filter: blur(24px);
+  -webkit-backdrop-filter: blur(24px);
+  border: 1px solid rgba(255, 255, 255, 0.11);
   border-radius: var(--radius-lg);
   padding: clamp(1.2rem, 2.5vw, 2rem);
   overflow-x: auto;
+  box-shadow: 0 8px 36px rgba(0,0,0,0.4), inset 0 1px 0 rgba(255,255,255,0.06);
 }
 
 .loanRateTableTitle {
@@ -596,6 +626,8 @@
 
 /* ── Outer wrapper — gives the section a fixed height in the flow ── */
 .loanHijackOuter {
+  position: relative;
+  z-index: 1;
   max-width: 92%;
   margin: 0 auto clamp(3rem, 6vw, 5rem);
   height: 100vh;
@@ -610,9 +642,12 @@
   top: 0;
   height: 100vh;
   overflow: hidden;
-  background: var(--color-surface);
-  border: 1px solid var(--color-border-gold);
+  background: rgba(255, 255, 255, 0.05);
+  backdrop-filter: blur(28px);
+  -webkit-backdrop-filter: blur(28px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
   border-radius: 1.5rem;
+  box-shadow: 0 8px 48px rgba(0,0,0,0.5), inset 0 1px 0 rgba(255,255,255,0.06);
 }
 
 /* ── Slide track — full width × N slides, shifts via translateX ── */
@@ -634,7 +669,7 @@
   justify-content: center;
   position: relative;
   padding: clamp(2rem, 6vw, 5rem) clamp(2rem, 8vw, 8rem);
-  background: var(--color-surface);
+  background: transparent;
   overflow: hidden;
 }
 

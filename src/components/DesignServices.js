@@ -151,12 +151,15 @@ function DesignServices() {
     vidIndex.current = (vidIndex.current + 1) % VIDEOS.length;
     if (videoRef.current) {
       videoRef.current.src = VIDEOS[vidIndex.current];
-      videoRef.current.play();
+      videoRef.current.load();
+      videoRef.current.play().catch(() => {});
     }
   }, []);
 
   useEffect(() => {
-    if (videoRef.current) videoRef.current.play();
+    if (videoRef.current) {
+      videoRef.current.play().catch(() => {});
+    }
   }, []);
 
   return (

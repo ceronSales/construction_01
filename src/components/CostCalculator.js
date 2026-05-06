@@ -14,6 +14,7 @@ import {
 } from "recharts";
 import jsPDF from "jspdf";
 import html2canvas from "html2canvas";
+import BlobBackground from "./BlobBackground";
 import "../css/CostCalculator.css";
 
 // ── Cost rates per sqm by finish type (Philippine Pesos) ──
@@ -294,6 +295,8 @@ function CostCalculator() {
 
   return (
     <section id="cost-calculator" className="calcSection">
+      {/* ── 12 animated blob gradient layers ── */}
+      <BlobBackground />
 
       {/* ── Section header ── */}
       <div className="calcHeader">

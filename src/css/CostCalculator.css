@@ -9,9 +9,9 @@
 /* ── Section wrapper ── */
 .calcSection {
   width: 100%;
-  background: var(--color-secondary);
+  background: #08080f;
   padding: var(--spacing-lg) 0 5rem;
-  border-top: 1px solid var(--color-border);
+  border-top: 1px solid rgba(255,255,255,0.06);
   position: relative;
   overflow: hidden;
 }
@@ -110,8 +110,10 @@
   align-items: center;
   gap: 0.45rem;
   padding: 0.8rem 2.5rem;
-  background: var(--color-surface);
-  border: 1px solid var(--color-border);
+  background: rgba(255,255,255,0.06);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid rgba(255,255,255,0.10);
   cursor: pointer;
   position: relative;
   z-index: 1;
@@ -211,10 +213,13 @@
 }
 
 .calcFloor {
-  background: var(--color-surface);
-  border: 1px solid var(--color-border);
+  background: rgba(255,255,255,0.06);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid rgba(255,255,255,0.12);
   border-radius: var(--radius-md);
   overflow: hidden;
+  box-shadow: 0 4px 28px rgba(0,0,0,0.35), inset 0 1px 0 rgba(255,255,255,0.07);
 }
 
 .calcFloorHeader {
@@ -289,7 +294,7 @@
 .calcQtyBtn {
   width: 26px; height: 26px;
   background: var(--color-secondary);
-  border: 1px solid var(--color-border);
+  border: 1px solid rgba(255,255,255,0.10);
   color: var(--color-text);
   font-size: 0.9rem;
   line-height: 1;
@@ -318,7 +323,9 @@
 
 /* Manual override */
 .calcManualArea {
-  background: var(--color-surface);
+  background: rgba(255,255,255,0.06);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
   border: 1px solid var(--color-border-gold);
   border-radius: var(--radius-md);
   padding: 1.2rem;
@@ -354,7 +361,7 @@
 .calcManualInput {
   flex: 1;
   background: var(--color-secondary);
-  border: 1px solid var(--color-border);
+  border: 1px solid rgba(255,255,255,0.10);
   border-radius: var(--radius-sm);
   color: var(--color-text);
   font-family: var(--font-ui);
@@ -438,8 +445,10 @@
 
 /* Quick cost preview */
 .calcQuickCosts {
-  background: var(--color-surface);
-  border: 1px solid var(--color-border);
+  background: rgba(255,255,255,0.06);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid rgba(255,255,255,0.10);
   border-radius: var(--radius-md);
   padding: 1.1rem;
 }
@@ -510,8 +519,10 @@
 }
 
 .calcFinishCard {
-  background: var(--color-surface);
-  border: 1px solid var(--color-border);
+  background: rgba(255,255,255,0.06);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid rgba(255,255,255,0.10);
   border-radius: var(--radius-md);
   padding: 2rem 1.6rem;
   cursor: pointer;
@@ -531,7 +542,7 @@
   top: calc(var(--navbar-height) + 0.5rem);
   z-index: 10;
   background: var(--color-secondary);
-  border: 1px solid var(--color-border);
+  border: 1px solid rgba(255,255,255,0.10);
   border-radius: var(--radius-sm);
   overflow: hidden;
   margin-bottom: 1rem;
@@ -631,7 +642,9 @@
 
 /* Selected finish highlight — compact strip */
 .calcSelectedCost {
-  background: var(--color-surface);
+  background: rgba(255,255,255,0.06);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
   border: 1px solid;
   border-radius: var(--radius-md);
   padding: 1rem 1.4rem;
@@ -690,8 +703,10 @@
 
 /* Bar chart — tall, fills remaining column space */
 .calcBarChartCard {
-  background: var(--color-surface);
-  border: 1px solid var(--color-border);
+  background: rgba(255,255,255,0.06);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid rgba(255,255,255,0.10);
   border-radius: var(--radius-md);
   padding: 1.2rem 1rem 1rem;
   display: flex;
@@ -737,8 +752,10 @@
 
 /* Additional costs */
 .calcAdditional {
-  background: var(--color-surface);
-  border: 1px solid var(--color-border);
+  background: rgba(255,255,255,0.06);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid rgba(255,255,255,0.10);
   border-radius: var(--radius-md);
   padding: 1rem;
 }
@@ -782,7 +799,9 @@
   display: flex;
   flex-direction: column;
   gap: 0.9rem;
-  background: var(--color-surface);
+  background: rgba(255,255,255,0.06);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
   border: 1px solid var(--color-border-gold);
   border-radius: var(--radius-md);
   padding: 1.5rem;
@@ -806,7 +825,7 @@
 
 .calcInvoiceInput {
   background: var(--color-secondary);
-  border: 1px solid var(--color-border);
+  border: 1px solid rgba(255,255,255,0.10);
   border-radius: var(--radius-sm);
   color: var(--color-text);
   font-family: var(--font-body);
@@ -999,7 +1018,7 @@
 
 .invoiceItemsTable {
   margin-bottom: 1.5rem;
-  border: 1px solid var(--color-border);
+  border: 1px solid rgba(255,255,255,0.10);
   border-radius: var(--radius-sm);
   overflow: hidden;
 }
