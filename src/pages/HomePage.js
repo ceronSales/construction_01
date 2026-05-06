@@ -1,22 +1,22 @@
 /**
  * WHAT: HomePage — assembles all sections of the Triconix Construction homepage.
- * HOW: Renders Navbar fixed at top, HeroSection as the 50% scroll sequence,
- *      followed by placeholder sections for each nav link. Sections will be
- *      built out per instruction.
+ * HOW: Renders Navbar fixed at top, then sections in UX-optimised order:
+ *      emotional hook → trust → proof → services → tools → info → conversion.
  * CALLED BY: App.js
  */
 
 import React from "react";
 import Navbar from "../components/Navbar";
 import HeroSection from "../components/HeroSection";
-import InteriorProjects from "../components/InteriorProjects";
 import WhyChooseUs from "../components/WhyChooseUs";
-import ContactSection from "../components/ContactSection";
 import ProjectsSection from "../components/ProjectsSection";
+import InteriorProjects from "../components/InteriorProjects";
+import ConstructionWorks from "../components/ConstructionWorks";
+import DesignServices from "../components/DesignServices";
 import CostCalculator from "../components/CostCalculator";
 import HomeLoanCalculator from "../components/HomeLoanCalculator";
-import DesignServices from "../components/DesignServices";
-import ConstructionWorks from "../components/ConstructionWorks";
+import AppointmentSection from "../components/AppointmentSection";
+import ContactSection from "../components/ContactSection";
 import "../css/HomePage.css";
 
 // Placeholder sections — built components are excluded from this list
@@ -29,28 +29,34 @@ const placeholderSections = [
 function HomePage() {
   return (
     <div className="homePage">
-      {/* ── Fixed Navigation ── */}
+      {/* ── 1. Fixed Navigation ── */}
       <Navbar />
 
-      {/* ── 50% — Scroll Construction Sequence Hero ── */}
+      {/* ── 2. Hero — cinematic scroll sequence, emotional hook ── */}
       <HeroSection />
 
-      {/* ── Interior Projects — video background carousel ── */}
-      <InteriorProjects />
+      {/* ── 3. Why Choose Us — establish trust at peak attention ── */}
+      <WhyChooseUs />
 
-      {/* ── Projects — fullscreen video bg + thumbnail slider ── */}
+      {/* ── 4. Projects — proof of work validates trust claims ── */}
       <ProjectsSection />
 
-      {/* ── Building Cost Calculator — scroll-jacked sticky steps ── */}
-      <CostCalculator />
+      {/* ── 5. Interior Projects — deeper showcase after main projects ── */}
+      <InteriorProjects />
 
-      {/* ── Construction Works & Services ── */}
+      {/* ── 6. Construction Works — explain services after showing results ── */}
       <ConstructionWorks />
 
-      {/* ── Design Services — looping video BG + glassmorphism cards ── */}
+      {/* ── 7. Design Services — companion to construction works ── */}
       <DesignServices />
 
-      {/* ── Remaining sections ── */}
+      {/* ── 8. Building Cost Calculator — tool for engaged prospects ── */}
+      <CostCalculator />
+
+      {/* ── 9. Home Loan Calculator — natural follow-up to cost calculator ── */}
+      <HomeLoanCalculator />
+
+      {/* ── 10–12. Informational placeholders ── */}
       {placeholderSections.map((section) => (
         <section key={section.id} id={section.id} className="homeSection">
           <div className="homeSectionInner">
@@ -63,13 +69,10 @@ function HomePage() {
         </section>
       ))}
 
-      {/* ── Home Loan Calculator ── */}
-      <HomeLoanCalculator />
+      {/* ── 13. Book Appointment — pre-contact conversion step ── */}
+      <AppointmentSection />
 
-      {/* ── Why Choose Us ── */}
-      <WhyChooseUs />
-
-      {/* ── Contact Us — two-column composer + 3D globe ── */}
+      {/* ── 14. Contact Us — final call to action ── */}
       <ContactSection />
     </div>
   );
