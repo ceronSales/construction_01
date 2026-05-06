@@ -10,11 +10,12 @@
 
 import React, { useState, useCallback, useMemo, useEffect, useRef } from "react";
 import {
-  AreaChart, Area, XAxis, YAxis, CartesianGrid,
-  Tooltip, ResponsiveContainer, ReferenceLine,
+  LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip,
+  ReferenceLine, ResponsiveContainer, Area, AreaChart,
 } from "recharts";
+import jsPDF from "jspdf";
+import html2canvas from "html2canvas";
 import "../css/HomeLoanCalculator.css";
-import BlobBackground from "./BlobBackground";
 
 /* ── Fixing period presets (Security Bank PH rates) ── */
 const FIXING_PERIODS = [
@@ -115,8 +116,74 @@ function HomeLoanCalculator() {
   const [activeFixing, setActiveFixing] = useState(0);
 
   const [activeStep,   setActiveStep]   = useState(0);
-  const hijackRef   = useRef(null);   // outer tall wrapper — provides scroll distance
-  const prevStep    = useRef(0);      // avoids unnecessary setState calls
+  const hijackRef   = useRef(null);
+  const prevStep    = useRef(0);
+  const invoiceRef  = useRef(null);   // ref for PDF capture target
+  const [generating, setGenerating]    = useState(false);
+
+  /**
+   * WHAT: Generates and downloads a home loan estimate PDF.
+   * HOW:  html2canvas captures the invoiceRef div at 2x scale. The canvas
+   *       is embedded into a jsPDF A4 document. A diagonal watermark is
+   *       drawn on the page before saving.
+   * CALLED BY: Download PDF button onClick.
+   */
+  const handleGeneratePDF = useCallback(async () => {
+    if (!invoiceRef.current) return;
+    setGenerating(true);
+    try {
+      const canvas  = await html2canvas(invoiceRef.current, {
+        scale: 2,
+        backgroundColor: "#0d0d0d",
+        useCORS: true,
+      });
+      const imgData = canvas.toDataURL("image/png");
+      const pdf     = new jsPDF({ orientation: "portrait", unit: "mm", format: "a4" });
+      const pdfW    = pdf.internal.pageSize.getWidth();
+      const pdfH    = pdf.internal.pageSize.getHeight();
+      const ratio   = canvas.height / canvas.width;
+      const imgH    = pdfW * ratio;
+
+      // If content fits on one page
+      if (imgH <= pdfH) {
+        pdf.addImage(imgData, "PNG", 0, 0, pdfW, imgH);
+      } else {
+        // Slice into pages
+        const pageCanvas = document.createElement("canvas");
+        const pageH      = Math.floor(canvas.width * (pdfH / pdfW));
+        pageCanvas.width  = canvas.width;
+        pageCanvas.height = pageH;
+        const ctx        = pageCanvas.getContext("2d");
+        let offset = 0;
+        while (offset < canvas.height) {
+          ctx.clearRect(0, 0, pageCanvas.width, pageCanvas.height);
+          ctx.drawImage(canvas, 0, -offset);
+          pdf.addImage(pageCanvas.toDataURL("image/png"), "PNG", 0, 0, pdfW, pdfH);
+          offset += pageH;
+          if (offset < canvas.height) pdf.addPage();
+        }
+      }
+
+      // Diagonal watermark on every page
+      const totalPages = pdf.internal.getNumberOfPages();
+      for (let p = 1; p <= totalPages; p++) {
+        pdf.setPage(p);
+        pdf.setFontSize(30);
+        pdf.setTextColor(201, 168, 76);
+        pdf.setGState(pdf.GState({ opacity: 0.06 }));
+        for (let y = 45; y < pdfH; y += 55) {
+          pdf.text("TRICONIX CONSTRUCTION CORP.", pdfW / 2, y, { angle: 35, align: "center" });
+        }
+        pdf.setGState(pdf.GState({ opacity: 1 }));
+      }
+
+      pdf.save(`Triconix-HomeLoan-Estimate-${Date.now()}.pdf`);
+    } catch (err) {
+      console.error("PDF error:", err);
+    } finally {
+      setGenerating(false);
+    }
+  }, []);
 
   /* ────────────────────────────────────────────────────────────────
      Scroll-position-driven slide advancement.
@@ -214,7 +281,6 @@ function HomeLoanCalculator() {
 
   return (
     <section id="loan" className="loanSection">
-      <BlobBackground />
 
       {/* ── Section header ── */}
       <div className="loanHeader">
@@ -447,7 +513,96 @@ function HomeLoanCalculator() {
             * Results are estimates based on fixed-rate amortization. Actual bank
             computations may vary. Consult your bank for final figures.
           </p>
+
+          {/* ── PDF download button ── */}
+          <button
+            className={`loanPdfBtn ${generating ? "loanPdfBtnLoading" : ""}`}
+            onClick={handleGeneratePDF}
+            disabled={generating}
+          >
+            {generating ? (
+              <><span className="loanPdfBtnSpinner" /> Generating PDF…</>
+            ) : (
+              <><span className="loanPdfBtnIcon">⬇</span> Download Loan Estimate PDF</>
+            )}
+          </button>
         </div>
+      </div>
+
+      {/* ── Hidden invoice div captured by html2canvas for PDF ── */}
+      <div className="loanInvoicePrint" ref={invoiceRef}>
+        <div className="loanInvoicePrintWatermark">TRICONIX</div>
+
+        <div className="loanInvoicePrintHeader">
+          <div>
+            <div className="loanInvoicePrintCompany">TRICONIX CONSTRUCTION CORPORATION</div>
+            <div className="loanInvoicePrintSub">Architects · Engineers · Builders</div>
+            <div className="loanInvoicePrintAddr">#66 JP Rizal St. 2nd Floor Unit 2C, Kore Bldg. Nangka, Marikina City</div>
+            <div className="loanInvoicePrintContact">Smart: 0946 616 3185 · Globe: 0905 266 6282</div>
+          </div>
+          <div className="loanInvoicePrintMeta">
+            <div className="loanInvoicePrintMetaLabel">HOME LOAN ESTIMATE</div>
+            <div className="loanInvoicePrintDate">
+              {new Date().toLocaleDateString("en-PH", { year: "numeric", month: "long", day: "numeric" })}
+            </div>
+          </div>
+        </div>
+
+        <div className="loanInvoicePrintDivider" />
+
+        <div className="loanInvoicePrintSection">Loan Parameters</div>
+        <div className="loanInvoicePrintGrid">
+          <div className="loanInvoicePrintRow"><span>Loan Amount</span><span>{formatPeso(parseAmount(loanAmount))}</span></div>
+          <div className="loanInvoicePrintRow"><span>Interest Rate</span><span>{interestRate}% per year</span></div>
+          <div className="loanInvoicePrintRow"><span>Loan Term</span><span>{termYears} years ({parseInt(termYears) * 12} months)</span></div>
+          <div className="loanInvoicePrintRow"><span>Existing Amortization</span><span>{formatPeso(parseAmount(existingAmort))}</span></div>
+        </div>
+
+        <div className="loanInvoicePrintDivider" />
+
+        <div className="loanInvoicePrintSection">Computed Results</div>
+        <div className="loanInvoicePrintGrid">
+          <div className="loanInvoicePrintRow loanInvoicePrintRowHero"><span>Monthly Payment</span><span>{formatPeso(results.monthly)}</span></div>
+          <div className="loanInvoicePrintRow"><span>Required Monthly Income (30% DSR)</span><span>{formatPeso(results.required)}</span></div>
+          <div className="loanInvoicePrintRow"><span>Total Interest Paid</span><span>{formatPeso(results.totalInterest)}</span></div>
+          <div className="loanInvoicePrintRow"><span>Total Amount Paid</span><span>{formatPeso(results.totalPaid)}</span></div>
+        </div>
+
+        <div className="loanInvoicePrintDivider" />
+
+        <div className="loanInvoicePrintSection">Fixing Period Comparison</div>
+        <div className="loanInvoicePrintTable">
+          <div className="loanInvoicePrintTableHeader">
+            <span>Fixing Period</span><span>Rate</span><span>Monthly Payment</span>
+          </div>
+          {FIXING_PERIODS.map(fp => {
+            const P = parseAmount(loanAmount);
+            const r = fp.rate / 100 / 12;
+            const n = parseFloat(termYears) * 12;
+            const m = P && r && n ? P * (r * Math.pow(1+r,n)) / (Math.pow(1+r,n) - 1) : 0;
+            return (
+              <div key={fp.label} className="loanInvoicePrintTableRow">
+                <span>{fp.label}</span><span>{fp.rate.toFixed(2)}%</span><span>{formatPeso(m)}</span>
+              </div>
+            );
+          })}
+        </div>
+
+        <div className="loanInvoicePrintDivider" />
+
+        <div className="loanInvoicePrintSection">Triconix Insight</div>
+        <div className="loanInvoicePrintInsight">
+          <p>Based on our observation, interest rates tend to drop during presidential elections and periods of economic uncertainty. Always prepare at least <strong>40% cash or equity</strong> when constructing via home loan — banks release funds in tranches (30%, 60%, 90% completion) and under-assess by approximately 5%.</p>
+          <p>The maximum loanable amount is approximately <strong>70%–80% of the bank's assessed value</strong> of the property — not the market price. You will still need approximately 40% cash to bridge each release and keep construction running.</p>
+        </div>
+
+        <div className="loanInvoicePrintDivider" />
+
+        <div className="loanInvoicePrintDisclaimer">
+          This estimate is based on standard fixed-rate amortization formulas and is for planning purposes only.
+          Actual bank computations may vary. Consult your bank or Pag-IBIG for final figures. Valid 30 days.
+        </div>
+        <div className="loanInvoicePrintBrand">TRICONIX CONSTRUCTION CORPORATION · "Crafting Dreams, Building Homes"</div>
       </div>
 
       {/* ── Current Home Loan Interest Rates — below calculator card ── */}

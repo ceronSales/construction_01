@@ -5,20 +5,24 @@
 
 /* ── Section wrapper ── */
 .loanSection {
-  background: #08080f;
+  background: var(--color-secondary);
   padding: clamp(4rem, 8vw, 7rem) clamp(1.5rem, 6vw, 6rem);
   position: relative;
   overflow: hidden;
 }
 
-/* blob spans rendered by BlobBackground component — see BlobGradient.css */
+.loanSection::before {
+  content: "";
+  position: absolute;
+  top: 0; left: 10%; right: 10%;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, var(--color-primary), transparent);
+}
 
 /* ── Header ── */
 .loanHeader {
   text-align: center;
   margin-bottom: clamp(2.5rem, 5vw, 4rem);
-  position: relative;
-  z-index: 1;
 }
 
 .loanEyebrow {
@@ -55,23 +59,16 @@
 
 /* ── Main calculator card ── */
 .loanCard {
-  position: relative;
-  z-index: 1;
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: clamp(1.5rem, 3vw, 3rem);
   max-width: 1200px;
   margin: 0 auto 3rem;
-  background: rgba(255, 255, 255, 0.07);
-  backdrop-filter: blur(28px);
-  -webkit-backdrop-filter: blur(28px);
-  border: 1px solid rgba(255, 255, 255, 0.14);
+  background: var(--color-surface);
+  border: 1px solid var(--color-border-gold);
   border-radius: var(--radius-lg);
   overflow: hidden;
-  box-shadow:
-    0 8px 40px rgba(0, 0, 0, 0.45),
-    0 2px 0 rgba(255, 255, 255, 0.06) inset,
-    0 0 0 1px rgba(201, 168, 76, 0.08);
+  box-shadow: var(--shadow-deep);
 }
 
 /* WHY media query: grid can't express stacking with fluid units alone */
@@ -150,13 +147,10 @@
   display: flex;
   align-items: center;
   gap: 0.4rem;
-  background: rgba(255,255,255,0.05);
-  backdrop-filter: blur(8px);
-  -webkit-backdrop-filter: blur(8px);
-  border: 1px solid rgba(255,255,255,0.12);
+  border: 1px solid var(--color-border);
   border-radius: var(--radius-sm);
   padding: 0 0.8rem;
-  transition: border-color var(--transition-fast), box-shadow var(--transition-fast);
+  transition: border-color var(--transition-fast);
 }
 
 .loanInputWrap:focus-within {
@@ -217,17 +211,14 @@
   flex-direction: column;
   align-items: center;
   gap: 0.15rem;
-  background: rgba(255, 255, 255, 0.05);
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
-  border: 1px solid rgba(255, 255, 255, 0.1);
+  background: var(--color-surface-2);
+  border: 1px solid var(--color-border);
   border-radius: var(--radius-sm);
   padding: 0.5rem 0.9rem;
   cursor: pointer;
   transition: all var(--transition-fast);
   flex: 1;
   min-width: 0;
-  box-shadow: 0 2px 10px rgba(0,0,0,0.2);
 }
 
 .loanFixingBtn:hover {
@@ -303,13 +294,10 @@
   align-items: center;
   text-align: center;
   padding: 1.8rem;
-  background: rgba(255, 255, 255, 0.08);
-  backdrop-filter: blur(20px);
-  -webkit-backdrop-filter: blur(20px);
-  border: 1px solid rgba(201, 168, 76, 0.28);
+  background: rgba(201,168,76,0.06);
+  border: 1px solid var(--color-border-gold);
   border-radius: var(--radius-md);
   margin-bottom: 1.5rem;
-  box-shadow: 0 4px 24px rgba(0,0,0,0.3), inset 0 1px 0 rgba(255,255,255,0.08);
 }
 
 .loanResultHeroLabel {
@@ -349,12 +337,9 @@
   flex-direction: column;
   gap: 0.25rem;
   padding: 1rem;
-  background: rgba(255, 255, 255, 0.06);
-  backdrop-filter: blur(16px);
-  -webkit-backdrop-filter: blur(16px);
-  border: 1px solid rgba(255, 255, 255, 0.1);
+  background: var(--color-surface-2);
+  border: 1px solid var(--color-border);
   border-radius: var(--radius-sm);
-  box-shadow: 0 2px 12px rgba(0,0,0,0.25), inset 0 1px 0 rgba(255,255,255,0.06);
 }
 
 .loanResultItemLabel {
@@ -443,17 +428,12 @@
 
 /* ── BSP Chart section ── */
 .loanChartSection {
-  position: relative;
-  z-index: 1;
   max-width: 1200px;
   margin: 0 auto 2.5rem;
-  background: rgba(255, 255, 255, 0.06);
-  backdrop-filter: blur(24px);
-  -webkit-backdrop-filter: blur(24px);
-  border: 1px solid rgba(255, 255, 255, 0.11);
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
   border-radius: var(--radius-lg);
   padding: clamp(1.5rem, 3vw, 2.5rem);
-  box-shadow: 0 8px 36px rgba(0,0,0,0.4), inset 0 1px 0 rgba(255,255,255,0.06);
 }
 
 .loanChartHeader { margin-bottom: 1.5rem; }
@@ -513,18 +493,13 @@
 
 /* ── Opinion box ── */
 .loanOpinionBox {
-  position: relative;
-  z-index: 1;
   max-width: 1200px;
   margin: 0 auto 2.5rem;
-  background: rgba(255, 255, 255, 0.06);
-  backdrop-filter: blur(20px);
-  -webkit-backdrop-filter: blur(20px);
-  border: 1px solid rgba(255, 255, 255, 0.1);
+  background: rgba(201,168,76,0.05);
+  border: 1px solid var(--color-border-gold);
   border-left: 3px solid var(--color-primary);
   border-radius: var(--radius-md);
   padding: 1.4rem 1.8rem;
-  box-shadow: 0 4px 24px rgba(0,0,0,0.3), inset 0 1px 0 rgba(255,255,255,0.06);
 }
 
 .loanOpinionTag {
@@ -549,18 +524,13 @@
 
 /* ── Rate reference table ── */
 .loanRateTable {
-  position: relative;
-  z-index: 1;
   max-width: 1200px;
   margin: 0 auto;
-  background: rgba(255, 255, 255, 0.06);
-  backdrop-filter: blur(24px);
-  -webkit-backdrop-filter: blur(24px);
-  border: 1px solid rgba(255, 255, 255, 0.11);
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
   border-radius: var(--radius-lg);
   padding: clamp(1.2rem, 2.5vw, 2rem);
   overflow-x: auto;
-  box-shadow: 0 8px 36px rgba(0,0,0,0.4), inset 0 1px 0 rgba(255,255,255,0.06);
 }
 
 .loanRateTableTitle {
@@ -626,8 +596,6 @@
 
 /* ── Outer wrapper — gives the section a fixed height in the flow ── */
 .loanHijackOuter {
-  position: relative;
-  z-index: 1;
   max-width: 92%;
   margin: 0 auto clamp(3rem, 6vw, 5rem);
   height: 100vh;
@@ -642,12 +610,9 @@
   top: 0;
   height: 100vh;
   overflow: hidden;
-  background: rgba(255, 255, 255, 0.05);
-  backdrop-filter: blur(28px);
-  -webkit-backdrop-filter: blur(28px);
-  border: 1px solid rgba(255, 255, 255, 0.1);
+  background: var(--color-surface);
+  border: 1px solid var(--color-border-gold);
   border-radius: 1.5rem;
-  box-shadow: 0 8px 48px rgba(0,0,0,0.5), inset 0 1px 0 rgba(255,255,255,0.06);
 }
 
 /* ── Slide track — full width × N slides, shifts via translateX ── */
@@ -669,7 +634,7 @@
   justify-content: center;
   position: relative;
   padding: clamp(2rem, 6vw, 5rem) clamp(2rem, 8vw, 8rem);
-  background: transparent;
+  background: var(--color-surface);
   overflow: hidden;
 }
 
@@ -847,4 +812,238 @@
 @keyframes loanHintPulse {
   0%, 100% { opacity: 0.35; }
   50%       { opacity: 0.7;  }
+}
+/* ── PDF Download Button ── */
+.loanPdfBtn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.6rem;
+  width: 100%;
+  margin-top: 1.2rem;
+  padding: 1rem 1.5rem;
+  background: linear-gradient(135deg, var(--color-primary), #e8c97a);
+  color: #0d0d0d;
+  font-family: var(--font-ui);
+  font-weight: 700;
+  font-size: 0.78rem;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  border: none;
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  transition: all 0.25s ease;
+  box-shadow: 0 4px 20px rgba(201, 168, 76, 0.25);
+}
+
+.loanPdfBtn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 28px rgba(201, 168, 76, 0.4);
+}
+
+.loanPdfBtnLoading {
+  opacity: 0.7;
+  cursor: not-allowed;
+  transform: none !important;
+}
+
+.loanPdfBtnIcon { font-size: 1rem; }
+
+.loanPdfBtnSpinner {
+  display: inline-block;
+  width: 14px; height: 14px;
+  border: 2px solid rgba(0,0,0,0.2);
+  border-top-color: #0d0d0d;
+  border-radius: 50%;
+  animation: loanPdfSpin 0.8s linear infinite;
+}
+
+@keyframes loanPdfSpin { to { transform: rotate(360deg); } }
+
+/* ── Hidden invoice capture div ── */
+.loanInvoicePrint {
+  position: absolute;
+  left: -9999px;
+  top: 0;
+  width: 794px;  /* A4 width at 96dpi */
+  min-height: 1123px; /* A4 height at 96dpi */
+  background: #0d0d0d;
+  color: #f5f0e8;
+  padding: 3rem;
+  font-family: var(--font-body);
+  overflow: visible;
+  display: flex;
+  flex-direction: column;
+}
+
+.loanInvoicePrintWatermark {
+  position: absolute;
+  top: 50%; left: 50%;
+  transform: translate(-50%, -50%) rotate(-35deg);
+  font-family: var(--font-heading);
+  font-size: 7rem;
+  font-weight: 700;
+  color: var(--color-primary);
+  opacity: 0.04;
+  pointer-events: none;
+  user-select: none;
+  white-space: nowrap;
+  letter-spacing: 0.2em;
+}
+
+.loanInvoicePrintHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 1.5rem;
+}
+
+.loanInvoicePrintCompany {
+  font-family: var(--font-ui);
+  font-size: 0.85rem;
+  font-weight: 800;
+  letter-spacing: 0.15em;
+  color: var(--color-primary);
+  text-transform: uppercase;
+  margin-bottom: 0.2rem;
+}
+
+.loanInvoicePrintSub {
+  font-size: 0.7rem;
+  color: rgba(255,255,255,0.5);
+  font-style: italic;
+  margin-bottom: 0.3rem;
+}
+
+.loanInvoicePrintAddr,
+.loanInvoicePrintContact {
+  font-size: 0.65rem;
+  color: rgba(255,255,255,0.4);
+  line-height: 1.5;
+}
+
+.loanInvoicePrintMeta { text-align: right; }
+
+.loanInvoicePrintMetaLabel {
+  font-family: var(--font-ui);
+  font-size: 0.65rem;
+  letter-spacing: 0.3em;
+  text-transform: uppercase;
+  color: var(--color-primary);
+  margin-bottom: 0.3rem;
+}
+
+.loanInvoicePrintDate {
+  font-size: 0.7rem;
+  color: rgba(255,255,255,0.4);
+}
+
+.loanInvoicePrintDivider {
+  height: 1px;
+  background: linear-gradient(to right, transparent, rgba(201,168,76,0.4), transparent);
+  margin: 1.2rem 0;
+}
+
+.loanInvoicePrintSection {
+  font-family: var(--font-ui);
+  font-size: 0.55rem;
+  font-weight: 700;
+  letter-spacing: 0.35em;
+  text-transform: uppercase;
+  color: var(--color-primary);
+  margin-bottom: 0.8rem;
+}
+
+.loanInvoicePrintGrid {
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+  margin-bottom: 0.5rem;
+}
+
+.loanInvoicePrintRow {
+  display: flex;
+  justify-content: space-between;
+  padding: 0.45rem 0.8rem;
+  border-bottom: 1px solid rgba(255,255,255,0.04);
+  font-size: 0.8rem;
+  color: rgba(255,255,255,0.65);
+}
+
+.loanInvoicePrintRowHero {
+  font-family: var(--font-heading);
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: #fff;
+  background: rgba(201,168,76,0.07);
+  border-radius: 4px;
+  padding: 0.6rem 0.8rem;
+  border-bottom: none;
+}
+
+.loanInvoicePrintTable { border: 1px solid rgba(255,255,255,0.08); border-radius: 6px; overflow: hidden; }
+
+.loanInvoicePrintTableHeader {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  padding: 0.5rem 0.8rem;
+  background: rgba(201,168,76,0.08);
+  font-family: var(--font-ui);
+  font-size: 0.58rem;
+  font-weight: 700;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--color-primary);
+}
+
+.loanInvoicePrintTableRow {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  padding: 0.5rem 0.8rem;
+  border-top: 1px solid rgba(255,255,255,0.04);
+  font-size: 0.78rem;
+  color: rgba(255,255,255,0.6);
+}
+
+.loanInvoicePrintDisclaimer {
+  font-size: 0.68rem;
+  color: rgba(255,255,255,0.3);
+  font-style: italic;
+  line-height: 1.7;
+  margin-bottom: 0.8rem;
+  margin-top: auto; /* pushes disclaimer + brand to bottom */
+}
+
+.loanInvoicePrintBrand {
+  font-family: var(--font-ui);
+  font-size: 0.58rem;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--color-primary);
+  opacity: 0.6;
+  text-align: center;
+  padding-top: 1rem;
+  border-top: 1px solid rgba(201,168,76,0.15);
+}
+
+/* ── Invoice insight block ── */
+.loanInvoicePrintInsight {
+  background: rgba(201, 168, 76, 0.05);
+  border: 1px solid rgba(201, 168, 76, 0.15);
+  border-radius: 6px;
+  padding: 1rem 1.2rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+}
+
+.loanInvoicePrintInsight p {
+  font-size: 0.76rem;
+  color: rgba(255, 255, 255, 0.55);
+  line-height: 1.75;
+}
+
+.loanInvoicePrintInsight strong {
+  color: var(--color-primary);
+  font-weight: 700;
 }
