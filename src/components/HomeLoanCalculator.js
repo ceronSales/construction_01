@@ -10,7 +10,7 @@
 
 import React, { useState, useCallback, useMemo, useEffect, useRef } from "react";
 import {
-  LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip,
+  XAxis, YAxis, CartesianGrid, Tooltip,
   ReferenceLine, ResponsiveContainer, Area, AreaChart,
 } from "recharts";
 import jsPDF from "jspdf";

@@ -14,10 +14,6 @@ import { collection, addDoc, serverTimestamp } from "firebase/firestore";
 import { db } from "../firebase/firebaseConfig";
 import "../css/AppointmentSection.css";
 
-const BOOKING_BASE_URL =
-  "https://calendar.google.com/calendar/appointments/schedules/" +
-  "AcZssZ38K8xNO8WC9y09yHtuHsJUK_aysITVv7-ErjRT1829rbDyNAits_lAVFF5xTI3J4PlcZiNNetL";
-
 const EMPTY_FORM = {
   firstName: "",
   surname:   "",
