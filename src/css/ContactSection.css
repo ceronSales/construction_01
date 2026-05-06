@@ -238,11 +238,10 @@
   opacity: 0.6;
 }
 
-/* ── Demo notice overlay ── */
-.contactDemoNotice {
+/* ── Status overlays — success and error ── */
+.contactStatusOverlay {
   position: absolute;
   inset: 0;
-  background: rgba(8,6,4,0.92);
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -250,29 +249,62 @@
   gap: 0.6rem;
   animation: contactFadeIn 0.3s ease;
   z-index: 10;
+  padding: 2rem;
+  text-align: center;
 }
 
-@keyframes contactFadeIn {
-  from { opacity: 0; }
-  to   { opacity: 1; }
+.contactStatusSuccess {
+  background: rgba(8,6,4,0.94);
+  border-top: 2px solid #27c93f;
 }
 
-.contactDemoNoticeIcon {
-  font-size: 2rem;
+.contactStatusError {
+  background: rgba(8,6,4,0.94);
+  border-top: 2px solid #ff5f56;
+}
+
+.contactStatusIcon {
+  font-size: 2.2rem;
   margin-bottom: 0.4rem;
 }
 
-.contactDemoNotice p {
+.contactStatusOverlay p {
   font-family: var(--font-body);
   font-size: 0.9rem;
   color: var(--color-text);
-  text-align: center;
   margin: 0;
   line-height: 1.6;
 }
 
-.contactDemoNotice strong {
+.contactStatusOverlay strong {
   color: var(--color-primary);
+}
+
+.contactStatusDismiss {
+  margin-top: 0.8rem;
+  font-family: var(--font-ui);
+  font-size: 0.62rem;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: var(--color-text-muted);
+  background: transparent;
+  border: 1px solid var(--color-border);
+  padding: 0.45em 1.2em;
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  transition: border-color var(--transition-fast), color var(--transition-fast);
+}
+
+.contactStatusDismiss:hover {
+  border-color: var(--color-primary);
+  color: var(--color-primary);
+}
+
+/* ── Disabled send button state ── */
+.contactSendBtn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+  transform: none;
 }
 
 /* ────────────────────────────────────────────────────────────────

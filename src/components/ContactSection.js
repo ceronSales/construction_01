@@ -12,6 +12,8 @@
  */
 
 import React, { useState } from "react";
+import { saveContact } from "../firebase/firestoreService";
+import { logEvent } from "../firebase/firebaseConfig";
 import "../css/ContactSection.css";
 
 /**
@@ -150,8 +152,9 @@ function PhilippinesMap() {
  * CALLED BY: HomePage.js
  */
 function ContactSection() {
-  const [form, setForm]       = useState({ name: "", email: "", subject: "", message: "" });
-  const [showNotice, setShowNotice] = useState(false);
+  const [form,       setForm]       = useState({ name: "", email: "", subject: "", message: "" });
+  const [status,     setStatus]     = useState("idle"); // idle | sending | success | error
+  const [errorMsg,   setErrorMsg]   = useState("");
 
   /**
    * WHAT: Updates form state on input change.
@@ -163,14 +166,31 @@ function ContactSection() {
   }
 
   /**
-   * WHAT: Handles form submit — shows demo purchase notice.
-   * HOW:  Prevents default, displays notice overlay for 3.5s.
+   * WHAT: Handles form submit — validates, saves to Firestore, logs analytics event.
+   * HOW:  Sets status to "sending", calls saveContact() from firestoreService,
+   *       logs a "contact_form_submit" analytics event on success.
+   *       On error, sets status to "error" with the error message.
    * CALLED BY: form onSubmit
    */
-  function handleSubmit(e) {
+  async function handleSubmit(e) {
     e.preventDefault();
-    setShowNotice(true);
-    setTimeout(() => setShowNotice(false), 3500);
+    if (!form.name || !form.email || !form.message) {
+      setErrorMsg("Please fill in your name, email, and message.");
+      setStatus("error");
+      return;
+    }
+    setStatus("sending");
+    setErrorMsg("");
+    try {
+      await saveContact(form);
+      logEvent("contact_form_submit", { subject: form.subject || "none" });
+      setStatus("success");
+      setForm({ name: "", email: "", subject: "", message: "" });
+    } catch (err) {
+      console.error("Contact form error:", err);
+      setErrorMsg("Something went wrong. Please try again.");
+      setStatus("error");
+    }
   }
 
   return (
@@ -264,20 +284,40 @@ function ContactSection() {
 
             {/* Send bar */}
             <div className="contactFormSendBar">
-              <button className="contactSendBtn" type="submit">
-                <span className="contactSendBtnIcon">✉</span>
-                Send Message
+              <button
+                className="contactSendBtn"
+                type="submit"
+                disabled={status === "sending"}
+              >
+                <span className="contactSendBtnIcon">
+                  {status === "sending" ? "⏳" : "✉"}
+                </span>
+                {status === "sending" ? "Sending..." : "Send Message"}
               </button>
-              <span className="contactDemoTag">Demo — contact us to activate</span>
             </div>
           </form>
 
-          {/* Demo notice overlay */}
-          {showNotice && (
-            <div className="contactDemoNotice">
-              <span className="contactDemoNoticeIcon">🔒</span>
-              <p>This form is a <strong>demo</strong>.</p>
-              <p>Purchase this site to activate live email delivery.</p>
+          {/* ── Success overlay ── */}
+          {status === "success" && (
+            <div className="contactStatusOverlay contactStatusSuccess">
+              <span className="contactStatusIcon">✓</span>
+              <p><strong>Message sent successfully!</strong></p>
+              <p>We'll get back to you within 1–2 business days.</p>
+              <button className="contactStatusDismiss" onClick={() => setStatus("idle")}>
+                Send another message
+              </button>
+            </div>
+          )}
+
+          {/* ── Error notice ── */}
+          {status === "error" && (
+            <div className="contactStatusOverlay contactStatusError">
+              <span className="contactStatusIcon">⚠</span>
+              <p><strong>Could not send message.</strong></p>
+              <p>{errorMsg}</p>
+              <button className="contactStatusDismiss" onClick={() => setStatus("idle")}>
+                Try again
+              </button>
             </div>
           )}
         </div>

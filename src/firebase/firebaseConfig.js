@@ -8,19 +8,50 @@
 import { initializeApp } from "firebase/app";
 import { getFirestore } from "firebase/firestore";
 import { getAuth } from "firebase/auth";
+import { getAnalytics, logEvent as firebaseLogEvent, isSupported } from "firebase/analytics";
 
 // Firebase project credentials loaded from .env
 const firebaseConfig = {
-  apiKey: process.env.REACT_APP_FIREBASE_API_KEY,
-  authDomain: process.env.REACT_APP_FIREBASE_AUTH_DOMAIN,
-  projectId: process.env.REACT_APP_FIREBASE_PROJECT_ID,
-  storageBucket: process.env.REACT_APP_FIREBASE_STORAGE_BUCKET,
-  messagingSenderId: process.env.REACT_APP_FIREBASE_MESSAGING_SENDER_ID,
-  appId: process.env.REACT_APP_FIREBASE_APP_ID,
+  apiKey: "AIzaSyDMNMRQ-H0wKJw2pMehgEildLu8ByXZ-kI",
+  authDomain: "fir-trinx.firebaseapp.com",
+  projectId: "fir-trinx",
+  storageBucket: "fir-trinx.firebasestorage.app",
+  messagingSenderId: "554228521430",
+  appId: "1:554228521430:web:49f157d965a3e6e0f0ac77"
 };
 
 const app = initializeApp(firebaseConfig);
 
-export const db = getFirestore(app);
+export const db   = getFirestore(app);
 export const auth = getAuth(app);
+
+/* ── Analytics — fully silent, only activates when credentials are valid ── */
+let analytics = null;
+
+isSupported()
+  .then(supported => {
+    // Only init analytics if measurementId is a real value (not placeholder)
+    const mid = process.env.REACT_APP_FIREBASE_MEASUREMENT_ID || "";
+    if (supported && mid && !mid.startsWith("G-XXX")) {
+      analytics = getAnalytics(app);
+    }
+  })
+  .catch(() => {
+    // Silently swallow — analytics is non-critical
+  });
+
+/**
+ * WHAT: logEvent — safe wrapper around Firebase Analytics logEvent.
+ * HOW:  No-ops silently if analytics is not initialized or credentials
+ *       are missing. Never throws. Safe to call at any time.
+ * CALLED BY: ContactSection, AppointmentSection, any tracking call.
+ */
+export function logEvent(eventName, params = {}) {
+  try {
+    if (analytics) firebaseLogEvent(analytics, eventName, params);
+  } catch (_) {
+    // Silently swallow — analytics failures must never crash the UI
+  }
+}
+
 export default app;
