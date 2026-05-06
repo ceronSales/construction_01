@@ -12,18 +12,17 @@ import "../css/Navbar.css";
 // All navigation links consolidated into one flat list for the slide-in panel
 const allLinks = [
   { label: "Home",                     href: "#home" },
-  { label: "Why Choose Us?",           href: "#why-us" },
-  { label: "Design Services",          href: "#design-services" },
-  { label: "Construction Works",       href: "#construction-works" },
-  { label: "Interior Projects",        href: "#interior-projects" },
   { label: "Projects",                 href: "#projects" },
+  { label: "Interior Projects",        href: "#interior-projects" },
+  { label: "Construction Works",       href: "#construction-works" },
   { label: "Building Cost Calculator", href: "#cost-calculator" },
-  { label: "Home Loan Calculator",     href: "#loan" },
-  { label: "Type of Finishes",         href: "#finishes" },
+  { label: "Design Services",          href: "#design-services" },
   { label: "Earthquake Faultline",     href: "#earthquake" },
   { label: "Building Permits",         href: "#permits" },
-  { label: "Fengshui",                 href: "#fengshui" },
+  { label: "Home Loan Calculator",     href: "#loan" },
   { label: "Contact Us",               href: "#contact" },
+  { label: "Fengshui",                 href: "#fengshui" },
+  { label: "Why Choose Us?",           href: "#why-us" },
 ];
 
 /**

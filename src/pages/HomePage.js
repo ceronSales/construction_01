@@ -16,13 +16,11 @@ import ProjectsSection from "../components/ProjectsSection";
 import CostCalculator from "../components/CostCalculator";
 import HomeLoanCalculator from "../components/HomeLoanCalculator";
 import DesignServices from "../components/DesignServices";
-import ConstructionWorks from "../components/ConstructionWorks";
-import AppointmentSection from "../components/AppointmentSection";
 import "../css/HomePage.css";
 
 // Placeholder sections — built components are excluded from this list
 const placeholderSections = [
-  { id: "finishes",           label: "Type of Finishes" },
+  { id: "construction-works", label: "Construction Works" },
   { id: "earthquake",         label: "Earthquake Faultline" },
   { id: "permits",            label: "Building Permits" },
   { id: "fengshui",           label: "Fengshui" },
@@ -37,28 +35,19 @@ function HomePage() {
       {/* ── 50% — Scroll Construction Sequence Hero ── */}
       <HeroSection />
 
-      {/* ── Why Choose Us — build trust before showing tools ── */}
-      <WhyChooseUs />
-
-      {/* ── Design Services — what we offer ── */}
-      <DesignServices />
-
-      {/* ── Construction Works — what we offer ── */}
-      <ConstructionWorks />
-
-      {/* ── Interior Projects — proof of work ── */}
+      {/* ── Interior Projects — video background carousel ── */}
       <InteriorProjects />
 
       {/* ── Projects — fullscreen video bg + thumbnail slider ── */}
       <ProjectsSection />
 
-      {/* ── Building Cost Calculator — visitor is now ready to calculate ── */}
+      {/* ── Building Cost Calculator — scroll-jacked sticky steps ── */}
       <CostCalculator />
 
-      {/* ── Home Loan Calculator — natural next question after cost estimate ── */}
-      <HomeLoanCalculator />
+      {/* ── Design Services — looping video BG + glassmorphism cards ── */}
+      <DesignServices />
 
-      {/* ── Remaining sections — reference material ── */}
+      {/* ── Remaining sections ── */}
       {placeholderSections.map((section) => (
         <section key={section.id} id={section.id} className="homeSection">
           <div className="homeSectionInner">
@@ -71,8 +60,11 @@ function HomePage() {
         </section>
       ))}
 
-      {/* ── Book a Consultation — close the deal ── */}
-      <AppointmentSection />
+      {/* ── Home Loan Calculator ── */}
+      <HomeLoanCalculator />
+
+      {/* ── Why Choose Us ── */}
+      <WhyChooseUs />
 
       {/* ── Contact Us — two-column composer + 3D globe ── */}
       <ContactSection />
