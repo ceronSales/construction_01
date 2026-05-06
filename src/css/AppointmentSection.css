@@ -733,3 +733,257 @@
   .apptSubmitBtn     { justify-content: center; }
   .apptModal         { border-radius: 0.75rem; }
 }
+
+/* ────────────────────────────────────────────────────────────────
+   STEP INDICATOR
+   ──────────────────────────────────────────────────────────────── */
+.apptSteps {
+  display: flex;
+  align-items: center;
+  gap: 0;
+  padding: 1rem 1.8rem 0;
+  border-bottom: 1px solid var(--color-border);
+  padding-bottom: 1rem;
+}
+
+.apptStep {
+  display: flex;
+  align-items: center;
+  gap: 0.55rem;
+}
+
+.apptStepNum {
+  width: 1.6rem;
+  height: 1.6rem;
+  border-radius: 50%;
+  background: var(--color-surface-2);
+  border: 1px solid var(--color-border);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--font-ui);
+  font-size: 0.65rem;
+  color: var(--color-text-muted);
+  flex-shrink: 0;
+  transition: all var(--transition-fast);
+}
+
+.apptStepActive .apptStepNum {
+  background: var(--color-primary);
+  border-color: var(--color-primary);
+  color: #0a0800;
+  font-weight: 700;
+}
+
+.apptStepDone .apptStepNum {
+  background: rgba(201,168,76,0.2);
+  border-color: var(--color-primary);
+  color: var(--color-primary);
+}
+
+.apptStepLabel {
+  font-family: var(--font-ui);
+  font-size: 0.65rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--color-text-muted);
+  transition: color var(--transition-fast);
+}
+
+.apptStepActive .apptStepLabel { color: var(--color-text); }
+.apptStepDone   .apptStepLabel { color: var(--color-primary); }
+
+.apptStepLine {
+  flex: 1;
+  height: 1px;
+  background: var(--color-border);
+  margin: 0 0.8rem;
+}
+
+/* ────────────────────────────────────────────────────────────────
+   TIME PICKER — STEP 2
+   ──────────────────────────────────────────────────────────────── */
+.apptTimePicker {
+  padding: 1.5rem 1.8rem 1.8rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1.2rem;
+}
+
+/* ── Day selector row ── */
+.apptDayRow {
+  display: flex;
+  gap: 0.5rem;
+  overflow-x: auto;
+  padding-bottom: 0.4rem;
+  scrollbar-width: none;
+}
+
+.apptDayRow::-webkit-scrollbar { display: none; }
+
+.apptDayBtn {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.15rem;
+  min-width: 3.2rem;
+  padding: 0.65rem 0.5rem;
+  background: var(--color-surface-2);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  cursor: pointer;
+  transition: all var(--transition-fast);
+  flex-shrink: 0;
+}
+
+.apptDayBtn:hover {
+  border-color: var(--color-border-gold);
+  background: rgba(201,168,76,0.05);
+}
+
+.apptDayBtnActive {
+  background: rgba(201,168,76,0.12) !important;
+  border-color: var(--color-primary) !important;
+  box-shadow: 0 0 0 2px rgba(201,168,76,0.2);
+}
+
+.apptDayName {
+  font-family: var(--font-ui);
+  font-size: 0.58rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--color-text-muted);
+}
+
+.apptDayNum {
+  font-family: var(--font-heading);
+  font-size: 1.3rem;
+  color: var(--color-text);
+  line-height: 1;
+}
+
+.apptDayBtnActive .apptDayNum { color: var(--color-primary); }
+
+.apptDayMonth {
+  font-family: var(--font-ui);
+  font-size: 0.55rem;
+  color: var(--color-text-muted);
+  text-transform: uppercase;
+}
+
+/* ── Time label ── */
+.apptTimeLabel {
+  font-family: var(--font-body);
+  font-size: 0.85rem;
+  color: var(--color-text-muted);
+}
+
+.apptTimeLabel strong { color: var(--color-text); }
+
+/* ── Time grid ── */
+.apptTimeGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(5.5rem, 1fr));
+  gap: 0.5rem;
+}
+
+.apptTimeSlot {
+  padding: 0.55rem 0.5rem;
+  background: var(--color-surface-2);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-sm);
+  font-family: var(--font-ui);
+  font-size: 0.7rem;
+  letter-spacing: 0.05em;
+  color: var(--color-text-muted);
+  cursor: pointer;
+  transition: all var(--transition-fast);
+  text-align: center;
+}
+
+.apptTimeSlot:hover {
+  border-color: var(--color-border-gold);
+  color: var(--color-text);
+  background: rgba(201,168,76,0.05);
+}
+
+.apptTimeSlotActive {
+  background: var(--color-primary) !important;
+  border-color: var(--color-primary) !important;
+  color: #0a0800 !important;
+  font-weight: 700;
+  box-shadow: 0 0 12px rgba(201,168,76,0.35);
+}
+
+/* ── No day selected prompt ── */
+.apptTimePrompt {
+  font-family: var(--font-body);
+  font-size: 0.85rem;
+  color: var(--color-text-muted);
+  opacity: 0.5;
+  text-align: center;
+  padding: 1.5rem 0;
+}
+
+/* ── Selection summary ── */
+.apptSelectionSummary {
+  display: flex;
+  align-items: center;
+  gap: 0.7rem;
+  padding: 0.8rem 1.2rem;
+  background: rgba(201,168,76,0.08);
+  border: 1px solid var(--color-border-gold);
+  border-radius: var(--radius-sm);
+  font-family: var(--font-body);
+  font-size: 0.88rem;
+  color: var(--color-text-muted);
+  animation: apptFadeIn 0.3s ease;
+}
+
+@keyframes apptFadeIn {
+  from { opacity: 0; transform: translateY(4px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+.apptSelectionIcon {
+  color: var(--color-primary);
+  font-size: 1rem;
+  flex-shrink: 0;
+}
+
+.apptSelectionSummary strong { color: var(--color-primary); }
+
+/* ── Time picker footer ── */
+.apptTimeFooter {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  padding-top: 0.5rem;
+  border-top: 1px solid var(--color-border);
+}
+
+.apptBackBtn {
+  font-family: var(--font-ui);
+  font-size: 0.65rem;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: var(--color-text-muted);
+  background: transparent;
+  border: 1px solid var(--color-border);
+  padding: 0.6em 1.2em;
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  transition: all var(--transition-fast);
+}
+
+.apptBackBtn:hover {
+  border-color: var(--color-primary);
+  color: var(--color-primary);
+}
+
+.apptSubmitBtnDisabled {
+  opacity: 0.4 !important;
+  cursor: not-allowed !important;
+  transform: none !important;
+}
