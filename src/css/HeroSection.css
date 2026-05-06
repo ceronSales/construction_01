@@ -426,3 +426,41 @@
 
   .heroSideLabel { display: none; }
 }
+/* ── Small phone (≤ 480px) ──
+   WHY media query: hero content, stage number, and
+   CTA buttons need repositioning at extreme narrow widths. */
+@media (max-width: 480px) {
+  .heroContent {
+    max-width: 96vw;
+    bottom: 16vh;
+    left: 4vw;
+  }
+
+  .heroStageLabel {
+    font-size: clamp(1.8rem, 8.5vw, 3rem);
+  }
+
+  .heroStageDesc {
+    font-size: 0.8rem;
+    max-width: 100%;
+  }
+
+  .heroScrollPrompt {
+    display: none;
+  }
+
+  .heroFinaleBtns {
+    flex-direction: column;
+    align-items: center;
+    gap: 0.75rem;
+  }
+
+  .heroFinaleBtn {
+    width: 80vw;
+    text-align: center;
+  }
+
+  .heroProgressRow {
+    margin-top: 1.2rem;
+  }
+}

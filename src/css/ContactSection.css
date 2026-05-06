@@ -391,3 +391,39 @@
   text-transform: uppercase;
   margin-bottom: 0.2rem;
 }
+/* ── Small phone (≤ 480px) ──
+   WHY media query: form rows and header font sizes need
+   targeted adjustments at extreme narrow widths. */
+@media (max-width: 480px) {
+  .contactTitle {
+    font-size: clamp(1.8rem, 7vw, 2.6rem);
+  }
+
+  .contactComposerHeader {
+    padding: 0.6rem 0.8rem;
+  }
+
+  .contactFormRow {
+    padding: 0.5rem 0.9rem;
+  }
+
+  .contactFormLabel {
+    min-width: 3.5rem;
+    font-size: 0.58rem;
+  }
+
+  .contactFormInput,
+  .contactFormTextarea {
+    font-size: 0.82rem;
+  }
+
+  .contactFormSendBar {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 0.6rem;
+  }
+
+  .contactSendBtn {
+    justify-content: center;
+  }
+}

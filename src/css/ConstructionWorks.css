@@ -367,3 +367,76 @@
   line-height: 1.9;
   font-style: italic;
 }
+/* ════════════════════════════════════════
+   RESPONSIVE
+   WHY media query: disclaimer text size and section padding
+   need structural adjustment on narrow viewports.
+   ════════════════════════════════════════ */
+
+/* ── Tablet (≤ 768px) ── */
+@media (max-width: 768px) {
+  .cwSection {
+    padding: clamp(3rem, 7vh, 5rem) clamp(1.2rem, 4vw, 3rem);
+  }
+
+  .cwTitle {
+    font-size: clamp(1.8rem, 5vw, 2.8rem);
+  }
+
+  .cwSubtitle {
+    font-size: 0.85rem;
+  }
+
+  /* Reduce card inner padding on tablet */
+  .cwCardInner {
+    padding: 1.5rem 1.1rem;
+  }
+
+  .cwDisclaimer {
+    padding: 1rem 1.2rem;
+  }
+
+  .cwDisclaimer p {
+    font-size: 0.85rem;
+  }
+}
+
+/* ── Small phone (≤ 480px) ── */
+@media (max-width: 480px) {
+  .cwSection {
+    padding: clamp(2.5rem, 6vh, 4rem) clamp(1rem, 3.5vw, 2rem);
+  }
+
+  /* Force 2-column grid minimum on phones */
+  .cwGrid {
+    grid-template-columns: repeat(auto-fill, minmax(min(100%, 140px), 1fr));
+    gap: 1rem;
+  }
+
+  .cwCardInner {
+    padding: 1.2rem 0.9rem;
+    min-height: 100px;
+  }
+
+  .cwCardIcon {
+    font-size: 1.5rem;
+  }
+
+  .cwCardLabel {
+    font-size: 0.7rem;
+  }
+
+  /* Estimate grid: 2 columns on phone */
+  .cwEstimateGrid {
+    grid-template-columns: 1fr 1fr;
+    gap: 0.75rem;
+  }
+
+  .cwEstimateCard {
+    padding: 1rem 0.9rem;
+  }
+
+  .cwEstimateRange {
+    font-size: 0.88rem;
+  }
+}

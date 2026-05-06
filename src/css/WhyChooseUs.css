@@ -293,3 +293,82 @@
   color: var(--color-primary);
   letter-spacing: 0.08em;
 }
+/* ════════════════════════════════════════
+   RESPONSIVE
+   WHY media query: team card grid and reason rows need
+   structural layout changes at narrow widths — fluid units
+   cannot collapse multi-column grids into single columns.
+   ════════════════════════════════════════ */
+
+/* ── Tablet (≤ 768px) ── */
+@media (max-width: 768px) {
+  .whySection {
+    padding: clamp(3rem, 7vh, 5rem) clamp(1.2rem, 5vw, 3rem);
+  }
+
+  /* Reduce gap on reason rows */
+  .whyRow {
+    gap: 1.2rem;
+    padding: 1.5rem 0;
+  }
+
+  .whyRowText {
+    font-size: 0.85rem;
+  }
+
+  /* Team cards: 2 columns on tablet */
+  .whyTeam {
+    gap: clamp(1.2rem, 3vw, 2.5rem);
+  }
+
+  .whyTeamCard {
+    width: clamp(180px, 42vw, 260px);
+  }
+}
+
+/* ── Small phone (≤ 480px) ── */
+@media (max-width: 480px) {
+  /* Stack icon + text vertically on very narrow screens */
+  .whyRow {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.8rem;
+    padding: 1.2rem 0;
+  }
+
+  /* Hide vertical rule — irrelevant in stacked layout */
+  .whyRowRule {
+    display: none;
+  }
+
+  /* Icon row becomes horizontal bar */
+  .whyRowIcon {
+    flex-direction: row;
+    width: auto;
+    gap: 0.75rem;
+    align-items: center;
+  }
+
+  .whyIconBox {
+    width: 1.8rem;
+    height: 1.8rem;
+  }
+
+  .whyRowTitle {
+    font-size: 0.75rem;
+  }
+
+  .whyRowText {
+    font-size: 0.82rem;
+  }
+
+  /* Team cards: single column on phones */
+  .whyTeam {
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .whyTeamCard {
+    width: clamp(200px, 70vw, 280px);
+  }
+}

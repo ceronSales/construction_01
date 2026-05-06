@@ -97,3 +97,19 @@
   margin: 0 auto;
   line-height: 1.8;
 }
+/* ── Small phone (≤ 480px) ──
+   WHY media query: placeholder section badge and title sizing
+   need explicit floor values on very narrow screens. */
+@media (max-width: 480px) {
+  .homeSectionTitle {
+    font-size: clamp(2rem, 8vw, 3.5rem);
+  }
+
+  .homeSectionDesc {
+    font-size: 0.88rem;
+  }
+
+  .homeSectionInner {
+    padding: var(--spacing-md) var(--spacing-sm);
+  }
+}

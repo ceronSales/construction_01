@@ -204,3 +204,79 @@
   writing-mode: vertical-rl;
   text-orientation: mixed;
 }
+
+/* ════════════════════════════════════════
+   RESPONSIVE
+   WHY media query: content position, font sizes, and control
+   placement require structural repositioning — fluid units
+   alone cannot express bottom vs. center layout shifts.
+   ════════════════════════════════════════ */
+
+/* ── Tablet (≤ 768px) ── */
+@media (max-width: 768px) {
+  .interiorContent {
+    bottom: 3vh;
+    left: 4vw;
+    gap: 0.8rem;
+  }
+
+  .interiorTitle {
+    font-size: clamp(1.6rem, 6vw, 2.8rem);
+  }
+
+  /* Hide vertical side label — not enough horizontal space */
+  .interiorSideLabel {
+    display: none;
+  }
+
+  .interiorBtn {
+    width: 2.4rem;
+    height: 2.4rem;
+  }
+}
+
+/* ── Small phone (≤ 480px) ── */
+@media (max-width: 480px) {
+  .interiorContent {
+    bottom: 2vh;
+    left: 3vw;
+    right: 3vw;
+    gap: 0.6rem;
+  }
+
+  .interiorTitle {
+    font-size: clamp(1.4rem, 7vw, 2.2rem);
+  }
+
+  .interiorEyebrow {
+    font-size: 0.5rem;
+    padding: 0.25rem 0.8rem;
+  }
+
+  /* Dots inline — smaller gaps on narrow screens */
+  .interiorDots {
+    gap: 0.35rem;
+  }
+
+  .interiorDot {
+    width: 20px;
+  }
+
+  .interiorDotActive {
+    width: 36px;
+  }
+
+  .interiorControls {
+    gap: 0.8rem;
+  }
+
+  .interiorBtn {
+    width: 2rem;
+    height: 2rem;
+  }
+
+  .interiorCounter {
+    font-size: 0.58rem;
+    min-width: 2.5rem;
+  }
+}

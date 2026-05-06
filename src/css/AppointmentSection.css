@@ -987,3 +987,37 @@
   cursor: not-allowed !important;
   transform: none !important;
 }
+/* ── Small phone (≤ 480px) ──
+   WHY media query: visual step grid and benefit layout
+   need explicit restructuring on narrow viewports. */
+@media (max-width: 480px) {
+  .appointmentSection {
+    padding: clamp(3.5rem, 7vh, 5.5rem) 0;
+  }
+
+  .appointmentHeading {
+    font-size: clamp(2rem, 7vw, 3rem);
+  }
+
+  /* 2-column step bar on phones */
+  .appointmentVisualSteps {
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .appointmentVisualStep:nth-child(2) {
+    border-right: none;
+  }
+
+  .appointmentVisualStep:nth-child(3) {
+    border-top: 1px solid var(--color-border);
+  }
+
+  .appointmentVisualCardContent {
+    padding: 1.8rem 1.5rem;
+  }
+
+  .appointmentBookBtn {
+    width: 100%;
+    justify-content: center;
+  }
+}

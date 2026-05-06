@@ -1047,3 +1047,50 @@
   color: var(--color-primary);
   font-weight: 700;
 }
+/* ── Small phone (≤ 480px) ──
+   WHY media query: result grid and fixing period buttons
+   need single-column fallback on narrow viewports. */
+@media (max-width: 480px) {
+  .loanResultGrid {
+    grid-template-columns: 1fr;
+  }
+
+  .loanFixingBtns {
+    gap: 0.4rem;
+  }
+
+  .loanFixingBtn {
+    padding: 0.45rem 0.6rem;
+  }
+
+  .loanFixingBtnLabel {
+    font-size: 0.55rem;
+  }
+
+  .loanFixingBtnRate {
+    font-size: 0.85rem;
+  }
+
+  /* Hijack outer: reduce height on phones — 100vh is too tall */
+  .loanHijackOuter {
+    height: 90vh;
+    max-width: 96%;
+  }
+
+  .loanHijackSlide {
+    padding: clamp(1.2rem, 4vw, 2.5rem) clamp(1.2rem, 5vw, 3rem);
+  }
+
+  .loanHijackTitle {
+    font-size: clamp(1.4rem, 5.5vw, 2.2rem);
+  }
+
+  .loanHijackBody {
+    font-size: 0.9rem;
+  }
+
+  /* Watermark: scale down on phones */
+  .loanHijackWatermark {
+    font-size: clamp(5rem, 18vw, 10rem);
+  }
+}

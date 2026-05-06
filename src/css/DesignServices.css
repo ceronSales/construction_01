@@ -519,3 +519,34 @@
   .dsSpecialGrid { grid-template-columns: 1fr; }
   .dsContent { padding: 4rem 1.2rem 4rem; }
 }
+
+/* ── Small phone (≤ 480px) ──
+   WHY media query: process tab scroll and package card padding
+   require explicit minimum sizing at extreme narrow widths. */
+@media (max-width: 480px) {
+  .dsContent {
+    padding: 3rem 1rem 3rem;
+  }
+
+  .dsHeroTitle {
+    font-size: clamp(1.6rem, 7vw, 2.4rem);
+  }
+
+  .dsSpecialGrid {
+    grid-template-columns: 1fr;
+  }
+
+  .dsGlassCard {
+    padding: 1.5rem 1.2rem;
+  }
+
+  .dsProcessContent {
+    padding: 1.5rem 1.2rem;
+    min-height: 260px;
+  }
+
+  .dsProcessTab {
+    padding: 0.7rem 1rem;
+    font-size: 0.52rem;
+  }
+}

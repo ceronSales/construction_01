@@ -320,3 +320,89 @@
   letter-spacing: 0.15em;
   font-style: italic;
 }
+/* ════════════════════════════════════════
+   RESPONSIVE
+   WHY media query: the nav panel width and brand text must
+   restructure on narrow viewports — fluid units cannot express
+   fundamentally different layouts.
+   ════════════════════════════════════════ */
+
+/* ── Tablet / large phone (≤ 768px) ── */
+@media (max-width: 768px) {
+  .navbarBrand {
+    padding: 0.6rem 1.2rem;
+    gap: 0.8rem;
+  }
+
+  .navbarScrolled .navbarBrand {
+    padding: 0.35rem 1.2rem;
+  }
+
+  .navbarLogo {
+    height: 2.8rem;
+  }
+
+  .navbarScrolled .navbarLogo {
+    height: 2rem;
+  }
+
+  .navbarTitle {
+    font-size: 1.1rem;
+  }
+
+  .navbarSubtitle {
+    font-size: 0.48rem;
+  }
+
+  /* Hide italic motto on small screens to reduce clutter */
+  .navbarMotto {
+    display: none;
+  }
+
+  /* Nav panel takes more width on narrow screens */
+  .navPanel {
+    width: clamp(16rem, 80vw, 22rem);
+  }
+}
+
+/* ── Small phone (≤ 480px) ── */
+@media (max-width: 480px) {
+  .navbarBrand {
+    padding: 0.5rem 1rem;
+    gap: 0.6rem;
+  }
+
+  .navbarLogo {
+    height: 2.4rem;
+  }
+
+  .navbarScrolled .navbarLogo {
+    height: 1.8rem;
+  }
+
+  .navbarTitle {
+    font-size: 0.95rem;
+    letter-spacing: 0.12em;
+  }
+
+  .navbarSubtitle {
+    display: none;
+  }
+
+  .navbarDivider {
+    display: none;
+  }
+
+  /* Full-width slide-in on small phones */
+  .navPanel {
+    width: 100vw;
+  }
+
+  .navMenuBtnLabel {
+    display: none;
+  }
+
+  .navMenuBtn {
+    padding: 0.45rem 0.7rem;
+  }
+}

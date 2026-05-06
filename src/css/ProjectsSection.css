@@ -289,3 +289,94 @@
   writing-mode: vertical-rl;
   text-orientation: mixed;
 }
+
+/* ════════════════════════════════════════
+   RESPONSIVE
+   WHY media query: thumbnail slider position, header placement,
+   and counter sizing require structural changes at narrow widths
+   that fluid units cannot express.
+   ════════════════════════════════════════ */
+
+/* ── Tablet (≤ 768px) ── */
+@media (max-width: 768px) {
+  .projectsHeader {
+    top: 8vh;
+    left: 4vw;
+  }
+
+  .projectsTitle {
+    font-size: clamp(1.8rem, 6vw, 3rem);
+  }
+
+  .projectsSlideCount {
+    top: 8vh;
+    right: 4vw;
+  }
+
+  .projectsSlideNum {
+    font-size: clamp(1.8rem, 4.5vw, 2.8rem);
+  }
+
+  /* Move thumb slider to bottom-center on tablet */
+  .projectsThumbSlider {
+    right: 50%;
+    transform: translateX(50%);
+    bottom: 3vh;
+    align-items: center;
+  }
+
+  .projectsThumb {
+    width: 14vw;
+    height: calc(14vw * 0.65);
+  }
+
+  /* Hide vertical label — not enough room */
+  .projectsSideLabel {
+    display: none;
+  }
+}
+
+/* ── Small phone (≤ 480px) ── */
+@media (max-width: 480px) {
+  .projectsHeader {
+    top: 6vh;
+    left: 3vw;
+    right: 3vw;
+  }
+
+  .projectsTitle {
+    font-size: clamp(1.5rem, 7.5vw, 2.2rem);
+  }
+
+  .projectsSub {
+    font-size: 0.62rem;
+  }
+
+  /* Hide slide count on very small screens — title + thumbs are enough */
+  .projectsSlideCount {
+    display: none;
+  }
+
+  /* Thumb slider full-width centered strip at bottom */
+  .projectsThumbSlider {
+    right: 50%;
+    transform: translateX(50%);
+    bottom: 2vh;
+  }
+
+  .projectsThumb {
+    width: 18vw;
+    height: calc(18vw * 0.65);
+    min-width: 60px;
+    min-height: 39px;
+  }
+
+  .projectsThumbLabel {
+    font-size: 0.42rem;
+  }
+
+  .projectsEyebrow {
+    font-size: 0.5rem;
+    padding: 0.25rem 0.8rem;
+  }
+}
