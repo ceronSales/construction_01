@@ -9,7 +9,10 @@
 .interiorSection {
   position: relative;
   width: 100%;
+  /* Use dvh (dynamic viewport height) so the background fills the full visible
+     area on mobile — 100vh can exceed the visible screen when browser UI is visible. */
   height: 100vh;
+  height: 100dvh;
   overflow: hidden;
   background: #0a0a0a;
   border-bottom: 1px solid var(--color-border);

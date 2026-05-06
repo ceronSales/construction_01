@@ -599,6 +599,7 @@
   max-width: 92%;
   margin: 0 auto clamp(3rem, 6vw, 5rem);
   height: 100vh;
+  height: 100dvh; /* dvh for accurate mobile visible-area height */
   position: relative;
   border-radius: 1.5rem;
   overflow: hidden;
@@ -609,6 +610,7 @@
   position: sticky;
   top: 0;
   height: 100vh;
+  height: 100dvh; /* dvh for accurate mobile visible-area height */
   overflow: hidden;
   background: var(--color-surface);
   border: 1px solid var(--color-border-gold);

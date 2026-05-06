@@ -206,12 +206,26 @@ function HeroSection() {
     // DPR multiplication caused drawImage to render at 2x the visible area
     // on retina screens, making the image appear cropped and not full-width.
     const resize = () => {
+      // Use offsetWidth/Height which reflects the actual rendered size after
+      // dvh / browser-toolbar adjustments on mobile.
       canvas.width  = canvas.offsetWidth;
       canvas.height = canvas.offsetHeight;
       drawFrame(prevFrameRef.current);
     };
+
+    // Delay first resize slightly to let the browser finish layout (especially
+    // needed on iOS Safari where offsetHeight can be 0 at the very first tick).
     resize();
+    const initialTimer = setTimeout(resize, 100);
+
     window.addEventListener("resize", resize);
+    // orientationchange fires when the phone rotates — triggers a new resize cycle.
+    window.addEventListener("orientationchange", () => setTimeout(resize, 200));
+    // visualViewport resize catches the iOS "address bar appearing/disappearing"
+    // event that plain window.resize does NOT reliably fire.
+    if (window.visualViewport) {
+      window.visualViewport.addEventListener("resize", resize);
+    }
 
     // Preload all frames
     const images = new Array(FRAME_COUNT);
@@ -243,7 +257,13 @@ function HeroSection() {
       images[i] = img;
     });
 
-    return () => window.removeEventListener("resize", resize);
+    return () => {
+      clearTimeout(initialTimer);
+      window.removeEventListener("resize", resize);
+      if (window.visualViewport) {
+        window.visualViewport.removeEventListener("resize", resize);
+      }
+    };
   }, [drawFrame, animateText]);
 
   // Clamp activeIndex to valid range — guards against stale state after STAGES array edits

@@ -15,7 +15,10 @@
 .dsVideoBg {
   position: sticky;
   top: var(--navbar-height);
+  /* dvh ensures the background fills the visible area on mobile
+     even when the browser toolbar is shown. Falls back to 100vh. */
   height: calc(100vh - var(--navbar-height));
+  height: calc(100dvh - var(--navbar-height));
   width: 100%;
   overflow: hidden;
   z-index: 0;
@@ -44,8 +47,9 @@
 .dsContent {
   position: relative;
   z-index: 2;
-  /* Pull content up to overlap the sticky video */
+  /* Pull content up to overlap the sticky video — uses dvh to match .dsVideoBg */
   margin-top: calc(-100vh + var(--navbar-height));
+  margin-top: calc(-100dvh + var(--navbar-height));
   padding: 6rem 3rem 6rem;
   max-width: 1400px;
   margin-left: auto;

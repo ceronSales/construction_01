@@ -17,7 +17,10 @@
 .heroSticky {
   position: sticky;
   top: var(--navbar-height);
+  /* Use dvh (dynamic viewport height) so mobile browser toolbars don't clip the background.
+     Falls back to 100vh for browsers that don't support dvh yet. */
   height: calc(100vh - var(--navbar-height));
+  height: calc(100dvh - var(--navbar-height));
   width: 100%;
   overflow: hidden;
   background: #080808;
