@@ -14,12 +14,28 @@ import video01 from "../assets/interior/interior-01.mp4";
 import video02 from "../assets/interior/interior-02.mp4";
 import video03 from "../assets/interior/interior-03.mp4";
 import video04 from "../assets/interior/interior-04.mp4";
+import video05 from "../assets/interior/interior-05.mp4";
+import video06 from "../assets/interior/interior-06.mp4";
+import video07 from "../assets/interior/interior-07.mp4";
+import video08 from "../assets/interior/interior-08.mp4";
+import video09 from "../assets/interior/interior-09.mp4";
+import video10 from "../assets/interior/interior-10.mp4";
+import video11 from "../assets/interior/interior-11.mp4";
+import video12 from "../assets/interior/interior-12.mp4";
 
 const interiorVideos = [
-  { id: 1, src: video01, label: "Foyer & Entrance" },
-  { id: 2, src: video02, label: "Living Spaces" },
-  { id: 3, src: video03, label: "Bedroom Design" },
-  { id: 4, src: video04, label: "Full Walkthrough" },
+  { id: 1,  src: video01, label: "Foyer & Entrance" },
+  { id: 2,  src: video02, label: "Living Spaces" },
+  { id: 3,  src: video03, label: "Bedroom Design" },
+  { id: 4,  src: video04, label: "Full Walkthrough" },
+  { id: 5,  src: video05, label: "Cinematic Interior" },
+  { id: 6,  src: video06, label: "Architectural Spaces" },
+  { id: 7,  src: video07, label: "Living & Dining" },
+  { id: 8,  src: video08, label: "Kitchen & Bath" },
+  { id: 9,  src: video09, label: "Luxury Finishes" },
+  { id: 10, src: video10, label: "Open Concept" },
+  { id: 11, src: video11, label: "Modern Details" },
+  { id: 12, src: video12, label: "Exterior & Landscape" },
 ];
 
 /**
@@ -32,7 +48,7 @@ const interiorVideos = [
  */
 function InteriorProjects() {
   const [activeIndex, setActiveIndex] = useState(0);
-  const videoRefs = useRef(interiorVideos.map(() => React.createRef()));
+  const videoRefs = useRef(Array.from({ length: 12 }, () => React.createRef()));
 
   /**
    * WHAT: Plays the video at nextIndex, pauses and resets the current one.
