@@ -10,11 +10,10 @@
 
 import React, { useState, useCallback, useMemo, useEffect, useRef } from "react";
 import {
-  LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip,
-  ReferenceLine, ResponsiveContainer, Area, AreaChart,
+  AreaChart, Area, XAxis, YAxis, CartesianGrid,
+  Tooltip, ResponsiveContainer, ReferenceLine,
 } from "recharts";
 import "../css/HomeLoanCalculator.css";
-import BlobBackground from "./BlobBackground";
 
 /* ── Fixing period presets (Security Bank PH rates) ── */
 const FIXING_PERIODS = [
@@ -214,8 +213,6 @@ function HomeLoanCalculator() {
 
   return (
     <section id="loan" className="loanSection">
-      {/* ── 12 animated blob gradient layers ── */}
-      <BlobBackground />
 
       {/* ── Section header ── */}
       <div className="loanHeader">

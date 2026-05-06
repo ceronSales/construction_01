@@ -17,7 +17,6 @@ import "../css/HeroSection.css";
 
 /* ── Frame sequence config ── */
 const FRAME_COUNT   = 192;                        // total frames extracted from MP4
-const FPS           = 24;                         // source video FPS
 const FRAME_URL     = (n) =>                      // public/frames/f001.jpg … f192.jpg
   `${process.env.PUBLIC_URL}/frames/f${String(n).padStart(3,"0")}.jpg`;
 
@@ -220,7 +219,8 @@ function HeroSection() {
 
     let loaded = 0;
 
-    for (let i = 0; i < FRAME_COUNT; i++) {
+    // forEach over index range — avoids no-loop-func lint warning
+    Array.from({ length: FRAME_COUNT }).forEach((_, i) => {
       const img = new Image();
       img.src   = FRAME_URL(i + 1);
 
@@ -241,7 +241,7 @@ function HeroSection() {
       };
 
       images[i] = img;
-    }
+    });
 
     return () => window.removeEventListener("resize", resize);
   }, [drawFrame, animateText]);
