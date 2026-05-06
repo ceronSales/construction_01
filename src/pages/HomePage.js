@@ -16,14 +16,14 @@ import ProjectsSection from "../components/ProjectsSection";
 import CostCalculator from "../components/CostCalculator";
 import HomeLoanCalculator from "../components/HomeLoanCalculator";
 import DesignServices from "../components/DesignServices";
+import ConstructionWorks from "../components/ConstructionWorks";
 import "../css/HomePage.css";
 
 // Placeholder sections — built components are excluded from this list
 const placeholderSections = [
-  { id: "construction-works", label: "Construction Works" },
-  { id: "earthquake",         label: "Earthquake Faultline" },
-  { id: "permits",            label: "Building Permits" },
-  { id: "fengshui",           label: "Fengshui" },
+  { id: "earthquake", label: "Earthquake Faultline" },
+  { id: "permits",    label: "Building Permits" },
+  { id: "fengshui",   label: "Fengshui" },
 ];
 
 function HomePage() {
@@ -43,6 +43,9 @@ function HomePage() {
 
       {/* ── Building Cost Calculator — scroll-jacked sticky steps ── */}
       <CostCalculator />
+
+      {/* ── Construction Works & Services ── */}
+      <ConstructionWorks />
 
       {/* ── Design Services — looping video BG + glassmorphism cards ── */}
       <DesignServices />
