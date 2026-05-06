@@ -14,6 +14,7 @@ import {
   Tooltip, ResponsiveContainer, ReferenceLine,
 } from "recharts";
 import "../css/HomeLoanCalculator.css";
+import BlobBackground from "./BlobBackground";
 
 /* ── Fixing period presets (Security Bank PH rates) ── */
 const FIXING_PERIODS = [
@@ -213,6 +214,7 @@ function HomeLoanCalculator() {
 
   return (
     <section id="loan" className="loanSection">
+      <BlobBackground />
 
       {/* ── Section header ── */}
       <div className="loanHeader">
