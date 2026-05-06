@@ -1,0 +1,459 @@
+/**
+ * WHAT: ConstructionWorks styles — fullscreen video BG + left slide-in glassmorphism panel.
+ * HOW:  cwSection is 100vh with sticky video. cwPanel slides in from the left
+ *       via translateX. cwPanelTab stays fixed on the left edge at all times.
+ *       Glassmorphism uses backdrop-filter blur + semi-transparent background.
+ */
+
+/* ── Section — full viewport height ── */
+.cwSection {
+  position: relative;
+  width: 100%;
+  height: 100vh;
+  overflow: hidden;
+  background: #080808;
+}
+
+/* ── Sticky video background ── */
+.cwVideoBg {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+}
+
+.cwVideo {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center;
+}
+
+/* Dark gradient overlay — heavier on left for panel readability */
+.cwVideoOverlay {
+  position: absolute;
+  inset: 0;
+  background:
+    linear-gradient(to right, rgba(0,0,0,0.72) 0%, rgba(0,0,0,0.25) 60%, transparent 100%),
+    linear-gradient(to bottom, rgba(0,0,0,0.4) 0%, transparent 30%, transparent 70%, rgba(0,0,0,0.5) 100%);
+}
+
+/* ── Centered hero text ── */
+.cwHero {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 2;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1rem;
+  pointer-events: none;
+}
+
+.cwHero > * { pointer-events: all; }
+
+.cwBadge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-family: var(--font-ui);
+  font-size: 0.6rem;
+  font-weight: 700;
+  letter-spacing: 0.35em;
+  text-transform: uppercase;
+  color: var(--color-primary);
+  border: 1px solid var(--color-border-gold);
+  padding: 0.3rem 1rem;
+  background: rgba(0,0,0,0.3);
+  backdrop-filter: blur(8px);
+}
+
+.cwBadgeDot {
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: var(--color-primary);
+  animation: pulseDot 2s ease infinite;
+}
+
+@keyframes pulseDot {
+  0%, 100% { opacity: 1; transform: scale(1); }
+  50%       { opacity: 0.4; transform: scale(0.6); }
+}
+
+.cwTitle {
+  font-family: var(--font-heading);
+  font-size: clamp(3rem, 7vw, 6.5rem);
+  font-weight: 700;
+  color: var(--color-text);
+  line-height: 1.05;
+  letter-spacing: -0.02em;
+  text-shadow: 0 4px 40px rgba(0,0,0,0.8);
+}
+
+.cwSubtitle {
+  font-family: var(--font-body);
+  font-size: clamp(0.9rem, 1.5vw, 1.05rem);
+  color: rgba(255,255,255,0.7);
+  letter-spacing: 0.05em;
+}
+
+.cwProjectsLink {
+  font-family: var(--font-ui);
+  font-size: 0.68rem;
+  font-weight: 700;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--color-primary);
+  border-bottom: 1px solid var(--color-border-gold);
+  padding-bottom: 2px;
+  transition: color var(--transition-fast), border-color var(--transition-fast);
+}
+
+.cwProjectsLink:hover {
+  color: var(--color-primary-light);
+  border-color: var(--color-primary-light);
+}
+
+/* Hint button shown when panel is closed */
+.cwOpenHint {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  background: rgba(201,168,76,0.1);
+  border: 1px solid var(--color-border-gold);
+  padding: 0.5rem 1.2rem;
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  margin-top: 0.5rem;
+  transition: background var(--transition-fast);
+  backdrop-filter: blur(8px);
+}
+
+.cwOpenHint:hover { background: rgba(201,168,76,0.18); }
+
+.cwOpenHintIcon {
+  font-size: 1rem;
+  color: var(--color-primary);
+  transform: rotate(180deg);
+}
+
+.cwOpenHintText {
+  font-family: var(--font-ui);
+  font-size: 0.62rem;
+  font-weight: 700;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--color-text-muted);
+}
+
+/* ── Panel toggle tab — always visible on left edge ── */
+.cwPanelTab {
+  position: absolute;
+  left: 0;
+  top: 50%;
+  transform: translateY(-50%);
+  z-index: 10;
+  background: rgba(201,168,76,0.15);
+  border: 1px solid var(--color-border-gold);
+  border-left: none;
+  border-radius: 0 var(--radius-md) var(--radius-md) 0;
+  padding: 1rem 0.7rem;
+  cursor: pointer;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.5rem;
+  backdrop-filter: blur(12px);
+  transition: background var(--transition-fast), transform var(--transition-base);
+}
+
+.cwPanelTab:hover {
+  background: rgba(201,168,76,0.25);
+}
+
+/* Shifts right when panel is open so tab stays visible outside panel */
+.cwPanelTabOpen {
+  left: clamp(300px, 38vw, 480px);
+  background: rgba(0,0,0,0.5);
+}
+
+.cwPanelTabIcon {
+  font-size: 1rem;
+  color: var(--color-primary);
+  line-height: 1;
+}
+
+.cwPanelTabLabel {
+  font-family: var(--font-ui);
+  font-size: 0.5rem;
+  font-weight: 700;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--color-text-muted);
+  writing-mode: vertical-rl;
+}
+
+/* ── Glassmorphism slide-in panel from left ── */
+.cwPanel {
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 100%;
+  width: clamp(300px, 38vw, 480px);
+  z-index: 9;
+  /* Glassmorphism */
+  background: rgba(10, 10, 10, 0.55);
+  backdrop-filter: blur(28px) saturate(1.4);
+  -webkit-backdrop-filter: blur(28px) saturate(1.4);
+  border-right: 1px solid rgba(201,168,76,0.2);
+  box-shadow: 20px 0 60px rgba(0,0,0,0.5);
+  /* Slide animation */
+  transform: translateX(-100%);
+  transition: transform 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+  will-change: transform;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+.cwPanelOpen {
+  transform: translateX(0);
+}
+
+/* ── Panel internal layout ── */
+.cwPanelHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  padding: 1.6rem 1.8rem 1.2rem;
+  flex-shrink: 0;
+}
+
+.cwPanelTitle {
+  font-family: var(--font-heading);
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: var(--color-text);
+  line-height: 1;
+  margin-bottom: 0.2rem;
+}
+
+.cwPanelSub {
+  font-family: var(--font-ui);
+  font-size: 0.55rem;
+  color: var(--color-primary);
+  letter-spacing: 0.25em;
+  text-transform: uppercase;
+}
+
+.cwPanelClose {
+  background: none;
+  border: 1px solid var(--color-border);
+  color: var(--color-text-muted);
+  width: 2rem;
+  height: 2rem;
+  border-radius: var(--radius-sm);
+  font-size: 0.75rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  flex-shrink: 0;
+  transition: border-color var(--transition-fast), color var(--transition-fast);
+}
+
+.cwPanelClose:hover {
+  border-color: var(--color-primary);
+  color: var(--color-primary);
+}
+
+/* Gold divider */
+.cwPanelDivider {
+  height: 1px;
+  background: linear-gradient(to right, transparent, rgba(201,168,76,0.3), transparent);
+  margin: 0 1.8rem;
+  flex-shrink: 0;
+}
+
+/* Scrollable content blocks */
+.cwPanelBlock {
+  padding: 1rem 1.8rem;
+  flex-shrink: 0;
+}
+
+.cwPanelBlockTitle {
+  font-family: var(--font-ui);
+  font-size: 0.58rem;
+  font-weight: 700;
+  letter-spacing: 0.3em;
+  text-transform: uppercase;
+  color: var(--color-primary);
+  margin-bottom: 0.8rem;
+}
+
+/* Services list */
+.cwServiceList {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+}
+
+.cwServiceItem {
+  display: flex;
+  align-items: center;
+  gap: 0.7rem;
+  padding: 0.45rem 0.6rem;
+  border-radius: var(--radius-sm);
+  background: rgba(255,255,255,0.03);
+  border: 1px solid transparent;
+  transition: background var(--transition-fast), border-color var(--transition-fast);
+}
+
+.cwServiceItem:hover {
+  background: rgba(201,168,76,0.06);
+  border-color: rgba(201,168,76,0.15);
+}
+
+.cwServiceIcon {
+  font-size: 1rem;
+  flex-shrink: 0;
+}
+
+.cwServiceLabel {
+  font-family: var(--font-body);
+  font-size: 0.82rem;
+  color: var(--color-text-muted);
+  letter-spacing: 0.02em;
+}
+
+/* Finish cost list */
+.cwFinishList {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.cwFinishItem {
+  display: flex;
+  align-items: center;
+  gap: 0.8rem;
+  padding: 0.5rem 0.6rem;
+  background: rgba(255,255,255,0.02);
+  border-radius: var(--radius-sm);
+  border-left: 2px solid transparent;
+  transition: background var(--transition-fast);
+}
+
+.cwFinishDot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+.cwFinishInfo {
+  display: flex;
+  flex-direction: column;
+  gap: 0.1rem;
+}
+
+.cwFinishLabel {
+  font-family: var(--font-ui);
+  font-size: 0.68rem;
+  font-weight: 600;
+  color: var(--color-text-muted);
+  letter-spacing: 0.05em;
+}
+
+.cwFinishRange {
+  font-family: var(--font-body);
+  font-size: 0.78rem;
+  font-weight: 700;
+}
+
+/* Note text */
+.cwPanelNote {
+  font-family: var(--font-body);
+  font-size: 0.78rem;
+  color: var(--color-text-muted);
+  line-height: 1.7;
+  letter-spacing: 0.01em;
+}
+
+.cwPanelNote strong {
+  color: var(--color-primary);
+}
+
+/* ── CTA buttons at bottom of panel ── */
+.cwPanelCta {
+  margin-top: auto;
+  padding: 1.2rem 1.8rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+  border-top: 1px solid var(--color-border);
+  flex-shrink: 0;
+}
+
+.cwCtaBtn {
+  display: block;
+  text-align: center;
+  padding: 0.75rem;
+  background: var(--color-primary);
+  color: #0d0d0d;
+  font-family: var(--font-ui);
+  font-size: 0.65rem;
+  font-weight: 800;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  border-radius: var(--radius-sm);
+  transition: background var(--transition-fast), transform var(--transition-fast);
+}
+
+.cwCtaBtn:hover {
+  background: var(--color-primary-light);
+  transform: translateY(-1px);
+}
+
+.cwCtaBtnSecondary {
+  display: block;
+  text-align: center;
+  padding: 0.65rem;
+  background: transparent;
+  color: var(--color-text-muted);
+  font-family: var(--font-ui);
+  font-size: 0.62rem;
+  font-weight: 600;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-sm);
+  transition: border-color var(--transition-fast), color var(--transition-fast);
+}
+
+.cwCtaBtnSecondary:hover {
+  border-color: var(--color-primary);
+  color: var(--color-primary);
+}
+
+/* ── Backdrop overlay ── */
+.cwBackdrop {
+  position: absolute;
+  inset: 0;
+  z-index: 8;
+  background: rgba(0,0,0,0.3);
+  backdrop-filter: blur(2px);
+  cursor: pointer;
+}
+
+/* ── Overflow scroll for tall panel content ── */
+.cwPanel {
+  overflow-y: auto;
+  scrollbar-width: thin;
+  scrollbar-color: rgba(201,168,76,0.2) transparent;
+}
