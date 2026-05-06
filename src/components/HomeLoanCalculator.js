@@ -122,10 +122,10 @@ function HomeLoanCalculator() {
   const [generating, setGenerating]    = useState(false);
 
   /**
-   * WHAT: Generates and downloads a home loan estimate PDF — always 1 page.
-   * HOW:  html2canvas captures invoiceRef. Canvas is scaled to fit exactly
-   *       within A4 (210mm x 297mm) — if taller than A4, it shrinks to fit.
-   *       No page slicing — always single page output.
+   * WHAT: Generates and downloads a home loan estimate PDF.
+   * HOW:  html2canvas captures the invoiceRef div at 2x scale. The canvas
+   *       is embedded into a jsPDF A4 document. A diagonal watermark is
+   *       drawn on the page before saving.
    * CALLED BY: Download PDF button onClick.
    */
   const handleGeneratePDF = useCallback(async () => {
@@ -134,39 +134,48 @@ function HomeLoanCalculator() {
     try {
       const canvas  = await html2canvas(invoiceRef.current, {
         scale: 2,
-        backgroundColor: "#ffffff",
+        backgroundColor: "#0d0d0d",
         useCORS: true,
-        logging: false,
       });
+      const imgData = canvas.toDataURL("image/png");
+      const pdf     = new jsPDF({ orientation: "portrait", unit: "mm", format: "a4" });
+      const pdfW    = pdf.internal.pageSize.getWidth();
+      const pdfH    = pdf.internal.pageSize.getHeight();
+      const ratio   = canvas.height / canvas.width;
+      const imgH    = pdfW * ratio;
 
-      const imgData    = canvas.toDataURL("image/png");
-      const pdf        = new jsPDF({ orientation: "portrait", unit: "mm", format: "a4" });
-      const pdfW       = pdf.internal.pageSize.getWidth();   // 210mm
-      const pdfH       = pdf.internal.pageSize.getHeight();  // 297mm
-
-      // Compute image height at full PDF width
-      const canvasRatio = canvas.height / canvas.width;
-      const imgH        = pdfW * canvasRatio;
-
+      // If content fits on one page
       if (imgH <= pdfH) {
-        // Content fits — place at top, leave natural whitespace at bottom
         pdf.addImage(imgData, "PNG", 0, 0, pdfW, imgH);
       } else {
-        // Content taller than A4 — scale down uniformly to fit exactly 1 page
-        const scaleFactor = pdfH / imgH;
-        const scaledW     = pdfW * scaleFactor;
-        const xOffset     = (pdfW - scaledW) / 2;
-        pdf.addImage(imgData, "PNG", xOffset, 0, scaledW, pdfH);
+        // Slice into pages
+        const pageCanvas = document.createElement("canvas");
+        const pageH      = Math.floor(canvas.width * (pdfH / pdfW));
+        pageCanvas.width  = canvas.width;
+        pageCanvas.height = pageH;
+        const ctx        = pageCanvas.getContext("2d");
+        let offset = 0;
+        while (offset < canvas.height) {
+          ctx.clearRect(0, 0, pageCanvas.width, pageCanvas.height);
+          ctx.drawImage(canvas, 0, -offset);
+          pdf.addImage(pageCanvas.toDataURL("image/png"), "PNG", 0, 0, pdfW, pdfH);
+          offset += pageH;
+          if (offset < canvas.height) pdf.addPage();
+        }
       }
 
-      // Diagonal watermark — always 1 page
-      pdf.setFontSize(28);
-      pdf.setTextColor(201, 168, 76);
-      pdf.setGState(pdf.GState({ opacity: 0.06 }));
-      for (let y = 45; y < pdfH; y += 55) {
-        pdf.text("TRICONIX CONSTRUCTION CORP.", pdfW / 2, y, { angle: 35, align: "center" });
+      // Diagonal watermark on every page
+      const totalPages = pdf.internal.getNumberOfPages();
+      for (let p = 1; p <= totalPages; p++) {
+        pdf.setPage(p);
+        pdf.setFontSize(30);
+        pdf.setTextColor(201, 168, 76);
+        pdf.setGState(pdf.GState({ opacity: 0.06 }));
+        for (let y = 45; y < pdfH; y += 55) {
+          pdf.text("TRICONIX CONSTRUCTION CORP.", pdfW / 2, y, { angle: 35, align: "center" });
+        }
+        pdf.setGState(pdf.GState({ opacity: 1 }));
       }
-      pdf.setGState(pdf.GState({ opacity: 1 }));
 
       pdf.save(`Triconix-HomeLoan-Estimate-${Date.now()}.pdf`);
     } catch (err) {
@@ -272,8 +281,6 @@ function HomeLoanCalculator() {
 
   return (
     <section id="loan" className="loanSection">
-      {/* ── Gold shimmer accent line ── */}
-      <div className="loanMeshAccent" aria-hidden="true" />
 
       {/* ── Section header ── */}
       <div className="loanHeader">
@@ -598,7 +605,49 @@ function HomeLoanCalculator() {
         <div className="loanInvoicePrintBrand">TRICONIX CONSTRUCTION CORPORATION · "Crafting Dreams, Building Homes"</div>
       </div>
 
-      {/* ── BSP Interest Rate History Chart — gives context before rate table ── */}
+      {/* ── Current Home Loan Interest Rates — below calculator card ── */}
+      <div className="loanRateTable">
+        <span className="loanRateTableTitle">Current Home Loan Interest Rates</span>
+        <table className="loanTable">
+          <thead>
+            <tr>
+              <th>Fixing Period</th>
+              <th>Interest Rate</th>
+              <th>Monthly Payment <span className="loanTableNote">({loanDisplay} / {termYears} yrs)</span></th>
+            </tr>
+          </thead>
+          <tbody>
+            {FIXING_PERIODS.map((fp, idx) => {
+              const P = parseAmount(loanAmount);
+              const r = fp.rate / 100 / 12;
+              const n = parseFloat(termYears) * 12;
+              const m = (P && r && n)
+                ? P * (r * Math.pow(1+r,n)) / (Math.pow(1+r,n) - 1)
+                : 0;
+              return (
+                <tr key={fp.label} className={activeFixing === idx ? "loanTableRowActive" : ""}>
+                  <td>{fp.label}</td>
+                  <td className="loanTableRate">{fp.rate.toFixed(2)}%</td>
+                  <td>{formatPeso(m)}</td>
+                </tr>
+              );
+            })}
+          </tbody>
+        </table>
+      </div>
+
+      {/* ── Triconix Insight — below rate table ── */}
+      <div className="loanOpinionBox">
+        <span className="loanOpinionTag">Triconix Insight</span>
+        <p className="loanOpinionText">
+          Based on our observation, interest rates tend to drop during presidential elections (1998, 2004, 2010, 2016, 2022)
+          and during periods of uncertainty such as the early months of the Covid Pandemic. Rates rise when inflation increases
+          due to higher demand for goods and services. <strong>Always prepare at least 40% cash or equity</strong> when
+          constructing via home loan — banks release funds in tranches (30%, 60%, 90%) and under-assess completion by ~5%.
+        </p>
+      </div>
+
+      {/* ── BSP Interest Rate History Chart — below Triconix Insight ── */}
       <div className="loanChartSection">
         <div className="loanChartHeader">
           <h3 className="loanChartTitle">BSP Interest Rate History <span className="loanChartTitleGold">(2000–2024)</span></h3>
@@ -647,48 +696,6 @@ function HomeLoanCalculator() {
           </ResponsiveContainer>
         </div>
         <p className="loanChartSource">Source: Bangko Sentral ng Pilipinas (BSP) · Trading Economics</p>
-      </div>
-
-      {/* ── Current Home Loan Interest Rates — after chart for context ── */}
-      <div className="loanRateTable">
-        <span className="loanRateTableTitle">Current Home Loan Interest Rates</span>
-        <table className="loanTable">
-          <thead>
-            <tr>
-              <th>Fixing Period</th>
-              <th>Interest Rate</th>
-              <th>Monthly Payment <span className="loanTableNote">({loanDisplay} / {termYears} yrs)</span></th>
-            </tr>
-          </thead>
-          <tbody>
-            {FIXING_PERIODS.map((fp, idx) => {
-              const P = parseAmount(loanAmount);
-              const r = fp.rate / 100 / 12;
-              const n = parseFloat(termYears) * 12;
-              const m = (P && r && n)
-                ? P * (r * Math.pow(1+r,n)) / (Math.pow(1+r,n) - 1)
-                : 0;
-              return (
-                <tr key={fp.label} className={activeFixing === idx ? "loanTableRowActive" : ""}>
-                  <td>{fp.label}</td>
-                  <td className="loanTableRate">{fp.rate.toFixed(2)}%</td>
-                  <td>{formatPeso(m)}</td>
-                </tr>
-              );
-            })}
-          </tbody>
-        </table>
-      </div>
-
-      {/* ── Triconix Insight — closes with expert advice ── */}
-      <div className="loanOpinionBox">
-        <span className="loanOpinionTag">Triconix Insight</span>
-        <p className="loanOpinionText">
-          Based on our observation, interest rates tend to drop during presidential elections (1998, 2004, 2010, 2016, 2022)
-          and during periods of uncertainty such as the early months of the Covid Pandemic. Rates rise when inflation increases
-          due to higher demand for goods and services. <strong>Always prepare at least 40% cash or equity</strong> when
-          constructing via home loan — banks release funds in tranches (30%, 60%, 90%) and under-assess completion by ~5%.
-        </p>
       </div>
 
     </section>
