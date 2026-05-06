@@ -17,6 +17,7 @@ import CostCalculator from "../components/CostCalculator";
 import HomeLoanCalculator from "../components/HomeLoanCalculator";
 import DesignServices from "../components/DesignServices";
 import ConstructionWorks from "../components/ConstructionWorks";
+import AppointmentSection from "../components/AppointmentSection";
 import "../css/HomePage.css";
 
 // Placeholder sections — built components are excluded from this list
@@ -69,6 +70,9 @@ function HomePage() {
 
       {/* ── Why Choose Us ── */}
       <WhyChooseUs />
+
+      {/* ── Book a Consultation — Google Calendar appointment scheduler ── */}
+      <AppointmentSection />
 
       {/* ── Contact Us — two-column composer + 3D globe ── */}
       <ContactSection />
