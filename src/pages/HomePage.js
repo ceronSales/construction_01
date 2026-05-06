@@ -37,22 +37,28 @@ function HomePage() {
       {/* ── 50% — Scroll Construction Sequence Hero ── */}
       <HeroSection />
 
-      {/* ── Interior Projects — video background carousel ── */}
+      {/* ── Why Choose Us — build trust before showing tools ── */}
+      <WhyChooseUs />
+
+      {/* ── Design Services — what we offer ── */}
+      <DesignServices />
+
+      {/* ── Construction Works — what we offer ── */}
+      <ConstructionWorks />
+
+      {/* ── Interior Projects — proof of work ── */}
       <InteriorProjects />
 
       {/* ── Projects — fullscreen video bg + thumbnail slider ── */}
       <ProjectsSection />
 
-      {/* ── Building Cost Calculator — scroll-jacked sticky steps ── */}
+      {/* ── Building Cost Calculator — visitor is now ready to calculate ── */}
       <CostCalculator />
 
-      {/* ── Design Services — looping video BG + glassmorphism cards ── */}
-      <DesignServices />
+      {/* ── Home Loan Calculator — natural next question after cost estimate ── */}
+      <HomeLoanCalculator />
 
-      {/* ── Construction Works — fullscreen video BG + left slide-in panel ── */}
-      <ConstructionWorks />
-
-      {/* ── Remaining sections ── */}
+      {/* ── Remaining sections — reference material ── */}
       {placeholderSections.map((section) => (
         <section key={section.id} id={section.id} className="homeSection">
           <div className="homeSectionInner">
@@ -65,13 +71,7 @@ function HomePage() {
         </section>
       ))}
 
-      {/* ── Home Loan Calculator ── */}
-      <HomeLoanCalculator />
-
-      {/* ── Why Choose Us ── */}
-      <WhyChooseUs />
-
-      {/* ── Book a Consultation — Google Calendar appointment scheduler ── */}
+      {/* ── Book a Consultation — close the deal ── */}
       <AppointmentSection />
 
       {/* ── Contact Us — two-column composer + 3D globe ── */}
